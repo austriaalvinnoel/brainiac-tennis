@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Brainiac Tennis — Booking</title>
+<!-- PWA -->
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#1a3a2a"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Brainiac"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --gd:#1a3a2a;--gm:#2a6644;--gl:#4a9e6e;--gp:#d4ede0;--gu:#f0f9f4;
+  --gold:#c9a84c;--off:#fafaf8;--w:#fff;
+  --g1:#f4f4f2;--g2:#e8e8e4;--g4:#9e9e96;--g6:#5a5a54;--g9:#1a1a16;
+  --red:#c0392b;--redl:#fdecea;--ambrl:#fef3cd;
+  --r:14px;--rs:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--g9);min-height:100vh}
+
+/* ── NAV ── */
+.nav{background:var(--gd);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:200}
+.brand{font-family:'DM Serif Display',serif;font-size:1.2rem;color:#fff;display:flex;align-items:center;gap:8px}
+.brand-em{color:var(--gold)}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap}
+.nb{padding:6px 14px;border-radius:50px;border:none;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;transition:all .18s}
+.nb-g{background:transparent;color:rgba(255,255,255,.65)}
+.nb-g:hover,.nb-g.on{background:rgba(255,255,255,.1);color:#fff}
+.nb-gold{background:var(--gold);color:var(--gd);font-weight:600}
+.nb-gold:hover{background:#d4b05a}
+
+/* ── LOGIN SCREEN ── */
+.login-screen{display:none;position:fixed;inset:0;background:var(--gd);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+.login-screen.on{display:flex}
+.login-box{background:var(--w);border-radius:20px;padding:2.5rem;max-width:400px;width:100%;text-align:center}
+.login-box h2{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--gd);margin-bottom:.3rem}
+.login-box p{font-size:.85rem;color:var(--g6);margin-bottom:1.75rem}
+.login-role-tabs{display:flex;gap:0;background:var(--g1);border-radius:50px;padding:3px;margin-bottom:1.5rem}
+.role-tab{flex:1;padding:8px;border:none;background:transparent;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;color:var(--g6);transition:all .18s}
+.role-tab.on{background:var(--gd);color:#fff}
+.login-fl{margin-bottom:.9rem;text-align:left}
+.login-fl label{display:block;font-size:.72rem;font-weight:600;color:var(--g6);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.login-fl input{width:100%;padding:10px 14px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:.92rem;color:var(--g9);background:var(--off)}
+.login-fl input:focus{outline:none;border-color:var(--gl)}
+.login-btn{width:100%;padding:12px;background:var(--gd);color:#fff;border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:.5rem;transition:background .2s}
+.login-btn:hover{background:var(--gm)}
+.login-err{color:var(--red);font-size:.82rem;margin-top:.5rem;min-height:1.2rem}
+.login-hint{font-size:.75rem;color:var(--g4);margin-top:.75rem}
+
+/* ── PAGES ── */
+.pg{display:none}.pg.on{display:block}
+
+/* ── HERO ── */
+.hero{background:var(--gd);padding:4rem 2rem 3.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(74,158,110,.18) 0%,transparent 60%);pointer-events:none}
+.hero-tag{display:inline-block;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);color:var(--gold);font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:5px 13px;border-radius:50px;margin-bottom:1.2rem}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2rem,5vw,3.4rem);color:#fff;line-height:1.15;margin-bottom:.9rem}
+.hero h1 em{color:var(--gold);font-style:italic}
+.hero p{font-size:1rem;color:rgba(255,255,255,.6);max-width:500px;margin:0 auto 2rem;line-height:1.7}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-p{background:var(--gold);color:var(--gd);border:none;padding:12px 26px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-p:hover{background:#d4b05a;transform:translateY(-1px)}
+.btn-o{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35);padding:11px 26px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.92rem;cursor:pointer;transition:all .2s}
+.btn-o:hover{border-color:#fff;background:rgba(255,255,255,.06)}
+
+/* ── INFO BAR ── */
+.info-bar{background:var(--gm);display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.ib{padding:1.25rem 1.5rem;border-right:1px solid rgba(255,255,255,.1);text-align:center}
+.ib:last-child{border:none}
+.ib .lbl{font-size:.68rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.ib .val{font-size:.95rem;color:#fff;font-weight:500}
+
+/* ── SECTION ── */
+.sec{padding:3.5rem 2rem;max-width:1100px;margin:0 auto}
+.sec-hd{text-align:center;margin-bottom:2.5rem}
+.sec-hd h2{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--gd);margin-bottom:.4rem}
+.sec-hd p{color:var(--g6);font-size:.9rem}
+
+/* ── PACKAGES ── */
+.pkg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}
+.pkg{background:var(--w);border:1.5px solid var(--g2);border-radius:var(--r);padding:1.4rem;position:relative;transition:all .2s}
+.pkg:hover{border-color:var(--gl);transform:translateY(-2px);box-shadow:0 4px 24px rgba(26,58,42,.1)}
+.pkg.hot{border-color:var(--gl)}
+.pkg-badge{position:absolute;top:-10px;left:1rem;background:var(--gd);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:50px}
+.pkg-name{font-size:.95rem;font-weight:600;color:var(--gd);margin-bottom:5px}
+.pkg-desc{font-size:.8rem;color:var(--g6);line-height:1.5;margin-bottom:.9rem}
+.pkg-price{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--gd)}
+.pkg-price sub{font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--g4);font-weight:400}
+.pkg-price s{font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--g4);margin-left:5px}
+.pkg-btn{margin-top:.9rem;width:100%;padding:8px;border-radius:50px;border:1.5px solid var(--gd);background:transparent;color:var(--gd);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .18s}
+.pkg-btn:hover{background:var(--gd);color:#fff}
+
+/* ── AVAILABLE SCHEDULE VIEW (Student) ── */
+.avail-section{background:var(--w);border-radius:var(--r);border:1px solid var(--g2);padding:1.75rem;margin-bottom:1.5rem}
+.avail-section h3{font-family:'DM Serif Display',serif;font-size:1.35rem;color:var(--gd);margin-bottom:1.25rem}
+.court-filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem}
+.cf-btn{padding:7px 14px;border-radius:50px;border:1.5px solid var(--g2);background:var(--off);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;color:var(--g6);cursor:pointer;transition:all .15s}
+.cf-btn:hover{border-color:var(--gl);color:var(--gd)}
+.cf-btn.on{background:var(--gd);color:#fff;border-color:var(--gd)}
+.avail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.avail-court-card{border:1.5px solid var(--g2);border-radius:var(--r);overflow:hidden;transition:all .2s}
+.avail-court-card:hover{border-color:var(--gl);box-shadow:0 4px 20px rgba(26,58,42,.08)}
+.acc-header{background:var(--gd);padding:1rem 1.25rem;color:#fff}
+.acc-header h4{font-size:.95rem;font-weight:600;margin-bottom:2px}
+.acc-header p{font-size:.75rem;opacity:.65}
+.acc-body{padding:1rem 1.25rem}
+.week-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--g2)}
+.week-row:last-child{border:none}
+.wr-day{font-size:.82rem;font-weight:600;color:var(--g9);width:36px;flex-shrink:0}
+.wr-slots{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.slot-pill{display:inline-block;padding:3px 8px;border-radius:50px;font-size:.7rem;font-weight:500;cursor:pointer;transition:all .15s}
+.slot-pill.avail{background:var(--gp);color:var(--gd)}
+.slot-pill.avail:hover{background:#b8dfc8}
+.slot-pill.full{background:var(--redl);color:var(--red);cursor:default;text-decoration:line-through;opacity:.7}
+.slot-pill.limited{background:#fef3cd;color:#7c5a00}
+.slot-pill.limited:hover{background:#fde68a}
+.wr-closed{font-size:.75rem;color:var(--g4);font-style:italic}
+.avail-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;font-size:.75rem;align-items:center}
+.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
+
+/* ── BOOKING ── */
+.bk-wrap{display:grid;grid-template-columns:1fr 330px;gap:1.75rem;align-items:start}
+@media(max-width:820px){.bk-wrap{grid-template-columns:1fr}}
+.bk-card{background:var(--w);border-radius:var(--r);border:1px solid var(--g2);padding:1.75rem;box-shadow:0 4px 24px rgba(26,58,42,.1);margin-bottom:1.25rem}
+.bk-card h3{font-family:'DM Serif Display',serif;font-size:1.35rem;color:var(--gd);margin-bottom:1.25rem}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.fg1{grid-template-columns:1fr}
+.fl label{display:block;font-size:.72rem;font-weight:600;color:var(--g6);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.fl input,.fl select,.fl textarea{width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--g9);background:var(--off);transition:border-color .15s;-webkit-appearance:none;appearance:none}
+.fl input:focus,.fl select:focus,.fl textarea:focus{outline:none;border-color:var(--gl);background:var(--w)}
+.fl textarea{resize:vertical;min-height:72px}
+.hr{border:none;border-top:1px solid var(--g2);margin:1.25rem 0}
+.lt-wrap{display:flex;gap:7px;flex-wrap:wrap}
+.lt{padding:7px 15px;border-radius:50px;border:1.5px solid var(--g2);background:var(--off);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;color:var(--g6);cursor:pointer;transition:all .15s}
+.lt:hover{border-color:var(--gl);color:var(--gd)}
+.lt.on{background:var(--gd);color:#fff;border-color:var(--gd)}
+.cal-week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.cal-week-nav button{background:none;border:1px solid var(--g2);border-radius:50px;padding:5px 12px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;color:var(--g6)}
+.cal-week-nav button:hover{border-color:var(--gl);color:var(--gd)}
+.cal-week-nav span{font-size:.88rem;font-weight:500;color:var(--gd)}
+.cal-strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.cal-day{min-width:56px;padding:10px 6px;border-radius:var(--rs);border:1.5px solid var(--g2);background:var(--off);text-align:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+.cal-day .d-name{font-size:.68rem;color:var(--g4);text-transform:uppercase;letter-spacing:.06em}
+.cal-day .d-num{font-size:1.1rem;font-weight:600;color:var(--g9);margin:2px 0}
+.cal-day .d-dot{width:5px;height:5px;border-radius:50%;background:var(--gl);margin:0 auto;opacity:0}
+.cal-day.has-slots .d-dot{opacity:1}
+.cal-day.closed{opacity:.35;cursor:not-allowed}
+.cal-day:not(.closed):hover{border-color:var(--gl)}
+.cal-day.on{background:var(--gd);border-color:var(--gd)}
+.cal-day.on .d-name,.cal-day.on .d-num{color:#fff}
+.slots-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.slot{padding:8px 4px;border-radius:var(--rs);border:1.5px solid var(--g2);background:var(--off);font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;color:var(--g6);cursor:pointer;transition:all .15s;text-align:center}
+.slot:hover{border-color:var(--gl);color:var(--gd)}
+.slot.on{background:var(--gd);color:#fff;border-color:var(--gd)}
+.slot.full{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+.no-slots{padding:1.5rem;text-align:center;color:var(--g4);font-size:.85rem;border:1.5px dashed var(--g2);border-radius:var(--rs)}
+
+/* ── SUMMARY ── */
+.sum-card{background:var(--gd);border-radius:var(--r);padding:1.6rem;color:#fff;position:sticky;top:72px}
+.sum-card h4{font-family:'DM Serif Display',serif;font-size:1.05rem;margin-bottom:1.1rem;opacity:.8}
+.sr{display:flex;justify-content:space-between;font-size:.85rem;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.sr:last-of-type{border:none}
+.sr .l{color:rgba(255,255,255,.55)}.sr .v{font-weight:500}
+.sum-total{margin-top:.9rem;padding-top:.9rem;border-top:1px solid rgba(255,255,255,.2);display:flex;justify-content:space-between;align-items:baseline}
+.sum-total .l{font-size:.82rem;color:rgba(255,255,255,.55)}
+.sum-total .v{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--gold)}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:1rem}
+.po{padding:7px 8px;border-radius:var(--rs);border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:rgba(255,255,255,.65);font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:500;cursor:pointer;transition:all .15s;text-align:center}
+.po:hover{border-color:rgba(255,255,255,.35)}
+.po.on{background:rgba(201,168,76,.2);border-color:var(--gold);color:var(--gold)}
+.coach-row{display:flex;align-items:center;gap:9px;margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid rgba(255,255,255,.1)}
+.coach-av{width:38px;height:38px;border-radius:50%;background:var(--gm);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:600;flex-shrink:0}
+.sub-btn{width:100%;padding:13px;background:var(--gold);color:var(--gd);border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:1.25rem}
+.sub-btn:hover{background:#d4b05a;transform:translateY(-1px)}
+.sub-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.waiver-box{margin-top:1.25rem;padding:1rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:var(--rs)}
+.waiver-title{font-size:.72rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+.waiver-check{display:flex;align-items:flex-start;gap:10px;margin-bottom:.65rem;cursor:pointer}
+.waiver-check:last-child{margin-bottom:0}
+.waiver-check input[type="checkbox"]{width:16px;height:16px;min-width:16px;margin-top:2px;cursor:pointer;accent-color:var(--gold)}
+.waiver-check .wc-text{font-size:.78rem;color:rgba(255,255,255,.78);line-height:1.5}
+.waiver-check .wc-text strong{color:#fff;font-weight:600}
+.waiver-err{font-size:.75rem;color:#ffb3b3;margin-top:.6rem;display:none;padding:6px 8px;background:rgba(192,57,43,.25);border-radius:var(--rs)}
+
+/* ── SUCCESS ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:500;align-items:center;justify-content:center;padding:1rem}
+.overlay.on{display:flex}
+.sbox{background:var(--w);border-radius:var(--r);padding:2.25rem;max-width:440px;width:100%;text-align:center;animation:pop .28s ease}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.s-icon{width:60px;height:60px;border-radius:50%;background:var(--gp);display:flex;align-items:center;justify-content:center;margin:0 auto 1.1rem}
+.sbox h3{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--gd);margin-bottom:.45rem}
+.sbox p{color:var(--g6);font-size:.88rem;line-height:1.6;margin-bottom:1.2rem}
+.ref-box{background:var(--gu);border:1px solid var(--gp);border-radius:var(--rs);padding:11px 16px;font-family:monospace;font-size:.95rem;color:var(--gd);font-weight:600;letter-spacing:.1em;margin-bottom:1.25rem}
+
+/* ── ADMIN ── */
+.adm-wrap{padding:2rem;max-width:1280px;margin:0 auto}
+.adm-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:.75rem}
+.adm-hd h2{font-family:'DM Serif Display',serif;font-size:1.75rem;color:var(--gd)}
+.adm-user-badge{display:flex;align-items:center;gap:8px;background:var(--gu);border:1px solid var(--gp);border-radius:50px;padding:5px 14px 5px 8px;font-size:.82rem;color:var(--gd);font-weight:500}
+.adm-av{width:26px;height:26px;border-radius:50%;background:var(--gd);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+.logout-btn{padding:5px 12px;border-radius:50px;border:1px solid var(--g2);background:var(--w);font-family:'DM Sans',sans-serif;font-size:.75rem;cursor:pointer;color:var(--red)}
+.logout-btn:hover{background:var(--redl)}
+.adm-tabs{display:flex;gap:0;background:var(--w);border:1px solid var(--g2);border-radius:var(--r);overflow:hidden;margin-bottom:1.75rem;flex-wrap:wrap}
+.adm-tab{flex:1;min-width:90px;padding:11px 8px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;color:var(--g6);border-right:1px solid var(--g2);transition:all .15s}
+.adm-tab:last-child{border:none}
+.adm-tab:hover{background:var(--gu);color:var(--gd)}
+.adm-tab.on{background:var(--gd);color:#fff}
+.adm-pane{display:none}.adm-pane.on{display:block}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.75rem}
+.stat{background:var(--w);border:1px solid var(--g2);border-radius:var(--r);padding:1.1rem 1.4rem}
+.stat .sl{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--g4);margin-bottom:4px}
+.stat .sv{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--gd)}
+.stat .ss{font-size:.75rem;color:var(--g4);margin-top:1px}
+
+/* ── TABLE ── */
+.tbl-card{background:var(--w);border:1px solid var(--g2);border-radius:var(--r);overflow:hidden}
+.tbl-head{padding:.9rem 1.25rem;border-bottom:1px solid var(--g2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.tbl-head h4{font-size:.9rem;font-weight:600;color:var(--gd)}
+.srch{padding:7px 11px;border:1px solid var(--g2);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--g9);width:190px}
+.srch:focus{outline:none;border-color:var(--gl)}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{padding:9px 14px;text-align:left;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--g4);border-bottom:1px solid var(--g2);background:var(--g1)}
+td{padding:11px 14px;border-bottom:1px solid var(--g2);vertical-align:middle}
+tr:last-child td{border:none}
+tr:hover td{background:var(--gu)}
+.bdg{display:inline-block;padding:3px 9px;border-radius:50px;font-size:.68rem;font-weight:600}
+.b-ok{background:#d4ede1;color:#1a6640}
+.b-pend{background:#fef3cd;color:#7c5a00}
+.b-can{background:#fdecea;color:#a02020}
+.ab{padding:4px 9px;border-radius:var(--rs);border:1px solid var(--g2);background:var(--w);font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer;transition:all .15s;margin-left:3px}
+.ab:hover{background:var(--g1)}
+.ab.danger:hover{background:var(--redl);border-color:var(--red);color:var(--red)}
+.empty{padding:2.5rem;text-align:center;color:var(--g4);font-size:.85rem}
+
+/* ── CMS ── */
+.cms-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:900px){.cms-grid{grid-template-columns:1fr}}
+.cms-card{background:var(--w);border:1px solid var(--g2);border-radius:var(--r);overflow:hidden}
+.cms-hd{padding:.9rem 1.25rem;border-bottom:1px solid var(--g2);display:flex;align-items:center;justify-content:space-between}
+.cms-hd h4{font-size:.9rem;font-weight:600;color:var(--gd)}
+.cms-body{padding:1.25rem}
+.add-btn{padding:6px 14px;border-radius:50px;border:none;background:var(--gd);color:#fff;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:background .15s}
+.add-btn:hover{background:var(--gm)}
+.add-btn-sm{padding:4px 10px;border-radius:50px;border:1px solid var(--gd);background:transparent;color:var(--gd);font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer}
+.add-btn-sm:hover{background:var(--gd);color:#fff}
+.court-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--g2)}
+.court-item:last-child{border:none}
+.court-dot{width:10px;height:10px;border-radius:50%;background:var(--gl);margin-top:4px;flex-shrink:0}
+.court-info{flex:1}
+.court-name{font-size:.88rem;font-weight:600;color:var(--g9)}
+.court-addr{font-size:.78rem;color:var(--g4);margin-top:1px}
+.court-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.tag{display:inline-block;padding:2px 8px;border-radius:50px;font-size:.68rem;font-weight:500;background:var(--gp);color:var(--gd)}
+.tag-amber{background:#fef3cd;color:#7c5a00}
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--g4);font-size:.85rem;padding:2px 5px}
+.icon-btn:hover{color:var(--red)}
+.day-block{border:1px solid var(--g2);border-radius:var(--rs);margin-bottom:.6rem;overflow:hidden}
+.day-hd{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--g1);cursor:pointer;user-select:none}
+.day-lbl{font-size:.82rem;font-weight:600;color:var(--gd);width:90px;flex-shrink:0}
+.day-date-lbl{font-size:.75rem;color:var(--g4);flex:1}
+.day-body{padding:10px 14px;border-top:1px solid var(--g2)}
+.slot-chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+.sc{display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:50px;background:var(--gp);font-size:.72rem;font-weight:500;color:var(--gd)}
+.sc.full-sc{background:#fdecea;color:#a02020}
+.sc button{background:none;border:none;cursor:pointer;color:inherit;font-size:.7rem;padding:0;margin-left:1px;line-height:1}
+.add-slot-row{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.add-slot-row input,.add-slot-row select{padding:5px 9px;border:1px solid var(--g2);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--g9);background:var(--w)}
+.add-slot-row input:focus,.add-slot-row select:focus{outline:none;border-color:var(--gl)}
+.tog{position:relative;width:34px;height:18px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-sl{position:absolute;inset:0;background:var(--g2);border-radius:50px;cursor:pointer;transition:.2s}
+.tog-sl::before{content:'';position:absolute;height:12px;width:12px;left:3px;bottom:3px;background:var(--w);border-radius:50%;transition:.2s}
+.tog input:checked+.tog-sl{background:var(--gm)}
+.tog input:checked+.tog-sl::before{transform:translateX(16px)}
+.lesson-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--g2)}
+.lesson-item:last-child{border:none}
+.lesson-info{flex:1}
+.lesson-name{font-size:.85rem;font-weight:600;color:var(--g9)}
+.lesson-price{font-size:.8rem;color:var(--gm);font-weight:500}
+.lesson-desc{font-size:.75rem;color:var(--g4);margin-top:1px}
+
+
+/* ── CLASS SCHEDULE BUILDER ── */
+.csb-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
+@media(max-width:900px){.csb-grid{grid-template-columns:1fr}}
+.class-card{background:var(--w);border:1.5px solid var(--g2);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:.75rem;transition:all .18s}
+.class-card:hover{border-color:var(--gl);box-shadow:0 3px 16px rgba(26,58,42,.08)}
+.class-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.class-card-title{font-size:.95rem;font-weight:600;color:var(--gd);margin-bottom:3px}
+.class-card-sub{font-size:.78rem;color:var(--g6);line-height:1.5}
+.class-card-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:.6rem}
+.class-card-actions{display:flex;gap:4px;flex-shrink:0}
+.cc-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:50px;font-size:.68rem;font-weight:600}
+.cc-court{background:#e6f1fb;color:#0c447c}
+.cc-lesson{background:var(--gp);color:var(--gd)}
+.cc-coach{background:#fef3cd;color:#7c5a00}
+.cc-time{background:var(--g1);color:var(--g6)}
+.cc-spots-ok{background:var(--gp);color:var(--gd)}
+.cc-spots-ltd{background:#fef3cd;color:#7c5a00}
+.cc-spots-full{background:var(--redl);color:var(--red)}
+.cc-inactive{background:var(--redl);color:var(--red)}
+.day-section{margin-bottom:1.5rem}
+.day-section-hd{font-size:.72rem;font-weight:700;color:var(--g4);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem;padding-bottom:.4rem;border-bottom:1px solid var(--g2)}
+.no-classes{padding:1.5rem;text-align:center;color:var(--g4);font-size:.85rem;border:1.5px dashed var(--g2);border-radius:var(--rs)}
+
+/* Schedule page - class cards for students */
+.sch-class-card{background:var(--w);border:1.5px solid var(--g2);border-radius:var(--r);padding:1.25rem 1.5rem;display:flex;gap:1rem;align-items:flex-start;transition:all .18s;cursor:pointer}
+.sch-class-card:hover{border-color:var(--gl);box-shadow:0 4px 20px rgba(26,58,42,.09);transform:translateY(-1px)}
+.sch-class-card.full{opacity:.65;cursor:default}
+.sch-class-card.full:hover{transform:none;border-color:var(--g2)}
+.scc-date{min-width:52px;text-align:center;background:var(--gd);border-radius:var(--rs);padding:8px 4px;flex-shrink:0}
+.scc-date .scc-day{font-size:.6rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em}
+.scc-date .scc-num{font-family:'DM Serif Display',serif;font-size:1.4rem;color:#fff;line-height:1.1}
+.scc-date .scc-mo{font-size:.6rem;color:rgba(255,255,255,.6)}
+.scc-body{flex:1}
+.scc-title{font-size:.95rem;font-weight:600;color:var(--gd);margin-bottom:3px}
+.scc-tags{display:flex;gap:5px;flex-wrap:wrap;margin:.4rem 0}
+.scc-desc{font-size:.78rem;color:var(--g6);line-height:1.5;margin-top:.3rem}
+.scc-right{flex-shrink:0;text-align:right}
+.scc-price{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--gd)}
+.scc-price span{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--g4);font-weight:400}
+.scc-spots{font-size:.75rem;margin-top:4px;font-weight:500}
+.scc-book-btn{margin-top:.6rem;padding:7px 14px;border-radius:50px;border:1.5px solid var(--gd);background:transparent;color:var(--gd);font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .15s}
+.scc-book-btn:hover{background:var(--gd);color:#fff}
+.scc-book-btn.full-btn{border-color:var(--g4);color:var(--g4);cursor:default}
+.sch-filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+.sch-filter-bar select{padding:7px 12px;border:1.5px solid var(--g2);border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--g9);background:var(--w);cursor:pointer;-webkit-appearance:none;appearance:none}
+.sch-filter-bar select:focus{outline:none;border-color:var(--gl)}
+.sch-view-tabs{display:flex;gap:0;background:var(--g1);border-radius:50px;padding:3px;margin-bottom:1.5rem;width:fit-content}
+.svt{padding:7px 16px;border:none;background:transparent;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;color:var(--g6);transition:all .15s}
+.svt.on{background:var(--gd);color:#fff}
+
+/* ── COACH PANEL ── */
+.coach-panel-wrap{padding:2rem;max-width:900px;margin:0 auto}
+.coach-panel-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem}
+.coach-panel-hd h2{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--gd)}
+.coach-filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center}
+.coach-filter-row label{font-size:.78rem;font-weight:600;color:var(--g6);text-transform:uppercase;letter-spacing:.06em}
+.coach-bk-card{background:var(--w);border:1px solid var(--g2);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:.75rem;display:flex;align-items:center;gap:14px;transition:all .15s}
+.coach-bk-card:hover{border-color:var(--gl)}
+.cbc-date{min-width:54px;text-align:center;background:var(--gd);border-radius:var(--rs);padding:8px 6px;flex-shrink:0}
+.cbc-date .cbc-day{font-size:.65rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em}
+.cbc-date .cbc-num{font-family:'DM Serif Display',serif;font-size:1.4rem;color:#fff;line-height:1}
+.cbc-date .cbc-mo{font-size:.65rem;color:rgba(255,255,255,.6)}
+.cbc-info{flex:1}
+.cbc-name{font-size:.95rem;font-weight:600;color:var(--g9)}
+.cbc-sub{font-size:.78rem;color:var(--g6);margin-top:2px}
+.cbc-right{text-align:right;flex-shrink:0}
+
+/* ── MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:600;align-items:center;justify-content:center;padding:1rem}
+.modal-bg.on{display:flex}
+.modal{background:var(--w);border-radius:var(--r);padding:1.75rem;max-width:480px;width:100%;animation:pop .25s ease;max-height:90vh;overflow-y:auto}
+.modal h3{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--gd);margin-bottom:1.1rem}
+.modal .fl{margin-bottom:.75rem}
+.modal .fl label{display:block;font-size:.72rem;font-weight:600;color:var(--g6);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.modal .fl input,.modal .fl select,.modal .fl textarea{width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--g9);background:var(--off)}
+.modal .fl input:focus,.modal .fl select:focus,.modal .fl textarea:focus{outline:none;border-color:var(--gl)}
+.modal .fl textarea{resize:vertical;min-height:60px}
+.modal-btns{display:flex;gap:.6rem;margin-top:1.1rem}
+.m-save{flex:1;padding:10px;background:var(--gd);color:#fff;border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer}
+.m-save:hover{background:var(--gm)}
+.m-cancel{padding:10px 18px;background:transparent;color:var(--g6);border:1px solid var(--g2);border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.88rem;cursor:pointer}
+.m-cancel:hover{background:var(--g1)}
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+
+@media(max-width:700px){
+  .fg{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:1fr}
+  .qa-grid{grid-template-columns:1fr}
+  .slots-grid{grid-template-columns:repeat(3,1fr)}
+  .cms-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div style="font-size:2.5rem;margin-bottom:.5rem">🎾</div>
+    <h2>Brainiac Tennis</h2>
+    <p>Staff access — please sign in</p>
+    <div class="login-role-tabs">
+      <button class="role-tab on" id="roleAdmin">Admin</button>
+      <button class="role-tab" id="roleCoach">Coach</button>
+    </div>
+    <div class="login-fl">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Enter username" autocomplete="username"/>
+    </div>
+    <div class="login-fl">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Enter password" autocomplete="current-password"/>
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <button class="login-btn" id="loginBtn">Sign In</button>
+    <div class="login-hint" id="loginHint">Admin: admin / tennis123 &nbsp;|&nbsp; Coaches: esther / coach123</div>
+    <button style="margin-top:1rem;background:none;border:none;color:var(--g4);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer" id="loginCancelBtn">← Back to booking site</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="brand">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93c4.69 4.69 4.69 9.45 0 14.14M19.07 4.93c-4.69 4.69-4.69 9.45 0 14.14"/></svg>
+    Brainiac <span class="brand-em">Tennis</span>
+  </div>
+  <div class="nav-links">
+    <button class="nb nb-g on" id="nav-home">Home</button>
+    <button class="nb nb-g" id="nav-schedule">Schedule</button>
+    <button class="nb nb-g" id="nav-book">Book</button>
+    <button class="nb nb-g" id="nav-about">About</button>
+    <button class="nb nb-g staff-only" id="nav-admin" style="display:none">⚙ Admin</button>
+    <button class="nb nb-g staff-only" id="nav-coach" style="display:none">📋 My Schedule</button>
+    <button class="nb nb-gold" id="nav-cta">Get a Lesson</button>
+    <button class="nb nb-g" id="nav-login-btn">Staff Login</button>
+  </div>
+</nav>
+
+<!-- SUCCESS MODAL -->
+<div class="overlay" id="successModal">
+  <div class="sbox">
+    <div class="s-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2a6644" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h3>Lesson Booked!</h3>
+    <p>You're confirmed! Coach Esther and the Brainiac Tennis team will see you on the court soon.</p>
+    <div class="ref-box" id="bkRef">BT-000000</div>
+    <button class="btn-p" style="width:100%;border-radius:50px" id="successDoneBtn">Done</button>
+  </div>
+</div>
+
+<!-- CMS MODAL -->
+<div class="modal-bg" id="cmsModal">
+  <div class="modal" id="cmsModalInner"></div>
+</div>
+
+<!-- ══ HOME ══ -->
+<div id="pg-home" class="pg on">
+  <div class="hero">
+    <div class="hero-tag">Winter &amp; Spring 2026 Schedule</div>
+    <h1>Play <em>Smarter.</em><br>Train with the Best.</h1>
+    <p>Brainiac Tennis — portable lessons for adults &amp; kids. Stroke technique, strategy, agility, and the mental game.</p>
+    <div class="hero-btns">
+      <button class="btn-p" id="heroCTA">Book a Lesson</button>
+      <button class="btn-o" id="heroSchedule">View Schedule</button>
+    </div>
+  </div>
+  <div class="info-bar">
+    <div class="ib"><div class="lbl">Phone / Text</div><div class="val">(516) 350-7971</div></div>
+    <div class="ib"><div class="lbl">Email</div><div class="val">brainiactennis@gmail.com</div></div>
+    <div class="ib"><div class="lbl">Locations</div><div class="val" id="locSummary">NYC · DC · Philly</div></div>
+    <div class="ib"><div class="lbl">Experience</div><div class="val">20+ Years Coaching</div></div>
+  </div>
+  <div class="sec">
+    <div class="sec-hd"><h2>Choose Your Lesson Package</h2><p>Select a package and reserve your spot on the court.</p></div>
+    <div class="pkg-grid" id="homePkgs"></div>
+  </div>
+</div>
+
+<!-- ══ SCHEDULE ══ -->
+<div id="pg-schedule" class="pg">
+  <div class="sec">
+    <div class="sec-hd">
+      <h2>Available Schedule</h2>
+      <p>Browse upcoming classes. Click any open class to book your spot instantly.</p>
+    </div>
+    <!-- View toggle -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.25rem">
+      <div class="sch-view-tabs">
+        <button class="svt on" id="svtList">📋 List View</button>
+        <button class="svt" id="svtCourt">📍 By Court</button>
+      </div>
+      <div class="sch-filter-bar">
+        <select id="schFilterCourt"><option value="">All Courts</option></select>
+        <select id="schFilterLesson"><option value="">All Lessons</option></select>
+        <select id="schFilterCoach"><option value="">All Coaches</option></select>
+      </div>
+    </div>
+    <!-- Legend -->
+    <div class="avail-legend" style="margin-bottom:1.25rem">
+      <span><span class="legend-dot" style="background:#d4ede0"></span> Available</span>
+      <span><span class="legend-dot" style="background:#fef3cd"></span> Limited (1–2 spots)</span>
+      <span><span class="legend-dot" style="background:#fdecea"></span> Full / Sold Out</span>
+    </div>
+    <!-- Class list -->
+    <div id="scheduleClassList"></div>
+  </div>
+</div>
+
+<!-- ══ BOOK ══ -->
+<div id="pg-book" class="pg">
+  <div class="sec">
+    <div class="sec-hd"><h2>Book Your Lesson</h2><p>Pick a date, choose a time slot, and confirm your session.</p></div>
+    <div class="bk-wrap">
+      <div>
+        <div class="bk-card">
+          <h3>Lesson Type</h3>
+          <div class="lt-wrap" id="ltBtns"></div>
+        </div>
+        <div class="bk-card">
+          <h3>Your Details</h3>
+          <div class="fg">
+            <div class="fl"><label>First Name</label><input id="bFN" placeholder="e.g. Jamie"/></div>
+            <div class="fl"><label>Last Name</label><input id="bLN" placeholder="e.g. Smith"/></div>
+            <div class="fl"><label>Email</label><input type="email" id="bEM" placeholder="you@email.com"/></div>
+            <div class="fl"><label>Phone (optional)</label><input id="bPH" placeholder="(555) 000-0000"/></div>
+          </div>
+          <hr class="hr"/>
+          <div class="fg">
+            <div class="fl"><label>Package</label><select id="bPkg"></select></div>
+            <div class="fl"><label>Skill Level</label>
+              <select id="bSK"><option>Beginner</option><option>Intermediate</option><option>Advanced</option><option>Professional</option></select>
+            </div>
+            <div class="fl"><label>Coach</label><select id="bCH"></select></div>
+            <div class="fl"><label>Court Location</label><select id="bCT"></select></div>
+          </div>
+          <hr class="hr"/>
+          <div class="fl fg1"><label>Notes (optional)</label><textarea id="bNT" placeholder="Goals, requests, or anything we should know..."></textarea></div>
+        </div>
+        <div class="bk-card">
+          <h3>Select Date &amp; Time</h3>
+          <div class="cal-week-nav">
+            <button id="prevWeekBtn">← Prev</button>
+            <span id="weekLabel"></span>
+            <button id="nextWeekBtn">Next →</button>
+          </div>
+          <div class="cal-strip" id="calStrip"></div>
+          <hr class="hr"/>
+          <div style="margin-bottom:.5rem"><label style="display:block;font-size:.72rem;font-weight:600;color:var(--g6);text-transform:uppercase;letter-spacing:.06em" id="slotsLabel">Available Time Slots</label></div>
+          <div id="slotsArea"></div>
+        </div>
+      </div>
+      <div>
+        <div class="sum-card">
+          <h4>Booking Summary</h4>
+          <div class="sr"><span class="l">Lesson type</span><span class="v" id="sType">—</span></div>
+          <div class="sr"><span class="l">Package</span><span class="v" id="sPkg">—</span></div>
+          <div class="sr"><span class="l">Court</span><span class="v" id="sCourt">—</span></div>
+          <div class="sr"><span class="l">Date</span><span class="v" id="sDate">—</span></div>
+          <div class="sr"><span class="l">Time</span><span class="v" id="sTime">—</span></div>
+          <div class="sr"><span class="l">Skill level</span><span class="v" id="sSkill">—</span></div>
+          <div class="sr"><span class="l">Coach</span><span class="v" id="sCoach">—</span></div>
+          <div class="sum-total"><span class="l">Total</span><span class="v" id="sPrice">$0</span></div>
+          <div style="margin-top:1rem">
+            <div style="font-size:.72rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Payment Method</div>
+            <div class="pay-grid" id="payGrid"></div>
+          </div>
+          <div class="coach-row">
+            <div class="coach-av" id="sumCoachAv">EF</div>
+            <div><div style="font-size:.85rem;font-weight:500" id="sumCoachName">Esther Forrester</div><div style="font-size:.72rem;color:rgba(255,255,255,.45)">Head Coach · Div I Alumni</div></div>
+          </div>
+          <div class="waiver-box">
+            <div class="waiver-title">Agreement &amp; Waiver — required before booking</div>
+            <label class="waiver-check">
+              <input type="checkbox" id="waiverLiability"/>
+              <span class="wc-text">I agree <strong>not to hold Brainiac Tennis liable</strong> for any injuries, accidents, or losses that may occur during lessons or activities.</span>
+            </label>
+            <label class="waiver-check">
+              <input type="checkbox" id="waiverPhoto"/>
+              <span class="wc-text">I agree that <strong>Brainiac Tennis may use photos of my children</strong> for commercial and promotional purposes.</span>
+            </label>
+            <div class="waiver-err" id="waiverErr">Please agree to both terms above before confirming your booking.</div>
+          </div>
+          <button class="sub-btn" id="confirmBookBtn">Confirm &amp; Book Lesson &#x2192;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<div id="pg-about" class="pg">
+  <div class="sec">
+    <div class="sec-hd"><h2>About Brainiac Tennis</h2><p>Portable tennis school for adults and kids.</p></div>
+    <div class="about-grid">
+      <div class="bk-card">
+        <h3>Our Mission</h3>
+        <p style="font-size:.88rem;color:var(--g6);line-height:1.7">Brainiac Tennis is a portable tennis school providing lessons for adults and kids. We offer group lessons, private lessons, and match coaching.<br><br>We come with qualified staff and equipment to schools, community centers, JCCs, YMCAs, and more.<br><br><strong>Serving:</strong> NYC &amp; suburbs · DC &amp; suburbs · Philadelphia &amp; suburbs.</p>
+      </div>
+      <div class="bk-card">
+        <h3>Coach Esther Forrester</h3>
+        <ul style="padding-left:1.1rem;font-size:.85rem;color:var(--g6);line-height:1.9">
+          <li>Former Division I collegiate player</li>
+          <li>Nearly 20 years of teaching experience</li>
+          <li>Coached the Empire State Games &amp; Tennis Europe</li>
+          <li>Nationally ranked in the 30-and-over category</li>
+          <li>Emphasizes smart play, tactics &amp; match readiness</li>
+        </ul>
+      </div>
+      <div class="bk-card">
+        <h3>What We Teach</h3>
+        <ul style="padding-left:1.1rem;font-size:.85rem;color:var(--g6);line-height:1.9">
+          <li>Stroke techniques and fundamentals</li>
+          <li>Strategy and tactical patterns</li>
+          <li>Agility and footwork exercises</li>
+          <li>Goal setting and mental toughness</li>
+          <li>Competing and winning recipes for matches</li>
+        </ul>
+      </div>
+      <div class="bk-card">
+        <h3>Contact Us</h3>
+        <div style="font-size:.88rem;color:var(--g6);line-height:2.1">
+          📧 <a href="mailto:brainiactennis@gmail.com" style="color:var(--gm)">brainiactennis@gmail.com</a><br>
+          📞 (516) 350-7971 — call or text<br>
+          📍 NYC · DC · Philadelphia &amp; suburbs
+        </div>
+        <div style="margin-top:1.1rem;padding:.9rem;background:var(--gu);border-radius:var(--rs);font-size:.82rem;color:var(--gd)">
+          <strong>Newsletter offer:</strong> Sign up and get a <strong>free lesson</strong> when you buy one!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADMIN ══ -->
+<div id="pg-admin" class="pg">
+  <div class="adm-wrap">
+    <div class="adm-hd">
+      <h2>⚙ Admin Panel</h2>
+      <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
+        <div class="adm-user-badge">
+          <div class="adm-av" id="admAvatar">AD</div>
+          <span id="admUserLabel">Admin</span>
+        </div>
+        <button class="logout-btn" id="adminLogoutBtn">Sign out</button>
+      </div>
+    </div>
+    <div class="adm-tabs">
+      <button class="adm-tab on" data-tab="bookings">📋 Bookings</button>
+      <button class="adm-tab" data-tab="schedule">📅 Schedule</button>
+      <button class="adm-tab" data-tab="courts">📍 Courts</button>
+      <button class="adm-tab" data-tab="lessons">🎾 Lessons</button>
+      <button class="adm-tab" data-tab="coaches">👤 Coaches</button>
+      <button class="adm-tab" data-tab="payments">💳 Payments</button>
+      <button class="adm-tab" data-tab="classes">📆 Classes</button>
+    </div>
+    <!-- BOOKINGS -->
+    <div class="adm-pane on" id="ap-bookings">
+      <div class="stats" id="statsRow"></div>
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start;flex-wrap:wrap">
+        <div class="tbl-card">
+          <div class="tbl-head">
+            <h4>All Bookings</h4>
+            <input class="srch" id="bkSearch" placeholder="Search name, package, ref..."/>
+          </div>
+          <div style="overflow-x:auto"><table><thead><tr>
+            <th>Ref</th><th>Student</th><th>Package</th><th>Court</th><th>Date</th><th>Time</th><th>Coach</th><th>Payment</th><th>Status</th><th>Actions</th>
+          </tr></thead><tbody id="bkBody"></tbody></table></div>
+        </div>
+        <div class="cms-card">
+          <div class="cms-hd"><h4>Quick Add Booking</h4></div>
+          <div class="cms-body" id="qaForm"></div>
+        </div>
+      </div>
+    </div>
+    <!-- SCHEDULE -->
+    <div class="adm-pane" id="ap-schedule">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start">
+        <div class="cms-card">
+          <div class="cms-hd"><h4>Weekly Schedule</h4></div>
+          <div class="cms-body" id="scheduleBody"></div>
+        </div>
+        <div class="cms-card">
+          <div class="cms-hd"><h4>How It Works</h4></div>
+          <div class="cms-body" style="font-size:.85rem;color:var(--g6);line-height:1.8">
+            <p style="margin-bottom:.75rem">This schedule controls what students see on the Schedule and Book pages.</p>
+            <ul style="padding-left:1.1rem">
+              <li>Toggle any day on/off to open or close it</li>
+              <li>Add time slots with a time picker + max capacity</li>
+              <li>Remove any slot with the × button</li>
+              <li>Slots showing bookings count (e.g. 2/4) update live</li>
+              <li>Full slots appear as "Sold Out" on the schedule</li>
+              <li>Students can click any available slot to book instantly</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- COURTS -->
+    <div class="adm-pane" id="ap-courts">
+      <div class="cms-grid">
+        <div class="cms-card">
+          <div class="cms-hd"><h4>Court Locations</h4><button class="add-btn" id="addCourtBtn">+ Add Court</button></div>
+          <div class="cms-body" id="courtsList"></div>
+        </div>
+        <div class="cms-card">
+          <div class="cms-hd"><h4>Active Locations</h4></div>
+          <div class="cms-body" id="courtsMap"></div>
+        </div>
+      </div>
+    </div>
+    <!-- LESSONS -->
+    <div class="adm-pane" id="ap-lessons">
+      <div class="cms-grid">
+        <div class="cms-card">
+          <div class="cms-hd"><h4>Lesson Packages</h4><button class="add-btn" id="addLessonBtn">+ Add Package</button></div>
+          <div class="cms-body" id="lessonsList"></div>
+        </div>
+        <div class="cms-card">
+          <div class="cms-hd"><h4>Lesson Types</h4></div>
+          <div class="cms-body" id="lessonTypesList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLASSES -->
+    <div class="adm-pane" id="ap-classes">
+      <div class="csb-grid">
+        <div>
+          <div class="cms-card" style="margin-bottom:1.5rem">
+            <div class="cms-hd">
+              <h4>📆 Class Schedule Builder</h4>
+              <button class="add-btn" id="addClassBtn">+ Create Class</button>
+            </div>
+            <div class="cms-body" id="classesList"></div>
+          </div>
+        </div>
+        <div class="cms-card">
+          <div class="cms-hd"><h4>How It Works</h4></div>
+          <div class="cms-body" style="font-size:.85rem;color:var(--g6);line-height:1.8">
+            <p style="margin-bottom:.75rem">Build your class schedule here. Each class you create will appear on the student-facing Schedule page.</p>
+            <ul style="padding-left:1.1rem">
+              <li>Choose a <strong>court location</strong>, <strong>lesson type</strong>, and <strong>date &amp; time</strong></li>
+              <li>Set a <strong>max capacity</strong> — students see remaining spots</li>
+              <li>Assign a <strong>coach</strong> to the class</li>
+              <li>Toggle a class <strong>active/inactive</strong> at any time</li>
+              <li>Edit any detail after creation</li>
+              <li>Students can click any open class to book instantly</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COACHES -->
+    <div class="adm-pane" id="ap-coaches">
+      <div class="cms-card" style="max-width:700px">
+        <div class="cms-hd"><h4>Coaches &amp; Login Credentials</h4><button class="add-btn" id="addCoachBtn">+ Add Coach</button></div>
+        <div class="cms-body" id="coachesList"></div>
+      </div>
+    </div>
+    <!-- PAYMENTS -->
+    <div class="adm-pane" id="ap-payments">
+      <div class="cms-card" style="max-width:700px">
+        <div class="cms-hd"><h4>Payment Methods</h4><button class="add-btn" id="addPayBtn">+ Add Method</button></div>
+        <div class="cms-body" id="payMethodsList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COACH PANEL ══ -->
+<div id="pg-coach" class="pg">
+  <div class="coach-panel-wrap">
+    <div class="coach-panel-hd">
+      <div>
+        <h2 id="coachPanelTitle">My Schedule</h2>
+        <p style="font-size:.85rem;color:var(--g6);margin-top:3px" id="coachPanelSub">Your upcoming lessons</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <div class="adm-user-badge">
+          <div class="adm-av" id="coachAvatar">EF</div>
+          <span id="coachUserLabel">Coach</span>
+        </div>
+        <button class="logout-btn" id="coachLogoutBtn">Sign out</button>
+      </div>
+    </div>
+    <div class="stats" id="coachStats"></div>
+    <div class="coach-filter-row">
+      <label>Filter:</label>
+      <button class="cf-btn on" data-filter="upcoming" id="cfUpcoming">Upcoming</button>
+      <button class="cf-btn" data-filter="all" id="cfAll">All</button>
+      <button class="cf-btn" data-filter="today" id="cfToday">Today</button>
+    </div>
+    <div id="coachBookingsList"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+var DB = {
+  courts: [
+    {id:1,name:'Main Court — NYC',address:'Long Island City, New York',city:'NYC',surfaces:'Hard Court',active:true},
+    {id:2,name:'Community Center — Brooklyn',address:'Brooklyn, New York',city:'NYC',surfaces:'Indoor',active:true},
+    {id:3,name:'Hamptons Court',address:'The Hamptons, New York',city:'NYC',surfaces:'Clay',active:true},
+    {id:4,name:'DC Sports Center',address:'Washington, DC',city:'DC',surfaces:'Hard Court',active:true},
+    {id:5,name:'Philly Academy',address:'Philadelphia, PA',city:'Philly',surfaces:'Indoor / Hard',active:true}
+  ],
+  lessons: [
+    {id:1,name:'Private Lesson',price:80,origPrice:null,desc:'One-on-one with Coach Esther.',type:'Private',active:true},
+    {id:2,name:'Pack of Private Lessons',price:200,origPrice:null,desc:'Bundle of private sessions.',type:'Private',active:true},
+    {id:3,name:'Group Lesson',price:45,origPrice:null,desc:'Learn alongside others.',type:'Group',active:true},
+    {id:4,name:'Pack of Group Lessons',price:360,origPrice:null,desc:'Best value for group players.',type:'Group',active:true},
+    {id:5,name:'Tennis Starter Pack',price:55,origPrice:null,desc:'Brand new to tennis? Includes equipment.',type:'Beginner',active:true},
+    {id:6,name:'Match Coaching',price:80,origPrice:null,desc:'Tactical coaching to get match-ready.',type:'Match',active:true},
+    {id:7,name:'Hamptons Private Lesson',price:100,origPrice:150,desc:'Premium private at Hamptons location.',type:'Private',active:true},
+    {id:8,name:'Gift Card',price:25,origPrice:null,desc:'Give the gift of tennis. From $25.',type:'Gift',active:true}
+  ],
+  lessonTypes: ['Private Lesson','Group Class','Match Coaching'],
+  coaches: [
+    {id:1,name:'Coach Esther Forrester',initials:'EF',title:'Head Coach · Div I Alumni',bio:'Former Division I player, 20 years experience.',username:'esther',password:'coach123',active:true},
+    {id:2,name:'Coach Maria Santos',initials:'MS',title:'Assistant Coach',bio:'Certified tennis instructor, 8 years experience.',username:'maria',password:'coach123',active:true},
+    {id:3,name:'Coach Jose Reyes',initials:'JR',title:'Junior Coach',bio:'Specializes in kids programs and beginners.',username:'jose',password:'coach123',active:true}
+  ],
+  payments: [
+    {id:1,name:'Pay Now (Card)',active:true},
+    {id:2,name:'GCash',active:true},
+    {id:3,name:'Maya',active:true},
+    {id:4,name:'Cash',active:true},
+    {id:5,name:'Bank Transfer',active:true},
+    {id:6,name:'Gift Card',active:true}
+  ],
+  schedule: {
+    Mon:{active:true,slots:[{time:'7:00 AM',max:4,booked:1},{time:'8:00 AM',max:4,booked:0},{time:'9:00 AM',max:6,booked:5},{time:'4:00 PM',max:4,booked:4},{time:'5:00 PM',max:4,booked:0}]},
+    Tue:{active:true,slots:[{time:'6:00 AM',max:4,booked:0},{time:'9:00 AM',max:6,booked:2},{time:'10:00 AM',max:4,booked:3},{time:'3:00 PM',max:4,booked:0},{time:'5:00 PM',max:4,booked:4}]},
+    Wed:{active:true,slots:[{time:'7:00 AM',max:4,booked:0},{time:'8:00 AM',max:4,booked:2},{time:'4:00 PM',max:4,booked:4},{time:'5:00 PM',max:4,booked:1},{time:'6:00 PM',max:4,booked:0}]},
+    Thu:{active:true,slots:[{time:'9:00 AM',max:4,booked:0},{time:'10:00 AM',max:4,booked:4},{time:'11:00 AM',max:6,booked:3},{time:'3:00 PM',max:4,booked:0},{time:'4:00 PM',max:4,booked:2}]},
+    Fri:{active:true,slots:[{time:'7:00 AM',max:4,booked:0},{time:'8:00 AM',max:4,booked:4},{time:'9:00 AM',max:4,booked:1},{time:'5:00 PM',max:4,booked:0},{time:'6:00 PM',max:4,booked:3}]},
+    Sat:{active:true,slots:[{time:'8:00 AM',max:8,booked:6},{time:'9:00 AM',max:8,booked:8},{time:'10:00 AM',max:8,booked:3},{time:'11:00 AM',max:6,booked:0}]},
+    Sun:{active:false,slots:[]}
+  },
+  users: [
+    {username:'admin',password:'tennis123',role:'admin',name:'Admin User',initials:'AD'}
+  ],
+  classes: [
+    {id:1, title:'Private Lesson — Morning', lessonId:1, courtId:1, coachId:1, date:'2026-04-14', time:'7:00 AM', duration:60, maxSpots:4, bookedSpots:1, price:80, notes:'Beginner friendly.', active:true},
+    {id:2, title:'Group Class — Weekday', lessonId:3, courtId:2, coachId:2, date:'2026-04-15', time:'9:00 AM', duration:60, maxSpots:8, bookedSpots:3, price:45, notes:'All skill levels welcome.', active:true},
+    {id:3, title:'Match Coaching — Advanced', lessonId:6, courtId:1, coachId:3, date:'2026-04-16', time:'4:00 PM', duration:90, maxSpots:4, bookedSpots:0, price:80, notes:'Advanced players only.', active:true},
+    {id:4, title:'Saturday Group Session', lessonId:3, courtId:3, coachId:1, date:'2026-04-18', time:'10:00 AM', duration:60, maxSpots:8, bookedSpots:7, price:45, notes:'Popular weekend group class.', active:true},
+    {id:5, title:'Hamptons Private', lessonId:7, courtId:3, coachId:1, date:'2026-04-19', time:'11:00 AM', duration:60, maxSpots:2, bookedSpots:0, price:100, notes:'Premium Hamptons location.', active:true}
+  ],
+  bookings: [
+    {id:1001,ref:'BT-100001',name:'Jamie Rodriguez',email:'jamie@email.com',phone:'',type:'Private Lesson',package:'Private Lesson',price:80,date:'2026-04-14',time:'7:00 AM',skill:'Beginner',coach:'Coach Esther Forrester',court:'Main Court — NYC',payment:'GCash',notes:'',status:'Confirmed',createdAt:'2026-04-01T10:00:00Z'},
+    {id:1002,ref:'BT-100002',name:'Sarah Kim',email:'sarah@email.com',phone:'',type:'Group Class',package:'Group Lesson',price:45,date:'2026-04-15',time:'9:00 AM',skill:'Intermediate',coach:'Coach Maria Santos',court:'Community Center — Brooklyn',payment:'Cash',notes:'',status:'Confirmed',createdAt:'2026-04-01T11:00:00Z'},
+    {id:1003,ref:'BT-100003',name:'Marco dela Cruz',email:'marco@email.com',phone:'',type:'Match Coaching',package:'Match Coaching',price:80,date:'2026-04-16',time:'4:00 PM',skill:'Advanced',coach:'Coach Jose Reyes',court:'Main Court — NYC',payment:'Pay Now (Card)',notes:'',status:'Pending',createdAt:'2026-04-02T09:00:00Z'}
+  ]
+};
+
+// ── AUTH ──
+var ADMIN_USER = {username:'admin',password:'tennis123',role:'admin',name:'Admin User',initials:'AD'};
+var currentUser = null;
+var loginRole = 'admin';
+
+// ── STATE ──
+var curPage = 'home';
+var selType = '';
+var pickedSlot = '';
+var selDate = null;
+var selPayment = '';
+var weekOffset = 0;
+var courtFilter = 'all';
+var coachFilter = 'upcoming';
+
+var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ═══════════════════════════════════════
+// LOGIN
+// ═══════════════════════════════════════
+function showLogin() {
+  document.getElementById('loginScreen').classList.add('on');
+  document.getElementById('loginErr').textContent = '';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  setLoginRole('admin');
+}
+function hideLogin() {
+  document.getElementById('loginScreen').classList.remove('on');
+}
+function setLoginRole(role) {
+  loginRole = role;
+  document.getElementById('roleAdmin').classList.toggle('on', role==='admin');
+  document.getElementById('roleCoach').classList.toggle('on', role==='coach');
+  document.getElementById('loginHint').textContent =
+    role === 'admin'
+      ? 'Admin: admin / tennis123'
+      : 'Coaches: esther / coach123  |  maria / coach123  |  jose / coach123';
+}
+function doLogin() {
+  var u = document.getElementById('loginUser').value.trim();
+  var p = document.getElementById('loginPass').value.trim();
+  var err = document.getElementById('loginErr');
+  if (!u || !p) { err.textContent = 'Please enter username and password.'; return; }
+  if (loginRole === 'admin') {
+    if (u === ADMIN_USER.username && p === ADMIN_USER.password) {
+      currentUser = {role:'admin', name:ADMIN_USER.name, initials:ADMIN_USER.initials, username:u};
+      hideLogin(); applyAuth(); goPage('admin');
+    } else { err.textContent = 'Incorrect admin credentials.'; }
+  } else {
+    var coach = DB.coaches.find(function(c){ return c.username===u && c.password===p && c.active; });
+    if (coach) {
+      currentUser = {role:'coach', name:coach.name, initials:coach.initials, username:u, coachId:coach.id};
+      hideLogin(); applyAuth(); goPage('coach');
+    } else { err.textContent = 'Incorrect coach credentials.'; }
+  }
+}
+function doLogout() {
+  currentUser = null;
+  applyAuth();
+  goPage('home');
+}
+function applyAuth() {
+  var isAdmin = currentUser && currentUser.role==='admin';
+  var isCoach = currentUser && currentUser.role==='coach';
+  document.getElementById('nav-admin').style.display = isAdmin ? '' : 'none';
+  document.getElementById('nav-coach').style.display = isCoach ? '' : 'none';
+  document.getElementById('nav-login-btn').style.display = currentUser ? 'none' : '';
+  if (isAdmin) {
+    document.getElementById('admAvatar').textContent = currentUser.initials;
+    document.getElementById('admUserLabel').textContent = currentUser.name;
+  }
+  if (isCoach) {
+    document.getElementById('coachAvatar').textContent = currentUser.initials;
+    document.getElementById('coachUserLabel').textContent = currentUser.name;
+    document.getElementById('coachPanelTitle').textContent = currentUser.name + "'s Schedule";
+  }
+}
+
+document.getElementById('roleAdmin').addEventListener('click', function(){ setLoginRole('admin'); });
+document.getElementById('roleCoach').addEventListener('click', function(){ setLoginRole('coach'); });
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('loginCancelBtn').addEventListener('click', hideLogin);
+document.getElementById('loginUser').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('loginPass').focus(); });
+document.getElementById('loginPass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+document.getElementById('adminLogoutBtn').addEventListener('click', doLogout);
+document.getElementById('coachLogoutBtn').addEventListener('click', doLogout);
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function goPage(page) {
+  if ((page==='admin') && (!currentUser || currentUser.role!=='admin')) { showLogin(); return; }
+  if ((page==='coach') && (!currentUser || currentUser.role!=='coach')) { showLogin(); return; }
+  document.querySelectorAll('.pg').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.nb-g').forEach(function(b){ b.classList.remove('on'); });
+  document.getElementById('pg-'+page).classList.add('on');
+  var nb = document.getElementById('nav-'+page);
+  if (nb) nb.classList.add('on');
+  curPage = page;
+  if (page==='home') renderHome();
+  if (page==='schedule') renderSchedulePage();
+  if (page==='book') initBook();
+  if (page==='admin') renderAdminBookings();
+  if (page==='coach') renderCoachPanel();
+  window.scrollTo(0,0);
+}
+
+document.getElementById('nav-home').addEventListener('click', function(){ goPage('home'); });
+document.getElementById('nav-schedule').addEventListener('click', function(){ goPage('schedule'); });
+document.getElementById('nav-book').addEventListener('click', function(){ goPage('book'); });
+document.getElementById('nav-about').addEventListener('click', function(){ goPage('about'); });
+document.getElementById('nav-admin').addEventListener('click', function(){ goPage('admin'); });
+document.getElementById('nav-coach').addEventListener('click', function(){ goPage('coach'); });
+document.getElementById('nav-cta').addEventListener('click', function(){ goPage('book'); });
+document.getElementById('nav-login-btn').addEventListener('click', showLogin);
+document.getElementById('heroCTA').addEventListener('click', function(){ goPage('book'); });
+document.getElementById('heroSchedule').addEventListener('click', function(){ goPage('schedule'); });
+document.getElementById('successDoneBtn').addEventListener('click', closeSuccess);
+document.getElementById('confirmBookBtn').addEventListener('click', submitBooking);
+document.getElementById('prevWeekBtn').addEventListener('click', function(){ if(weekOffset>0) weekOffset--; renderCal(); });
+document.getElementById('nextWeekBtn').addEventListener('click', function(){ weekOffset++; renderCal(); });
+document.getElementById('cmsModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+document.getElementById('bkSearch').addEventListener('input', function(){ filterBk(this.value); });
+document.getElementById('addCourtBtn').addEventListener('click', openCourtModal);
+document.getElementById('addLessonBtn').addEventListener('click', openLessonModal);
+document.getElementById('addCoachBtn').addEventListener('click', openCoachModal);
+document.getElementById('addPayBtn').addEventListener('click', openPayModal);
+document.getElementById('addClassBtn').addEventListener('click', function(){ openClassModal(null); });
+
+document.querySelectorAll('.adm-tab').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.adm-tab').forEach(function(b){ b.classList.remove('on'); });
+    document.querySelectorAll('.adm-pane').forEach(function(p){ p.classList.remove('on'); });
+    btn.classList.add('on');
+    var t = btn.getAttribute('data-tab');
+    document.getElementById('ap-'+t).classList.add('on');
+    if(t==='bookings') renderAdminBookings();
+    if(t==='schedule') renderScheduleTab();
+    if(t==='courts')   renderCourtsTab();
+    if(t==='lessons')  renderLessonsTab();
+    if(t==='coaches')  renderCoachesTab();
+    if(t==='payments') renderPaymentsTab();
+    if(t==='classes')  renderClassesTab();
+  });
+});
+
+// ═══════════════════════════════════════
+// HOME
+// ═══════════════════════════════════════
+function renderHome() {
+  var cities = [];
+  DB.courts.filter(function(c){ return c.active; }).forEach(function(c){
+    if(cities.indexOf(c.city)===-1) cities.push(c.city);
+  });
+  document.getElementById('locSummary').textContent = cities.join(' · ') || 'NYC · DC · Philly';
+  var g = document.getElementById('homePkgs');
+  g.innerHTML = '';
+  DB.lessons.filter(function(l){ return l.active; }).forEach(function(l,i){
+    var div = document.createElement('div');
+    div.className = 'pkg'+(i===0?' hot':'');
+    div.innerHTML = (i===0?'<div class="pkg-badge">Most Popular</div>':'')+
+      '<div class="pkg-name">'+esc(l.name)+'</div>'+
+      '<div class="pkg-desc">'+esc(l.desc)+'</div>'+
+      '<div class="pkg-price">$'+l.price+'<sub>/ session</sub>'+(l.origPrice?'<s>$'+l.origPrice+'</s>':'')+'</div>'+
+      '<button class="pkg-btn">Book Now</button>';
+    div.querySelector('.pkg-btn').addEventListener('click', function(){ selectPkgAndBook(l.id); });
+    g.appendChild(div);
+  });
+}
+function selectPkgAndBook(id) {
+  goPage('book');
+  setTimeout(function(){
+    var sel = document.getElementById('bPkg');
+    for(var i=0;i<sel.options.length;i++){
+      if(sel.options[i].getAttribute('data-id')==id){sel.selectedIndex=i;break;}
+    }
+    sumUpdate();
+  },80);
+}
+
+// ═══════════════════════════════════════
+// SCHEDULE PAGE (student-facing — class-based)
+// ═══════════════════════════════════════
+var schView = 'list';
+
+function renderSchedulePage() {
+  // Populate filter dropdowns
+  var fc = document.getElementById('schFilterCourt');
+  var fl = document.getElementById('schFilterLesson');
+  var fco = document.getElementById('schFilterCoach');
+  if (!fc) return;
+
+  fc.innerHTML = '<option value="">All Courts</option>';
+  DB.courts.filter(function(c){ return c.active; }).forEach(function(c){
+    fc.innerHTML += '<option value="'+c.id+'">'+esc(c.name)+'</option>';
+  });
+  fl.innerHTML = '<option value="">All Lessons</option>';
+  DB.lessons.filter(function(l){ return l.active; }).forEach(function(l){
+    fl.innerHTML += '<option value="'+l.id+'">'+esc(l.name)+'</option>';
+  });
+  fco.innerHTML = '<option value="">All Coaches</option>';
+  DB.coaches.filter(function(c){ return c.active; }).forEach(function(c){
+    fco.innerHTML += '<option value="'+c.id+'">'+esc(c.name)+'</option>';
+  });
+
+  fc.onchange = renderClassList;
+  fl.onchange = renderClassList;
+  fco.onchange = renderClassList;
+
+  document.getElementById('svtList').addEventListener('click', function(){
+    schView='list';
+    document.getElementById('svtList').classList.add('on');
+    document.getElementById('svtCourt').classList.remove('on');
+    renderClassList();
+  });
+  document.getElementById('svtCourt').addEventListener('click', function(){
+    schView='court';
+    document.getElementById('svtCourt').classList.add('on');
+    document.getElementById('svtList').classList.remove('on');
+    renderClassList();
+  });
+
+  renderClassList();
+}
+
+function getFilteredClasses() {
+  var today = new Date(); today.setHours(0,0,0,0);
+  var crtId = parseInt(document.getElementById('schFilterCourt').value)||0;
+  var lsnId = parseInt(document.getElementById('schFilterLesson').value)||0;
+  var cchId = parseInt(document.getElementById('schFilterCoach').value)||0;
+
+  return DB.classes.filter(function(cls){
+    if (!cls.active) return false;
+    var d = new Date(cls.date+'T00:00:00'); d.setHours(0,0,0,0);
+    if (d < today) return false;
+    if (crtId && cls.courtId !== crtId) return false;
+    if (lsnId && cls.lessonId !== lsnId) return false;
+    if (cchId && cls.coachId !== cchId) return false;
+    return true;
+  }).sort(function(a,b){ return a.date.localeCompare(b.date)||a.time.localeCompare(b.time); });
+}
+
+function renderClassList() {
+  var container = document.getElementById('scheduleClassList');
+  if (!container) return;
+  var classes = getFilteredClasses();
+
+  if (!classes.length) {
+    container.innerHTML = '<div class="no-slots" style="border:none;background:var(--w);border-radius:var(--r);padding:3rem;text-align:center;color:var(--g4)">No upcoming classes found for your filters.</div>';
+    return;
+  }
+
+  if (schView === 'list') {
+    renderClassListView(container, classes);
+  } else {
+    renderClassCourtView(container, classes);
+  }
+}
+
+function renderClassListView(container, classes) {
+  // Group by date
+  var groups = {};
+  var groupOrder = [];
+  classes.forEach(function(cls){
+    if (!groups[cls.date]) { groups[cls.date]=[]; groupOrder.push(cls.date); }
+    groups[cls.date].push(cls);
+  });
+
+  container.innerHTML = '';
+  groupOrder.forEach(function(date){
+    var d = new Date(date+'T00:00:00');
+    var label = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    var sec = document.createElement('div');
+    sec.className = 'day-section';
+    sec.innerHTML = '<div class="day-section-hd">'+esc(label)+'</div>';
+    groups[date].forEach(function(cls){
+      sec.appendChild(buildStudentClassCard(cls));
+    });
+    container.appendChild(sec);
+  });
+}
+
+function renderClassCourtView(container, classes) {
+  var courts = {};
+  var courtOrder = [];
+  classes.forEach(function(cls){
+    var court = DB.courts.find(function(c){ return c.id===cls.courtId; });
+    var key = court ? court.name : 'Unknown Court';
+    if (!courts[key]) { courts[key]=[]; courtOrder.push(key); }
+    courts[key].push(cls);
+  });
+
+  container.innerHTML = '';
+  courtOrder.forEach(function(cname){
+    var sec = document.createElement('div');
+    sec.className = 'day-section';
+    sec.innerHTML = '<div class="day-section-hd">📍 '+esc(cname)+'</div>';
+    courts[cname].forEach(function(cls){
+      sec.appendChild(buildStudentClassCard(cls));
+    });
+    container.appendChild(sec);
+  });
+}
+
+function buildStudentClassCard(cls) {
+  var court  = DB.courts.find(function(c){ return c.id===cls.courtId; });
+  var lesson = DB.lessons.find(function(l){ return l.id===cls.lessonId; });
+  var coach  = DB.coaches.find(function(c){ return c.id===cls.coachId; });
+  var rem = cls.maxSpots - cls.bookedSpots;
+  var isFull = rem <= 0;
+  var isLtd  = rem > 0 && rem <= 2;
+  var d = new Date(cls.date+'T00:00:00');
+  var DAYS2 = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var MONTHS2 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  var spotsCls = isFull ? 'cc-spots-full' : isLtd ? 'cc-spots-ltd' : 'cc-spots-ok';
+  var spotsLbl = isFull ? 'Sold Out' : rem+' spot'+(rem===1?'':'s')+' left';
+
+  var card = document.createElement('div');
+  card.className = 'sch-class-card'+(isFull?' full':'');
+
+  card.innerHTML =
+    '<div class="scc-date">'+
+      '<div class="scc-day">'+DAYS2[d.getDay()]+'</div>'+
+      '<div class="scc-num">'+d.getDate()+'</div>'+
+      '<div class="scc-mo">'+MONTHS2[d.getMonth()]+'</div>'+
+    '</div>'+
+    '<div class="scc-body">'+
+      '<div class="scc-title">'+esc(cls.title)+'</div>'+
+      '<div class="scc-tags">'+
+        '<span class="cc-tag cc-court">📍 '+esc(court?court.name:'TBA')+'</span>'+
+        '<span class="cc-tag cc-lesson">🎾 '+esc(lesson?lesson.name:'TBA')+'</span>'+
+        '<span class="cc-tag cc-coach">👤 '+esc(coach?coach.name:'TBA')+'</span>'+
+        '<span class="cc-tag cc-time">⏰ '+esc(cls.time)+' · '+cls.duration+'min</span>'+
+      '</div>'+
+      (cls.notes?'<div class="scc-desc">'+esc(cls.notes)+'</div>':'')+
+    '</div>'+
+    '<div class="scc-right">'+
+      '<div class="scc-price">$'+cls.price+'<span>/session</span></div>'+
+      '<div class="scc-spots '+spotsCls+'">'+esc(spotsLbl)+'</div>'+
+      '<button class="scc-book-btn'+(isFull?' full-btn':'')+'">'+
+        (isFull?'Sold Out':'Book Now')+'</button>'+
+    '</div>';
+
+  if (!isFull) {
+    card.querySelector('.scc-book-btn').addEventListener('click', function(){
+      preSelectClassBooking(cls);
+    });
+  }
+  return card;
+}
+
+function preSelectClassBooking(cls) {
+  goPage('book');
+  setTimeout(function(){
+    // Set court
+    var ctSel = document.getElementById('bCT');
+    var court = DB.courts.find(function(c){ return c.id===cls.courtId; });
+    if (court && ctSel) {
+      for (var i=0;i<ctSel.options.length;i++){
+        if (ctSel.options[i].textContent===court.name){ ctSel.selectedIndex=i; break; }
+      }
+    }
+    // Set package
+    var pkgSel = document.getElementById('bPkg');
+    if (pkgSel) {
+      for (var j=0;j<pkgSel.options.length;j++){
+        if (pkgSel.options[j].getAttribute('data-id')==cls.lessonId){ pkgSel.selectedIndex=j; break; }
+      }
+    }
+    // Set coach
+    var chSel = document.getElementById('bCH');
+    var coach = DB.coaches.find(function(c){ return c.id===cls.coachId; });
+    if (coach && chSel) {
+      for (var k=0;k<chSel.options.length;k++){
+        if (chSel.options[k].textContent===coach.name){ chSel.selectedIndex=k; break; }
+      }
+    }
+    // Set date
+    var clsDate = new Date(cls.date+'T00:00:00');
+    selDate = clsDate;
+    pickedSlot = cls.time;
+    // Adjust calendar week to show this date
+    var today = new Date(); today.setHours(0,0,0,0);
+    var diffDays = Math.round((clsDate-today)/(86400000));
+    weekOffset = Math.max(0, Math.floor(diffDays/7));
+    renderCal();
+    sumUpdate();
+    setTimeout(function(){ document.getElementById('pg-book').scrollIntoView({behavior:'smooth'}); }, 100);
+  }, 100);
+}
+
+// ═══════════════════════════════════════
+// BOOKING
+// ═══════════════════════════════════════
+function initBook() {
+  var lt = document.getElementById('ltBtns');
+  lt.innerHTML='';
+  DB.lessonTypes.forEach(function(t,i){
+    var btn=document.createElement('button');
+    btn.className='lt'+(i===0?' on':'');
+    btn.textContent=t;
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.lt').forEach(function(b){ b.classList.remove('on'); });
+      btn.classList.add('on'); selType=t; sumUpdate();
+    });
+    lt.appendChild(btn);
+  });
+  if(!selType) selType=DB.lessonTypes[0]||'';
+
+  var ps=document.getElementById('bPkg');
+  ps.innerHTML='';
+  DB.lessons.filter(function(l){ return l.active; }).forEach(function(l){
+    var opt=document.createElement('option');
+    opt.value=l.price; opt.setAttribute('data-id',l.id);
+    opt.textContent=l.name+' — $'+l.price;
+    ps.appendChild(opt);
+  });
+  ps.onchange=sumUpdate;
+
+  var ch=document.getElementById('bCH');
+  ch.innerHTML='<option>— Any Available —</option>';
+  DB.coaches.filter(function(c){ return c.active; }).forEach(function(c){
+    var opt=document.createElement('option'); opt.textContent=c.name; ch.appendChild(opt);
+  });
+  ch.onchange=function(){
+    var coach=DB.coaches.find(function(c){ return c.name===ch.value; });
+    if(coach){ document.getElementById('sumCoachAv').textContent=coach.initials; document.getElementById('sumCoachName').textContent=coach.name; }
+    else { document.getElementById('sumCoachAv').textContent='EF'; document.getElementById('sumCoachName').textContent='Esther Forrester'; }
+    sumUpdate();
+  };
+
+  var ct=document.getElementById('bCT');
+  ct.innerHTML='';
+  DB.courts.filter(function(c){ return c.active; }).forEach(function(c){
+    var opt=document.createElement('option'); opt.textContent=c.name; ct.appendChild(opt);
+  });
+  ct.onchange=sumUpdate;
+
+  var pg=document.getElementById('payGrid');
+  pg.innerHTML='';
+  DB.payments.filter(function(p){ return p.active; }).forEach(function(p,i){
+    var div=document.createElement('div');
+    div.className='po'+(i===0?' on':'');
+    div.textContent=p.name;
+    div.addEventListener('click',function(){
+      document.querySelectorAll('.po').forEach(function(e){ e.classList.remove('on'); });
+      div.classList.add('on'); selPayment=p.name;
+    });
+    pg.appendChild(div);
+  });
+  if(!selPayment){ var fp=DB.payments.find(function(p){ return p.active; }); selPayment=fp?fp.name:''; }
+  document.getElementById('bSK').onchange=sumUpdate;
+  renderCal(); sumUpdate();
+}
+
+function renderCal() {
+  var today=new Date(); today.setHours(0,0,0,0);
+  var base=new Date(today); base.setDate(today.getDate()+weekOffset*7);
+  var dow=base.getDay();
+  var monday=new Date(base); monday.setDate(base.getDate()-(dow===0?6:dow-1));
+  var endDay=new Date(monday.getTime()+6*86400000);
+  document.getElementById('weekLabel').textContent=MONTHS[monday.getMonth()]+' '+monday.getDate()+' – '+MONTHS[endDay.getMonth()]+' '+endDay.getDate();
+  var strip=document.getElementById('calStrip');
+  strip.innerHTML='';
+  for(var i=0;i<7;i++){
+    var d=new Date(monday.getTime()+i*86400000);
+    var dayKey=DAYS[d.getDay()];
+    var dayData=DB.schedule[dayKey];
+    var hasSlots=dayData.active&&dayData.slots.some(function(s){ return s.booked<s.max; });
+    var isPast=d<today;
+    var isOn=selDate&&selDate.toDateString()===d.toDateString();
+    var el=document.createElement('div');
+    el.className='cal-day'+(hasSlots&&!isPast?' has-slots':'')+(!dayData.active||isPast?' closed':'')+(isOn?' on':'');
+    el.innerHTML='<div class="d-name">'+dayKey+'</div><div class="d-num">'+d.getDate()+'</div><div class="d-dot"></div>';
+    if(dayData.active&&!isPast){
+      (function(date){ el.addEventListener('click',function(){ selDate=new Date(date); pickedSlot=''; renderCal(); sumUpdate(); }); })(d);
+    }
+    strip.appendChild(el);
+  }
+  renderSlots();
+}
+
+function renderSlots() {
+  var area=document.getElementById('slotsArea');
+  var lbl=document.getElementById('slotsLabel');
+  if(!selDate){ area.innerHTML='<div class="no-slots">Select a date above to see available time slots.</div>'; return; }
+  var dayKey=DAYS[selDate.getDay()];
+  var dayData=DB.schedule[dayKey];
+  if(!dayData||!dayData.active){ area.innerHTML='<div class="no-slots">No sessions on this day.</div>'; return; }
+  var avail=dayData.slots.filter(function(s){ return s.booked<s.max; });
+  if(!avail.length){ area.innerHTML='<div class="no-slots">All slots fully booked. Pick another date.</div>'; return; }
+  lbl.textContent='Available Time Slots — '+selDate.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  var grid=document.createElement('div');
+  grid.className='slots-grid';
+  dayData.slots.forEach(function(s){
+    var full=s.booked>=s.max;
+    var btn=document.createElement('div');
+    var rem=s.max-s.booked;
+    btn.className='slot'+(full?' full':'')+(pickedSlot===s.time?' on':'');
+    btn.innerHTML=esc(s.time)+(full?'<br><span style="font-size:.62rem;opacity:.65">Sold out</span>':rem<=2?'<br><span style="font-size:.62rem;color:#c9a84c">'+rem+' left</span>':'');
+    if(!full){
+      (function(time){ btn.addEventListener('click',function(){ document.querySelectorAll('.slot').forEach(function(sl){ sl.classList.remove('on'); }); btn.classList.add('on'); pickedSlot=time; sumUpdate(); }); })(s.time);
+    }
+    grid.appendChild(btn);
+  });
+  area.innerHTML=''; area.appendChild(grid);
+}
+
+function sumUpdate() {
+  var pkg=document.getElementById('bPkg');
+  if(!pkg) return;
+  var pkgTxt=pkg.options[pkg.selectedIndex]?pkg.options[pkg.selectedIndex].text:'—';
+  var pkgPrice=pkg.value||'0';
+  var lt=document.querySelector('.lt.on');
+  document.getElementById('sType').textContent=lt?lt.textContent:(selType||'—');
+  document.getElementById('sPkg').textContent=pkgTxt.split('—')[0].trim();
+  document.getElementById('sPrice').textContent='$'+pkgPrice;
+  var sk=document.getElementById('bSK');
+  document.getElementById('sSkill').textContent=sk?sk.value:'—';
+  var ch=document.getElementById('bCH');
+  document.getElementById('sCoach').textContent=ch?ch.value:'—';
+  var ct=document.getElementById('bCT');
+  document.getElementById('sCourt').textContent=ct?ct.value:'—';
+  document.getElementById('sDate').textContent=selDate?selDate.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}):'—';
+  document.getElementById('sTime').textContent=pickedSlot||'—';
+}
+
+function submitBooking() {
+  var fn=document.getElementById('bFN').value.trim();
+  var ln=document.getElementById('bLN').value.trim();
+  var em=document.getElementById('bEM').value.trim();
+  if(!fn||!ln||!em){ alert('Please enter your first name, last name, and email.'); return; }
+  if(!selDate){ alert('Please select a date.'); return; }
+  if(!pickedSlot){ alert('Please select a time slot.'); return; }
+  var w1=document.getElementById('waiverLiability');
+  var w2=document.getElementById('waiverPhoto');
+  var wErr=document.getElementById('waiverErr');
+  if(!w1||!w1.checked||!w2||!w2.checked){
+    if(wErr){ wErr.style.display='block'; wErr.scrollIntoView({behavior:'smooth',block:'center'}); }
+    return;
+  }
+  if(wErr) wErr.style.display='none';
+  var pkg=document.getElementById('bPkg');
+  var pkgTxt=pkg.options[pkg.selectedIndex].text;
+  var ref='BT-'+Math.floor(100000+Math.random()*900000);
+  var bk={
+    id:Date.now(),ref:ref,name:fn+' '+ln,email:em,
+    phone:document.getElementById('bPH').value,
+    type:selType,package:pkgTxt.split('—')[0].trim(),
+    price:parseInt(pkg.value)||0,
+    date:selDate.toISOString().split('T')[0],
+    time:pickedSlot,skill:document.getElementById('bSK').value,
+    coach:document.getElementById('bCH').value,
+    court:document.getElementById('bCT').value,
+    payment:selPayment,
+    notes:document.getElementById('bNT').value,
+    status:'Confirmed',createdAt:new Date().toISOString()
+  };
+  var dayKey=DAYS[selDate.getDay()];
+  var sl=DB.schedule[dayKey].slots.find(function(s){ return s.time===pickedSlot; });
+  if(sl) sl.booked++;
+  DB.bookings.push(bk);
+  document.getElementById('bkRef').textContent=ref;
+  document.getElementById('successModal').classList.add('on');
+}
+
+function closeSuccess() {
+  document.getElementById('successModal').classList.remove('on');
+  ['bFN','bLN','bEM','bPH','bNT'].forEach(function(id){ document.getElementById(id).value=''; });
+  var cw1=document.getElementById('waiverLiability'); if(cw1) cw1.checked=false;
+  var cw2=document.getElementById('waiverPhoto'); if(cw2) cw2.checked=false;
+  var cwe=document.getElementById('waiverErr'); if(cwe) cwe.style.display='none';
+  pickedSlot=''; selDate=null; renderCal(); sumUpdate();
+}
+
+// ═══════════════════════════════════════
+// COACH PANEL
+// ═══════════════════════════════════════
+function renderCoachPanel() {
+  if(!currentUser||currentUser.role!=='coach') return;
+  var coach=DB.coaches.find(function(c){ return c.id===currentUser.coachId; });
+  if(!coach) return;
+  var myBks=DB.bookings.filter(function(b){ return b.coach===coach.name; });
+  var today=new Date(); today.setHours(0,0,0,0);
+  var upcoming=myBks.filter(function(b){ return new Date(b.date+'T00:00:00')>=today; });
+  var todayBks=myBks.filter(function(b){ return b.date===today.toISOString().split('T')[0]; });
+
+  // Stats
+  document.getElementById('coachStats').innerHTML=
+    stat('My Total',myBks.length,'All lessons')+
+    stat('Upcoming',upcoming.length,'Future lessons')+
+    stat('Today',todayBks.length,'Today\'s classes')+
+    stat('Confirmed',myBks.filter(function(b){ return b.status==='Confirmed'; }).length,'Active');
+
+  // Filters
+  document.querySelectorAll('[data-filter]').forEach(function(btn){
+    btn.classList.toggle('on', btn.getAttribute('data-filter')===coachFilter);
+    btn.onclick=function(){
+      coachFilter=btn.getAttribute('data-filter');
+      document.querySelectorAll('[data-filter]').forEach(function(b){ b.classList.remove('on'); });
+      btn.classList.add('on');
+      renderCoachBookings(coach, myBks, today);
+    };
+  });
+  renderCoachBookings(coach, myBks, today);
+}
+
+function renderCoachBookings(coach, myBks, today) {
+  var list=document.getElementById('coachBookingsList');
+  var filtered;
+  if(coachFilter==='upcoming') filtered=myBks.filter(function(b){ return new Date(b.date+'T00:00:00')>=today; });
+  else if(coachFilter==='today') filtered=myBks.filter(function(b){ return b.date===today.toISOString().split('T')[0]; });
+  else filtered=myBks;
+  filtered.sort(function(a,b){ return a.date.localeCompare(b.date)||a.time.localeCompare(b.time); });
+  list.innerHTML='';
+  if(!filtered.length){
+    list.innerHTML='<div class="no-slots" style="border:none;padding:2rem;text-align:center;color:var(--g4)">No '+(coachFilter==='today'?'lessons today':'upcoming lessons')+'.</div>';
+    return;
+  }
+  filtered.forEach(function(b){
+    var d=new Date(b.date+'T00:00:00');
+    var isToday=b.date===today.toISOString().split('T')[0];
+    var sc=b.status==='Confirmed'?'b-ok':'b-pend';
+    var card=document.createElement('div');
+    card.className='coach-bk-card';
+    card.innerHTML=
+      '<div class="cbc-date">'+
+        '<div class="cbc-day">'+DAYS[d.getDay()]+'</div>'+
+        '<div class="cbc-num">'+d.getDate()+'</div>'+
+        '<div class="cbc-mo">'+MONTHS[d.getMonth()]+'</div>'+
+      '</div>'+
+      '<div class="cbc-info">'+
+        '<div class="cbc-name">'+esc(b.name)+'</div>'+
+        '<div class="cbc-sub">'+esc(b.type)+' · '+esc(b.package)+'</div>'+
+        '<div class="cbc-sub">📍 '+esc(b.court)+'</div>'+
+        '<div class="cbc-sub">⏰ '+esc(b.time)+(isToday?' <strong style="color:var(--gold)">TODAY</strong>':'')+'</div>'+
+      '</div>'+
+      '<div class="cbc-right">'+
+        '<span class="bdg '+sc+'">'+esc(b.status)+'</span>'+
+        '<div style="font-size:.72rem;color:var(--g4);margin-top:5px">'+esc(b.skill)+' level</div>'+
+        '<div style="font-size:.75rem;color:var(--g4);margin-top:2px">'+esc(b.ref)+'</div>'+
+      '</div>';
+    list.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════
+// ADMIN — BOOKINGS
+// ═══════════════════════════════════════
+function renderAdminBookings() {
+  renderStats(); renderBkTable(DB.bookings); buildQaForm();
+}
+function renderStats() {
+  var conf=DB.bookings.filter(function(b){ return b.status==='Confirmed'; });
+  var pend=DB.bookings.filter(function(b){ return b.status==='Pending'; });
+  var rev=conf.reduce(function(s,b){ return s+b.price; },0);
+  document.getElementById('statsRow').innerHTML=
+    stat('Total Bookings',DB.bookings.length,'All time')+
+    stat('Confirmed',conf.length,'Active')+
+    stat('Revenue','$'+rev.toLocaleString(),'Confirmed only')+
+    stat('Pending',pend.length,'Awaiting')+
+    stat('Courts',DB.courts.filter(function(c){ return c.active; }).length,'Active locations');
+}
+function stat(lbl,val,sub){ return '<div class="stat"><div class="sl">'+lbl+'</div><div class="sv">'+val+'</div><div class="ss">'+sub+'</div></div>'; }
+
+function renderBkTable(data) {
+  var tb=document.getElementById('bkBody');
+  if(!data.length){ tb.innerHTML='<tr><td colspan="10" class="empty">No bookings yet.</td></tr>'; return; }
+  tb.innerHTML='';
+  data.forEach(function(b){
+    var d=new Date(b.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    var sc=b.status==='Confirmed'?'b-ok':b.status==='Pending'?'b-pend':'b-can';
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td style="font-family:monospace;font-size:.72rem;color:var(--g4)">'+esc(b.ref)+'</td>'+
+      '<td><div style="font-weight:500">'+esc(b.name)+'</div><div style="font-size:.72rem;color:var(--g4)">'+esc(b.email)+'</div></td>'+
+      '<td>'+esc(b.package)+'</td>'+
+      '<td style="font-size:.78rem">'+esc(b.court||'—')+'</td>'+
+      '<td>'+d+'</td><td>'+esc(b.time)+'</td>'+
+      '<td style="font-size:.78rem">'+esc(b.coach||'—')+'</td>'+
+      '<td><span class="bdg" style="background:var(--gp);color:var(--gd)">'+esc(b.payment)+'</span></td>'+
+      '<td><span class="bdg '+sc+'">'+esc(b.status)+'</span></td>'+
+      '<td>'+
+        '<button class="ab" data-id="'+b.id+'" data-action="confirm" title="Confirm">✓</button>'+
+        '<button class="ab" data-id="'+b.id+'" data-action="pending" title="Pending">⏳</button>'+
+        '<button class="ab danger" data-id="'+b.id+'" data-action="delete" title="Delete">✕</button>'+
+      '</td>';
+    tb.appendChild(tr);
+  });
+  tb.querySelectorAll('.ab').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var id=parseInt(btn.getAttribute('data-id'));
+      var ac=btn.getAttribute('data-action');
+      if(ac==='confirm') chgStatus(id,'Confirmed');
+      else if(ac==='pending') chgStatus(id,'Pending');
+      else if(ac==='delete') delBk(id);
+    });
+  });
+}
+function filterBk(q) {
+  var f=DB.bookings.filter(function(b){ var s=q.toLowerCase(); return b.name.toLowerCase().indexOf(s)>-1||b.package.toLowerCase().indexOf(s)>-1||b.ref.toLowerCase().indexOf(s)>-1; });
+  renderBkTable(f);
+}
+function chgStatus(id,s){ var b=DB.bookings.find(function(x){ return x.id===id; }); if(b){ b.status=s; renderAdminBookings(); } }
+function delBk(id){ if(!confirm('Remove this booking?')) return; DB.bookings=DB.bookings.filter(function(x){ return x.id!==id; }); renderAdminBookings(); }
+
+function buildQaForm() {
+  var f=document.getElementById('qaForm');
+  var times=[];
+  Object.keys(DB.schedule).forEach(function(d){ DB.schedule[d].slots.forEach(function(s){ if(times.indexOf(s.time)===-1) times.push(s.time); }); });
+  times.sort();
+  f.innerHTML=
+    '<div class="qa-grid">'+
+      ifl('Student Name','qaName','text','Full name')+
+      ifl('Email','qaEmail','email','email@example.com')+
+    '</div>'+
+    sfl('Package','qaPkg', DB.lessons.filter(function(l){ return l.active; }).map(function(l){ return {v:l.price+'|'+l.name,t:l.name+' — $'+l.price}; }))+
+    '<div class="qa-grid">'+
+      ifl('Date','qaDate','date','')+
+      sfl('Time','qaTime', times.map(function(t){ return {v:t,t:t}; }))+
+    '</div>'+
+    sfl('Court','qaCourt', DB.courts.filter(function(c){ return c.active; }).map(function(c){ return {v:c.name,t:c.name}; }))+
+    sfl('Coach','qaCoach', [{v:'— Any —',t:'— Any Available —'}].concat(DB.coaches.filter(function(c){ return c.active; }).map(function(c){ return {v:c.name,t:c.name}; })))+
+    '<button class="add-btn" id="qaAddBtn" style="width:100%;margin-top:.6rem">Add Booking</button>';
+  f.querySelectorAll('input,select').forEach(function(el){ el.style.cssText='width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:\'DM Sans\',sans-serif;font-size:.9rem;color:var(--g9);background:var(--off);-webkit-appearance:none;appearance:none'; });
+  document.getElementById('qaAddBtn').addEventListener('click', qaAdd);
+  var today=new Date().toISOString().split('T')[0];
+  var qd=document.getElementById('qaDate'); if(qd) qd.min=today;
+}
+function ifl(lbl,id,type,ph){ return '<div><label style="display:block;font-size:.72rem;font-weight:600;color:var(--g6);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">'+lbl+'</label><input type="'+type+'" id="'+id+'" placeholder="'+esc(ph)+'"/></div>'; }
+function sfl(lbl,id,opts){ return '<div style="margin:.6rem 0"><label style="display:block;font-size:.72rem;font-weight:600;color:var(--g6);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">'+lbl+'</label><select id="'+id+'">'+opts.map(function(o){ return '<option value="'+esc(o.v)+'">'+esc(o.t)+'</option>'; }).join('')+'</select></div>'; }
+
+function qaAdd() {
+  var name=document.getElementById('qaName').value.trim();
+  var email=document.getElementById('qaEmail').value.trim();
+  var date=document.getElementById('qaDate').value;
+  var coach=document.getElementById('qaCoach').value;
+  if(!name||!email||!date){ alert('Please fill name, email, and date.'); return; }
+  var pv=document.getElementById('qaPkg').value.split('|');
+  DB.bookings.push({
+    id:Date.now(),ref:'BT-'+Math.floor(100000+Math.random()*900000),
+    name:name,email:email,phone:'',type:'Private Lesson',
+    package:pv[1],price:parseInt(pv[0])||0,
+    date:date,time:document.getElementById('qaTime').value,
+    skill:'—',coach:coach==='— Any —'?'—':coach,
+    court:document.getElementById('qaCourt').value,
+    payment:'—',notes:'',status:'Pending',createdAt:new Date().toISOString()
+  });
+  document.getElementById('qaName').value='';
+  document.getElementById('qaEmail').value='';
+  document.getElementById('qaDate').value='';
+  renderAdminBookings();
+}
+
+// ═══════════════════════════════════════
+// ADMIN — SCHEDULE
+// ═══════════════════════════════════════
+function renderScheduleTab() {
+  var body=document.getElementById('scheduleBody');
+  body.innerHTML='';
+  Object.keys(DB.schedule).forEach(function(day){
+    var data=DB.schedule[day];
+    var block=document.createElement('div');
+    block.className='day-block';
+    block.innerHTML=
+      '<div class="day-hd">'+
+        '<span class="day-lbl">'+day+'</span>'+
+        '<label class="tog"><input type="checkbox" '+(data.active?'checked':'')+'/><span class="tog-sl"></span></label>'+
+        '<span class="day-date-lbl">'+(data.active?data.slots.length+' slot(s)':'Closed')+'</span>'+
+        '<span style="color:var(--g4);font-size:.8rem">'+(data.active?'▼':'▶')+'</span>'+
+      '</div>'+
+      '<div class="day-body" id="dbody-'+day+'" style="'+(data.active?'':'display:none')+'">'+
+        '<div class="slot-chips" id="chips-'+day+'"></div>'+
+        '<div class="add-slot-row">'+
+          '<input type="time" id="ns-'+day+'" style="width:110px"/>'+
+          '<input type="number" id="nm-'+day+'" value="4" min="1" max="30" placeholder="Max" style="width:65px"/>'+
+          '<button class="add-btn-sm" data-day="'+day+'">+ Add slot</button>'+
+        '</div>'+
+      '</div>';
+    body.appendChild(block);
+    renderChips(day);
+    block.querySelector('.day-hd').addEventListener('click',function(e){
+      if(e.target.type==='checkbox') return;
+      var db=document.getElementById('dbody-'+day);
+      db.style.display=db.style.display==='none'?'':'none';
+    });
+    block.querySelector('input[type="checkbox"]').addEventListener('change',function(){
+      data.active=this.checked; renderScheduleTab();
+    });
+    block.querySelector('.add-btn-sm').addEventListener('click',function(){ addSlotForDay(day); });
+  });
+}
+function renderChips(day) {
+  var c=document.getElementById('chips-'+day); if(!c) return;
+  c.innerHTML='';
+  DB.schedule[day].slots.forEach(function(s,i){
+    var span=document.createElement('span');
+    span.className='sc'+(s.booked>=s.max?' full-sc':'');
+    span.innerHTML=esc(s.time)+(s.booked>0?' <em style="font-style:normal;opacity:.6">('+s.booked+'/'+s.max+')</em>':'')+' <button title="Remove">×</button>';
+    span.querySelector('button').addEventListener('click',function(){ removeSlotForDay(day,i); });
+    c.appendChild(span);
+  });
+}
+function addSlotForDay(day) {
+  var ti=document.getElementById('ns-'+day).value;
+  var mx=parseInt(document.getElementById('nm-'+day).value)||4;
+  if(!ti){ alert('Pick a time.'); return; }
+  var p=ti.split(':'),hr=parseInt(p[0]),mn=p[1],ap=hr>=12?'PM':'AM',h12=hr%12||12;
+  var tStr=h12+':'+mn+' '+ap;
+  if(DB.schedule[day].slots.find(function(s){ return s.time===tStr; })){ alert('Slot already exists.'); return; }
+  DB.schedule[day].slots.push({time:tStr,max:mx,booked:0});
+  DB.schedule[day].slots.sort(function(a,b){
+    function t24(t){ var p=t.split(' '),hm=p[0].split(':'); return (parseInt(hm[0])%12)+(p[1]==='PM'?12:0)+parseInt(hm[1])/60; }
+    return t24(a.time)-t24(b.time);
+  });
+  renderScheduleTab();
+}
+function removeSlotForDay(day,idx){
+  if(!confirm('Remove slot?')) return;
+  DB.schedule[day].slots.splice(idx,1); renderScheduleTab();
+}
+
+// ═══════════════════════════════════════
+// ADMIN — COURTS
+// ═══════════════════════════════════════
+function renderCourtsTab() {
+  var list=document.getElementById('courtsList');
+  list.innerHTML='';
+  DB.courts.forEach(function(c){
+    var div=document.createElement('div'); div.className='court-item';
+    div.innerHTML='<div class="court-dot" style="background:'+(c.active?'var(--gl)':'var(--g4)')+'"></div>'+
+      '<div class="court-info"><div class="court-name">'+esc(c.name)+'</div><div class="court-addr">'+esc(c.address)+'</div>'+
+      '<div class="court-meta"><span class="tag">'+esc(c.city)+'</span><span class="tag">'+esc(c.surfaces)+'</span>'+(c.active?'':'<span class="tag tag-amber">Inactive</span>')+'</div></div>'+
+      '<div style="display:flex;gap:3px">'+
+        '<button class="icon-btn" data-a="edit">✎</button>'+
+        '<button class="icon-btn" data-a="tog">'+(c.active?'⊘':'✓')+'</button>'+
+        '<button class="icon-btn" data-a="del">✕</button>'+
+      '</div>';
+    div.querySelector('[data-a="edit"]').addEventListener('click',function(){ editCourt(c.id); });
+    div.querySelector('[data-a="tog"]').addEventListener('click',function(){ c.active=!c.active; renderCourtsTab(); });
+    div.querySelector('[data-a="del"]').addEventListener('click',function(){ if(!confirm('Delete?')) return; DB.courts=DB.courts.filter(function(x){ return x.id!==c.id; }); renderCourtsTab(); });
+    list.appendChild(div);
+  });
+  var map=document.getElementById('courtsMap');
+  map.innerHTML='<p style="margin-bottom:.75rem;font-weight:500;color:var(--gd)">Active ('+DB.courts.filter(function(c){ return c.active; }).length+')</p>';
+  DB.courts.filter(function(c){ return c.active; }).forEach(function(c){
+    map.innerHTML+='<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--g2)"><div style="width:8px;height:8px;border-radius:50%;background:var(--gl);flex-shrink:0"></div><div><div style="font-size:.85rem;font-weight:500">'+esc(c.name)+'</div><div style="font-size:.75rem;color:var(--g4)">'+esc(c.address)+'</div></div></div>';
+  });
+}
+function editCourt(id){
+  var c=DB.courts.find(function(x){ return x.id===id; });
+  openModal('<h3>Edit Court</h3>'+mfl('Name','ec-name',c.name)+mfl('Address','ec-addr',c.address)+mfl('City','ec-city',c.city)+mfl('Surface','ec-surf',c.surfaces)+
+    '<div class="modal-btns"><button class="m-save" id="mSave">Save</button><button class="m-cancel" id="mCancel">Cancel</button></div>');
+  document.getElementById('mSave').addEventListener('click',function(){ c.name=document.getElementById('ec-name').value; c.address=document.getElementById('ec-addr').value; c.city=document.getElementById('ec-city').value; c.surfaces=document.getElementById('ec-surf').value; closeModal(); renderCourtsTab(); });
+  document.getElementById('mCancel').addEventListener('click',closeModal);
+}
+function openCourtModal(){
+  openModal('<h3>Add Court</h3>'+mfl('Name','nc-name','','e.g. Central Park Court')+mfl('Address','nc-addr','','Full address')+mfl('City','nc-city','','e.g. NYC')+mfl('Surface','nc-surf','','e.g. Hard Court')+
+    '<div class="modal-btns"><button class="m-save" id="mSave">Add</button><button class="m-cancel" id="mCancel">Cancel</button></div>');
+  document.getElementById('mSave').addEventListener('click',function(){ var n=document.getElementById('nc-name').value.trim(); if(!n){ alert('Name required.'); return; } DB.courts.push({id:Date.now(),name:n,address:document.getElementById('nc-addr').value,city:document.getElementById('nc-city').value,surfaces:document.getElementById('nc-surf').value,active:true}); closeModal(); renderCourtsTab(); });
+  document.getElementById('mCancel').addEventListener('click',closeModal);
+}
+
+// ═══════════════════════════════════════
+// ADMIN — LESSONS
+// ═══════════════════════════════════════
+function renderLessonsTab(){
+  var list=document.getElementById('lessonsList'); list.innerHTML='';
+  DB.lessons.forEach(function(l){
+    var div=document.createElement('div'); div.className='lesson-item';
+    div.innerHTML='<div class="lesson-info"><div class="lesson-name">'+esc(l.name)+(l.active?'':'<span style="background:#fdecea;color:#a02020;padding:2px 7px;border-radius:50px;font-size:.65rem;margin-left:6px">Inactive</span>')+'</div><div class="lesson-price">$'+l.price+(l.origPrice?' <s style="color:var(--g4)">$'+l.origPrice+'</s>':'')+' · '+esc(l.type)+'</div><div class="lesson-desc">'+esc(l.desc)+'</div></div>'+
+      '<div style="display:flex;gap:3px;flex-shrink:0"><button class="icon-btn" data-a="edit">✎</button><button class="icon-btn" data-a="tog">'+(l.active?'⊘':'✓')+'</button><button class="icon-btn" data-a="del">✕</button></div>';
+    div.querySelector('[data-a="edit"]').addEventListener('click',function(){ editLesson(l.id); });
+    div.querySelector('[data-a="tog"]').addEventListener('click',function(){ l.active=!l.active; renderLessonsTab(); });
+    div.querySelector('[data-a="del"]').addEventListener('click',function(){ if(!confirm('Delete?')) return; DB.lessons=DB.lessons.filter(function(x){ return x.id!==l.id; }); renderLessonsTab(); });
+    list.appendChild(div);
+  });
+  var tl=document.getElementById('lessonTypesList'); tl.innerHTML='<div style="font-size:.82rem;color:var(--g6);margin-bottom:.75rem">Lesson type buttons on the booking page.</div>';
+  DB.lessonTypes.forEach(function(t,i){
+    var row=document.createElement('div'); row.style='display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--g2)';
+    row.innerHTML='<span style="font-size:.88rem;font-weight:500">'+esc(t)+'</span><button class="icon-btn">✕</button>';
+    row.querySelector('.icon-btn').addEventListener('click',function(){ DB.lessonTypes.splice(i,1); renderLessonsTab(); });
+    tl.appendChild(row);
+  });
+  var ar=document.createElement('div'); ar.style='display:flex;gap:6px;margin-top:.75rem';
+  ar.innerHTML='<input id="newLT" placeholder="New type..." style="flex:1;padding:7px 10px;border:1px solid var(--g2);border-radius:var(--rs);font-family:\'DM Sans\',sans-serif;font-size:.82rem"/><button class="add-btn-sm" id="addLTBtn">+ Add</button>';
+  tl.appendChild(ar);
+  document.getElementById('addLTBtn').addEventListener('click',function(){ var t=document.getElementById('newLT').value.trim(); if(!t) return; DB.lessonTypes.push(t); document.getElementById('newLT').value=''; renderLessonsTab(); });
+}
+function editLesson(id){
+  var l=DB.lessons.find(function(x){ return x.id===id; });
+  openModal('<h3>Edit Lesson</h3>'+mfl('Name','el-name',l.name)+mfl('Price ($)','el-price',l.price,'','number')+mfl('Original Price (sale)','el-orig',l.origPrice||'','','number')+mfl('Type','el-type',l.type)+mfta('Description','el-desc',l.desc)+
+    '<div class="modal-btns"><button class="m-save" id="mSave">Save</button><button class="m-cancel" id="mCancel">Cancel</button></div>');
+  document.getElementById('mSave').addEventListener('click',function(){ l.name=document.getElementById('el-name').value; l.price=parseInt(document.getElementById('el-price').value)||l.price; l.origPrice=parseInt(document.getElementById('el-orig').value)||null; l.type=document.getElementById('el-type').value; l.desc=document.getElementById('el-desc').value; closeModal(); renderLessonsTab(); });
+  document.getElementById('mCancel').addEventListener('click',closeModal);
+}
+function openLessonModal(){
+  openModal('<h3>Add Lesson Package</h3>'+mfl('Name','nl-name','','e.g. Junior Clinic')+mfl('Price ($)','nl-price','','60','number')+mfl('Original Price (optional)','nl-orig','','','number')+mfl('Type','nl-type','','e.g. Group')+mfta('Description','nl-desc','','Short description...')+
+    '<div class="modal-btns"><button class="m-save" id="mSave">Add</button><button class="m-cancel" id="mCancel">Cancel</button></div>');
+  document.getElementById('mSave').addEventListener('click',function(){ var n=document.getElementById('nl-name').value.trim(); if(!n){ alert('Name required.'); return; } DB.lessons.push({id:Date.now(),name:n,price:parseInt(document.getElementById('nl-price').value)||0,origPrice:parseInt(document.getElementById('nl-orig').value)||null,type:document.getElementById('nl-type').value,desc:document.getElementById('nl-desc').value,active:true}); closeModal(); renderLessonsTab(); });
+  document.getElementById('mCancel').addEventListener('click',closeModal);
+}
+
+// ═══════════════════════════════════════
+// ADMIN — COACHES
+// ═══════════════════════════════════════
+function renderCoachesTab(){
+  var list=document.getElementById('coachesList'); list.innerHTML='';
+  DB.coaches.forEach(function(c){
+    var div=document.createElement('div'); div.className='lesson-item';
+    div.innerHTML='<div style="width:38px;height:38px;border-radius:50%;background:var(--gp);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:600;color:var(--gd);flex-shrink:0">'+esc(c.initials)+'</div>'+
+      '<div class="lesson-info"><div class="lesson-name">'+esc(c.name)+(c.active?'':'<span style="background:#fdecea;color:#a02020;padding:2px 7px;border-radius:50px;font-size:.65rem;margin-left:6px">Inactive</span>')+'</div>'+
+      '<div class="lesson-price">'+esc(c.title)+'</div>'+
+      '<div class="lesson-desc">'+esc(c.bio)+'</div>'+
+      '<div style="font-size:.75rem;color:var(--g4);margin-top:3px">Login: <strong>'+esc(c.username)+'</strong> / '+esc(c.password)+'</div></div>'+
+      '<div style="display:flex;gap:3px;flex-shrink:0"><button class="icon-btn" data-a="edit">✎</button><button class="icon-btn" data-a="tog">'+(c.active?'⊘':'✓')+'</button><button class="icon-btn" data-a="del">✕</button></div>';
+    div.querySelector('[data-a="edit"]').addEventListener('click',function(){ editCoach(c.id); });
+    div.querySelector('[data-a="tog"]').addEventListener('click',function(){ c.active=!c.active; renderCoachesTab(); });
+    div.querySelector('[data-a="del"]').addEventListener('click',function(){ if(!confirm('Delete?')) return; DB.coaches=DB.coaches.filter(function(x){ return x.id!==c.id; }); renderCoachesTab(); });
+    list.appendChild(div);
+  });
+}
+function editCoach(id){
+  var c=DB.coaches.find(function(x){ return x.id===id; });
+  openModal('<h3>Edit Coach</h3>'+mfl('Name','ec2-name',c.name)+mfl('Initials','ec2-init',c.initials)+mfl('Title','ec2-title',c.title)+mfta('Bio','ec2-bio',c.bio)+mfl('Username','ec2-user',c.username)+mfl('Password','ec2-pass',c.password)+
+    '<div class="modal-btns"><button class="m-save" id="mSave">Save</button><button class="m-cancel" id="mCancel">Cancel</button></div>');
+  document.getElementById('mSave').addEventListener('click',function(){ c.name=document.getElementById('ec2-name').value; c.initials=document.getElementById('ec2-init').value.toUpperCase().slice(0,2); c.title=document.getElementById('ec2-title').value; c.bio=document.getElementById('ec2-bio').value; c.username=document.getElementById('ec2-user').value; c.password=document.getElementById('ec2-pass').value; closeModal(); renderCoachesTab(); });
+  document.getElementById('mCancel').addEventListener('click',closeModal);
+}
+function openCoachModal(){
+  openModal('<h3>Add Coach</h3>'+mfl('Name','nc2-name','','e.g. Coach Ana Cruz')+mfl('Initials','nc2-init','','AC')+mfl('Title','nc2-title','','e.g. Junior Coach')+mfta('Bio','nc2-bio','','Short bio...')+mfl('Username','nc2-user','','e.g. ana')+mfl('Password','nc2-pass','','coach password')+
+    '<div class="modal-btns"><button class="m-save" id="mSave">Add Coach</button><button class="m-cancel" id="mCancel">Cancel</button></div>');
+  document.getElementById('mSave').addEventListener('click',function(){ var n=document.getElementById('nc2-name').value.trim(); if(!n){ alert('Name required.'); return; } DB.coaches.push({id:Date.now(),name:n,initials:document.getElementById('nc2-init').value.toUpperCase().slice(0,2)||'??',title:document.getElementById('nc2-title').value,bio:document.getElementById('nc2-bio').value,username:document.getElementById('nc2-user').value,password:document.getElementById('nc2-pass').value,active:true}); closeModal(); renderCoachesTab(); });
+  document.getElementById('mCancel').addEventListener('click',closeModal);
+}
+
+// ═══════════════════════════════════════
+// ADMIN — CLASSES (Schedule Builder)
+// ═══════════════════════════════════════
+function renderClassesTab() {
+  var list = document.getElementById('classesList');
+  list.innerHTML = '';
+  var today = new Date(); today.setHours(0,0,0,0);
+  var active   = DB.classes.filter(function(c){ return c.active && new Date(c.date+'T00:00:00') >= today; });
+  var inactive = DB.classes.filter(function(c){ return !c.active || new Date(c.date+'T00:00:00') < today; });
+  function renderGroup(title, arr) {
+    if (!arr.length) return;
+    var sec = document.createElement('div');
+    sec.innerHTML = '<div class="day-section-hd" style="margin-bottom:.6rem">'+title+' ('+arr.length+')</div>';
+    arr.forEach(function(cls){ sec.appendChild(buildAdminClassCard(cls)); });
+    list.appendChild(sec);
+  }
+  if (!DB.classes.length) {
+    list.innerHTML = '<div class="no-classes">No classes yet. Click "+ Create Class" to add your first scheduled class.</div>';
+    return;
+  }
+  renderGroup('Upcoming / Active', active);
+  if (inactive.length) renderGroup('Past / Inactive', inactive);
+}
+
+function buildAdminClassCard(cls) {
+  var court  = DB.courts.find(function(c){ return c.id===cls.courtId; });
+  var lesson = DB.lessons.find(function(l){ return l.id===cls.lessonId; });
+  var coach  = DB.coaches.find(function(c){ return c.id===cls.coachId; });
+  var rem = cls.maxSpots - cls.bookedSpots;
+  var isFull = rem <= 0;
+  var spotsCls = isFull?'cc-spots-full':rem<=2?'cc-spots-ltd':'cc-spots-ok';
+  var d = new Date(cls.date+'T00:00:00');
+  var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var DA=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var card = document.createElement('div');
+  card.className = 'class-card'+(cls.active?'':' inactive');
+  card.innerHTML =
+    '<div class="class-card-top">'+
+      '<div style="flex:1">'+
+        '<div class="class-card-title">'+esc(cls.title)+'</div>'+
+        '<div class="class-card-sub">'+DA[d.getDay()]+', '+MO[d.getMonth()]+' '+d.getDate()+' &middot; '+esc(cls.time)+' &middot; '+cls.duration+' min</div>'+
+      '</div>'+
+      '<div class="class-card-actions">'+
+        '<button class="ab" data-a="edit">&#9998; Edit</button>'+
+        '<button class="ab" data-a="tog">'+(cls.active?'&#8856;':'&#10003;')+'</button>'+
+        '<button class="ab danger" data-a="del">&#10005;</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="class-card-meta">'+
+      '<span class="cc-tag cc-court">'+esc(court?court.name:'No court')+'</span>'+
+      '<span class="cc-tag cc-lesson">'+esc(lesson?lesson.name:'No lesson')+'</span>'+
+      '<span class="cc-tag cc-coach">'+esc(coach?coach.name:'Unassigned')+'</span>'+
+      '<span class="cc-tag cc-time">$'+cls.price+'</span>'+
+      '<span class="cc-tag '+spotsCls+'">'+cls.bookedSpots+'/'+cls.maxSpots+' booked</span>'+
+      (cls.active?'':'<span class="cc-tag cc-inactive">Inactive</span>')+
+    '</div>'+
+    (cls.notes?'<div style="font-size:.75rem;color:var(--g4);margin-top:.5rem">'+esc(cls.notes)+'</div>':'');
+  card.querySelector('[data-a="edit"]').addEventListener('click', function(){ openClassModal(cls.id); });
+  card.querySelector('[data-a="tog"]').addEventListener('click', function(){ cls.active=!cls.active; renderClassesTab(); });
+  card.querySelector('[data-a="del"]').addEventListener('click', function(){
+    if (!confirm('Delete this class?')) return;
+    DB.classes = DB.classes.filter(function(x){ return x.id!==cls.id; });
+    renderClassesTab();
+  });
+  return card;
+}
+
+function openClassModal(editId) {
+  var isEdit = !!editId;
+  var cls = isEdit ? DB.classes.find(function(x){ return x.id===editId; }) : null;
+  var v = function(f){ return cls ? (cls[f]!==undefined?cls[f]:'') : ''; };
+  var today2 = new Date().toISOString().split('T')[0];
+  var courtOpts = DB.courts.filter(function(c){ return c.active; }).map(function(c){
+    return '<option value="'+c.id+'"'+(cls&&cls.courtId===c.id?' selected':'')+'>'+esc(c.name)+'</option>';
+  }).join('');
+  var lessonOpts = DB.lessons.filter(function(l){ return l.active; }).map(function(l){
+    return '<option value="'+l.id+'"'+(cls&&cls.lessonId===l.id?' selected':'')+'>'+esc(l.name)+' - $'+l.price+'</option>';
+  }).join('');
+  var coachOpts = '<option value="">-- Assign coach --</option>'+DB.coaches.filter(function(c){ return c.active; }).map(function(c){
+    return '<option value="'+c.id+'"'+(cls&&cls.coachId===c.id?' selected':'')+'>'+esc(c.name)+'</option>';
+  }).join('');
+  var durOpts = [30,45,60,90,120].map(function(d){
+    return '<option value="'+d+'"'+(cls&&cls.duration===d?' selected':'')+'>'+d+' min</option>';
+  }).join('');
+
+  openModal(
+    '<h3>'+(isEdit?'Edit Class':'Create New Class')+'</h3>'+
+    mfl('Class Title','cm-title',v('title'),'e.g. Morning Private Lesson')+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">'+
+      '<div class="fl"><label>Court Location</label><select id="cm-court" style="width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:DM Sans,sans-serif;font-size:.9rem;color:var(--g9);background:var(--off);-webkit-appearance:none">'+courtOpts+'</select></div>'+
+      '<div class="fl"><label>Lesson / Package</label><select id="cm-lesson" style="width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:DM Sans,sans-serif;font-size:.9rem;color:var(--g9);background:var(--off);-webkit-appearance:none">'+lessonOpts+'</select></div>'+
+    '</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">'+
+      '<div class="fl"><label>Date</label><input type="date" id="cm-date" value="'+esc(String(v('date')))+'" min="'+today2+'" style="width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:DM Sans,sans-serif;font-size:.9rem"/></div>'+
+      '<div class="fl"><label>Time</label><input type="time" id="cm-time" value="'+(cls?to24(cls.time):'09:00')+'" style="width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:DM Sans,sans-serif;font-size:.9rem"/></div>'+
+    '</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:.75rem">'+
+      '<div class="fl"><label>Duration</label><select id="cm-dur" style="width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:DM Sans,sans-serif;font-size:.9rem;color:var(--g9);background:var(--off);-webkit-appearance:none">'+durOpts+'</select></div>'+
+      '<div class="fl"><label>Max Spots</label><input type="number" id="cm-max" value="'+(v('maxSpots')||4)+'" min="1" max="50" style="width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:DM Sans,sans-serif;font-size:.9rem"/></div>'+
+      '<div class="fl"><label>Price ($)</label><input type="number" id="cm-price" value="'+(v('price')||80)+'" min="0" style="width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:DM Sans,sans-serif;font-size:.9rem"/></div>'+
+    '</div>'+
+    '<div class="fl" style="margin-bottom:.75rem"><label>Assign Coach</label><select id="cm-coach" style="width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:DM Sans,sans-serif;font-size:.9rem;color:var(--g9);background:var(--off);-webkit-appearance:none">'+coachOpts+'</select></div>'+
+    mfta('Notes / Description','cm-notes',v('notes'),'e.g. Beginner friendly, bring your racket...')+
+    '<div class="modal-btns">'+
+      '<button class="m-save" id="mSave">'+(isEdit?'Save Changes':'Create Class')+'</button>'+
+      '<button class="m-cancel" id="mCancel">Cancel</button>'+
+    '</div>'
+  );
+
+  document.getElementById('cm-lesson').addEventListener('change', function(){
+    var lid = parseInt(this.value);
+    var l = DB.lessons.find(function(x){ return x.id===lid; });
+    if (l) document.getElementById('cm-price').value = l.price;
+  });
+  document.getElementById('mCancel').addEventListener('click', closeModal);
+  document.getElementById('mSave').addEventListener('click', function(){
+    var title = document.getElementById('cm-title').value.trim();
+    if (!title) { alert('Please enter a class title.'); return; }
+    var dateVal = document.getElementById('cm-date').value;
+    if (!dateVal) { alert('Please select a date.'); return; }
+    var timeStr = from24(document.getElementById('cm-time').value);
+    var courtId  = parseInt(document.getElementById('cm-court').value)||0;
+    var lessonId = parseInt(document.getElementById('cm-lesson').value)||0;
+    var coachId  = parseInt(document.getElementById('cm-coach').value)||0;
+    var dur   = parseInt(document.getElementById('cm-dur').value)||60;
+    var maxSp = parseInt(document.getElementById('cm-max').value)||4;
+    var price = parseInt(document.getElementById('cm-price').value)||0;
+    var notes = document.getElementById('cm-notes').value;
+    if (isEdit) {
+      cls.title=title; cls.courtId=courtId; cls.lessonId=lessonId; cls.coachId=coachId;
+      cls.date=dateVal; cls.time=timeStr; cls.duration=dur; cls.maxSpots=maxSp; cls.price=price; cls.notes=notes;
+    } else {
+      DB.classes.push({ id:Date.now(), title:title, courtId:courtId, lessonId:lessonId, coachId:coachId,
+        date:dateVal, time:timeStr, duration:dur, maxSpots:maxSp, bookedSpots:0, price:price, notes:notes, active:true });
+    }
+    closeModal(); renderClassesTab();
+  });
+}
+
+function to24(t12) {
+  if (!t12) return '09:00';
+  var p=t12.split(' '), hm=p[0].split(':'), h=parseInt(hm[0]), m=hm[1]||'00', ap=p[1]||'AM';
+  if (ap==='PM'&&h!==12) h+=12;
+  if (ap==='AM'&&h===12) h=0;
+  return (h<10?'0':'')+h+':'+m;
+}
+function from24(t24) {
+  if (!t24) return '9:00 AM';
+  var p=t24.split(':'), h=parseInt(p[0]), m=p[1]||'00', ap=h>=12?'PM':'AM', h12=h%12||12;
+  return h12+':'+m+' '+ap;
+}
+
+// ═══════════════════════════════════════
+// ADMIN — PAYMENTS
+// ═══════════════════════════════════════
+function renderPaymentsTab(){
+  var list=document.getElementById('payMethodsList'); list.innerHTML='';
+  DB.payments.forEach(function(p){
+    var div=document.createElement('div'); div.className='lesson-item';
+    div.innerHTML='<div class="lesson-info"><div class="lesson-name">'+esc(p.name)+(p.active?'':'<span style="background:#fdecea;color:#a02020;padding:2px 7px;border-radius:50px;font-size:.65rem;margin-left:6px">Inactive</span>')+'</div></div>'+
+      '<div style="display:flex;gap:3px"><button class="icon-btn" data-a="tog">'+(p.active?'⊘':'✓')+'</button><button class="icon-btn" data-a="del">✕</button></div>';
+    div.querySelector('[data-a="tog"]').addEventListener('click',function(){ p.active=!p.active; renderPaymentsTab(); });
+    div.querySelector('[data-a="del"]').addEventListener('click',function(){ if(!confirm('Delete?')) return; DB.payments=DB.payments.filter(function(x){ return x.id!==p.id; }); renderPaymentsTab(); });
+    list.appendChild(div);
+  });
+}
+function openPayModal(){
+  openModal('<h3>Add Payment Method</h3>'+mfl('Name','np-name','','e.g. PayPal')+
+    '<div class="modal-btns"><button class="m-save" id="mSave">Add</button><button class="m-cancel" id="mCancel">Cancel</button></div>');
+  document.getElementById('mSave').addEventListener('click',function(){ var n=document.getElementById('np-name').value.trim(); if(!n) return; DB.payments.push({id:Date.now(),name:n,active:true}); closeModal(); renderPaymentsTab(); });
+  document.getElementById('mCancel').addEventListener('click',closeModal);
+}
+
+// ═══════════════════════════════════════
+// MODAL HELPERS
+// ═══════════════════════════════════════
+function openModal(html){ document.getElementById('cmsModalInner').innerHTML=html; document.getElementById('cmsModal').classList.add('on'); }
+function closeModal(){ document.getElementById('cmsModal').classList.remove('on'); }
+function mfl(lbl,id,val,ph,type){ return '<div class="fl"><label>'+lbl+'</label><input type="'+(type||'text')+'" id="'+id+'" value="'+esc(String(val===undefined?'':val))+'" placeholder="'+esc(ph||'')+'"/></div>'; }
+function mfta(lbl,id,val,ph){ return '<div class="fl"><label>'+lbl+'</label><textarea id="'+id+'" placeholder="'+esc(ph||'')+'">'+esc(val||'')+'</textarea></div>'; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+applyAuth();
+renderHome();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+</body>
+</html>
