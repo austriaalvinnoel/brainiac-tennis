@@ -14,7 +14,7 @@ const mime = {
   '.ico':  'image/x-icon',
 };
 
-const root = __dirname;
+const root = 'C:/Users/lindol/Downloads/brainiac mobile app';
 
 http.createServer(function(req, res) {
   var url = req.url === '/' ? '/brainiac-tennis-app.html' : req.url;
