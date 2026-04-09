@@ -382,6 +382,47 @@ tr:hover td{background:var(--gu)}
   .slots-grid{grid-template-columns:repeat(3,1fr)}
   .cms-grid{grid-template-columns:1fr}
 }
+/* ── STUDENT AUTH SCREENS ── */
+.sauth-screen{display:none;position:fixed;inset:0;background:var(--gd);z-index:1000;align-items:flex-start;justify-content:center;padding:1.5rem;overflow-y:auto}
+.sauth-screen.on{display:flex}
+.sauth-box{background:var(--w);border-radius:20px;padding:2rem;max-width:500px;width:100%;margin:auto}
+.sauth-box h2{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--gd);margin-bottom:.25rem;text-align:center}
+.sauth-box .sauth-sub{font-size:.85rem;color:var(--g6);margin-bottom:1.5rem;text-align:center}
+.sauth-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.sauth-grid .fl{margin-bottom:0}
+.sauth-full{grid-column:1/-1}
+.sauth-fl{margin-bottom:.75rem}
+.sauth-fl label{display:block;font-size:.72rem;font-weight:600;color:var(--g6);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.sauth-fl input,.sauth-fl select{width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--g9);background:var(--off);transition:border-color .15s;-webkit-appearance:none;appearance:none}
+.sauth-fl input:focus,.sauth-fl select:focus{outline:none;border-color:var(--gl);background:var(--w)}
+.sauth-btn{width:100%;padding:12px;background:var(--gd);color:#fff;border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:.75rem;transition:background .2s}
+.sauth-btn:hover{background:var(--gm)}
+.sauth-err{color:var(--red);font-size:.82rem;margin-top:.5rem;min-height:1.2rem;text-align:center}
+.sauth-link{background:none;border:none;color:var(--gl);font-family:'DM Sans',sans-serif;font-size:.85rem;cursor:pointer;text-decoration:underline}
+.sauth-link:hover{color:var(--gm)}
+.sauth-switch{text-align:center;margin-top:1rem;font-size:.85rem;color:var(--g6)}
+.photo-upload-wrap{display:flex;align-items:center;gap:1rem;padding:.75rem;border:1.5px dashed var(--g2);border-radius:var(--rs);cursor:pointer;transition:border-color .15s}
+.photo-upload-wrap:hover{border-color:var(--gl)}
+.photo-preview{width:52px;height:52px;border-radius:50%;background:var(--gp);display:flex;align-items:center;justify-content:center;font-size:1.4rem;overflow:hidden;flex-shrink:0}
+.photo-preview img{width:100%;height:100%;object-fit:cover}
+.photo-upload-label{font-size:.82rem;color:var(--g6);line-height:1.5}
+.photo-upload-label strong{display:block;color:var(--gd);font-size:.88rem}
+/* student nav badge */
+.stu-badge{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);border-radius:50px;padding:4px 12px 4px 6px;cursor:pointer}
+.stu-av{width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--gd);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;overflow:hidden;flex-shrink:0}
+.stu-av img{width:100%;height:100%;object-fit:cover}
+.stu-name{font-size:.82rem;color:#fff;font-weight:500;max-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* OTP box */
+.otp-input{letter-spacing:.35em;font-size:1.4rem;text-align:center;font-weight:700}
+/* admin student/coach cards */
+.stu-card{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--g2)}
+.stu-card:last-child{border:none}
+.stu-card-av{width:42px;height:42px;border-radius:50%;background:var(--gp);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--gd);flex-shrink:0;overflow:hidden}
+.stu-card-av img{width:100%;height:100%;object-fit:cover}
+.stu-card-info{flex:1}
+.stu-card-name{font-size:.92rem;font-weight:600;color:var(--g9)}
+.stu-card-sub{font-size:.75rem;color:var(--g4);margin-top:2px}
+.stu-card-badge{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -410,6 +451,143 @@ tr:hover td{background:var(--gu)}
   </div>
 </div>
 
+<!-- STUDENT LOGIN SCREEN -->
+<div class="sauth-screen" id="stuLoginScreen">
+  <div class="sauth-box">
+    <div style="font-size:2.5rem;margin-bottom:.5rem;text-align:center">🎾</div>
+    <h2>Welcome Back</h2>
+    <p class="sauth-sub">Sign in to your Brainiac Tennis account</p>
+    <div class="sauth-fl">
+      <label>Email or Username</label>
+      <input type="text" id="slUser" placeholder="Enter email or username" autocomplete="username"/>
+    </div>
+    <div class="sauth-fl">
+      <label>Password</label>
+      <input type="password" id="slPass" placeholder="Enter password" autocomplete="current-password"/>
+    </div>
+    <div class="sauth-err" id="slErr"></div>
+    <button class="sauth-btn" id="slBtn">Sign In</button>
+    <div class="sauth-switch">
+      <button class="sauth-link" id="slForgotBtn">Forgot password?</button>
+    </div>
+    <div class="sauth-switch" style="margin-top:.5rem">
+      Don't have an account? <button class="sauth-link" id="slToSignup">Create one</button>
+    </div>
+    <div style="text-align:center;margin-top:.75rem">
+      <button style="background:none;border:none;color:var(--g4);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer" id="slCancelBtn">← Back to site</button>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT SIGN-UP SCREEN -->
+<div class="sauth-screen" id="stuSignupScreen">
+  <div class="sauth-box">
+    <div style="font-size:2.5rem;margin-bottom:.5rem;text-align:center">🎾</div>
+    <h2>Create Account</h2>
+    <p class="sauth-sub">Join Brainiac Tennis — it's free</p>
+    <!-- Profile photo -->
+    <div class="sauth-fl">
+      <label>Profile Photo <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <div class="photo-upload-wrap" id="photoWrap" onclick="document.getElementById('photoInput').click()">
+        <div class="photo-preview" id="photoPreview">📷</div>
+        <div class="photo-upload-label">
+          <strong>Upload a photo</strong>
+          Tap to choose from your device
+        </div>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" style="display:none"/>
+    </div>
+    <div class="sauth-grid">
+      <div class="sauth-fl">
+        <label>First Name *</label>
+        <input type="text" id="suFN" placeholder="First name"/>
+      </div>
+      <div class="sauth-fl">
+        <label>Last Name *</label>
+        <input type="text" id="suLN" placeholder="Last name"/>
+      </div>
+      <div class="sauth-fl">
+        <label>Age *</label>
+        <input type="number" id="suAge" placeholder="e.g. 16" min="5" max="99"/>
+      </div>
+      <div class="sauth-fl">
+        <label>Gender *</label>
+        <select id="suGender">
+          <option value="">Select...</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Non-binary</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+      <div class="sauth-fl sauth-full">
+        <label>Email Address *</label>
+        <input type="email" id="suEmail" placeholder="your@email.com"/>
+      </div>
+      <div class="sauth-fl sauth-full">
+        <label>Telephone Number *</label>
+        <input type="tel" id="suPhone" placeholder="+1 234 567 8900"/>
+      </div>
+      <div class="sauth-fl sauth-full">
+        <label>Address *</label>
+        <input type="text" id="suAddr" placeholder="Street, City, State"/>
+      </div>
+      <div class="sauth-fl sauth-full" id="guardianRow" style="display:none">
+        <label>Guardian Name * <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--g4)">(required — under 18)</span></label>
+        <input type="text" id="suGuardian" placeholder="Parent / Guardian full name"/>
+      </div>
+      <div class="sauth-fl">
+        <label>Username *</label>
+        <input type="text" id="suUser" placeholder="Choose a username"/>
+      </div>
+      <div class="sauth-fl">
+        <label>Password *</label>
+        <input type="password" id="suPass" placeholder="Min. 6 characters"/>
+      </div>
+    </div>
+    <div class="sauth-err" id="suErr"></div>
+    <button class="sauth-btn" id="suBtn">Create Account</button>
+    <div class="sauth-switch">
+      Already have an account? <button class="sauth-link" id="suToLogin">Sign in</button>
+    </div>
+    <div style="text-align:center;margin-top:.75rem">
+      <button style="background:none;border:none;color:var(--g4);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer" id="suCancelBtn">← Back to site</button>
+    </div>
+  </div>
+</div>
+
+<!-- PASSWORD RESET MODAL -->
+<div class="sauth-screen" id="resetScreen">
+  <div class="sauth-box" style="max-width:380px">
+    <div style="font-size:2rem;margin-bottom:.5rem;text-align:center">🔑</div>
+    <h2>Reset Password</h2>
+    <p class="sauth-sub" id="resetSub">Enter your registered email to receive a reset code.</p>
+    <div id="resetStep1">
+      <div class="sauth-fl">
+        <label>Email Address</label>
+        <input type="email" id="resetEmail" placeholder="your@email.com"/>
+      </div>
+      <div class="sauth-err" id="resetErr"></div>
+      <button class="sauth-btn" id="resetSendBtn">Send Reset Code</button>
+    </div>
+    <div id="resetStep2" style="display:none">
+      <div class="sauth-fl">
+        <label>6-Digit Code</label>
+        <input type="text" id="resetOtp" class="otp-input" placeholder="000000" maxlength="6"/>
+      </div>
+      <div class="sauth-fl">
+        <label>New Password</label>
+        <input type="password" id="resetNewPass" placeholder="Min. 6 characters"/>
+      </div>
+      <div class="sauth-err" id="resetErr2"></div>
+      <button class="sauth-btn" id="resetConfirmBtn">Set New Password</button>
+    </div>
+    <div style="text-align:center;margin-top:.75rem">
+      <button class="sauth-link" id="resetBackBtn">← Back to sign in</button>
+    </div>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav class="nav">
   <div class="brand">
@@ -424,6 +602,14 @@ tr:hover td{background:var(--gu)}
     <button class="nb nb-g staff-only" id="nav-admin" style="display:none">⚙ Admin</button>
     <button class="nb nb-g staff-only" id="nav-coach" style="display:none">📋 My Schedule</button>
     <button class="nb nb-gold" id="nav-cta">Get a Lesson</button>
+    <div id="stuNavBadge" style="display:none">
+      <div class="stu-badge" id="stuBadgeBtn">
+        <div class="stu-av" id="stuNavAv">?</div>
+        <span class="stu-name" id="stuNavName">Student</span>
+      </div>
+    </div>
+    <button class="nb nb-g" id="nav-stu-login" style="background:rgba(255,255,255,.12);color:#fff">Sign In</button>
+    <button class="nb nb-g" id="nav-stu-signup" style="border:1px solid rgba(255,255,255,.3);color:#fff">Sign Up</button>
     <button class="nb nb-g" id="nav-login-btn">Staff Login</button>
   </div>
 </nav>
@@ -646,6 +832,7 @@ tr:hover td{background:var(--gu)}
       <button class="adm-tab" data-tab="payments">💳 Payments</button>
       <button class="adm-tab" data-tab="classes">📆 Classes</button>
       <button class="adm-tab" data-tab="students">🎓 Students</button>
+      <button class="adm-tab" data-tab="coaches-list">👤 Coaches</button>
     </div>
     <!-- BOOKINGS -->
     <div class="adm-pane on" id="ap-bookings">
@@ -759,21 +946,35 @@ tr:hover td{background:var(--gu)}
         <div class="cms-body" id="payMethodsList"></div>
       </div>
     </div>
-    <!-- STUDENTS -->
+    <!-- STUDENTS (registered accounts) -->
     <div class="adm-pane" id="ap-students">
       <div class="tbl-card">
-        <div class="tbl-head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
-          <h4>🎓 All Students</h4>
-          <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+        <div class="tbl-head" style="flex-wrap:wrap;gap:.5rem">
+          <h4>🎓 Registered Students (<span id="stuCount">0</span>)</h4>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
             <input class="srch" id="stuSearch" placeholder="Search name or email..."/>
-            <button class="add-btn" id="exportBookingsBtn">⬇ Export Bookings CSV</button>
-            <button class="add-btn" id="exportCoachesBtn" style="background:var(--gm)">⬇ Export Coaches CSV</button>
+            <button class="add-btn" id="exportBookingsBtn">⬇ Bookings CSV</button>
+            <button class="add-btn" id="exportStudentsBtn" style="background:var(--gl)">⬇ Students CSV</button>
           </div>
         </div>
         <div style="overflow-x:auto">
           <table><thead><tr>
-            <th>Name</th><th>Email</th><th>Phone</th><th>Skill</th><th>Bookings</th><th>Last Booking</th><th>Total Spent</th>
+            <th>Photo</th><th>Name</th><th>Email</th><th>Phone</th><th>Age</th><th>Gender</th><th>Address</th><th>Guardian</th><th>Username</th><th>Bookings</th><th>Joined</th>
           </tr></thead><tbody id="stuBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+    <!-- COACHES LIST (admin view) -->
+    <div class="adm-pane" id="ap-coaches-list">
+      <div class="tbl-card">
+        <div class="tbl-head">
+          <h4>👤 Coaches (<span id="coachCount">0</span>)</h4>
+          <button class="add-btn" id="exportCoachesBtn" style="background:var(--gm)">⬇ Coaches CSV</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table><thead><tr>
+            <th>Name</th><th>Title</th><th>Bio</th><th>Username</th><th>Status</th>
+          </tr></thead><tbody id="coachListBody"></tbody></table>
         </div>
       </div>
     </div>
@@ -866,8 +1067,22 @@ var DB = {
     {id:1001,ref:'BT-100001',name:'Jamie Rodriguez',email:'jamie@email.com',phone:'',type:'Private Lesson',package:'Private Lesson',price:80,date:'2026-04-14',time:'7:00 AM',skill:'Beginner',coach:'Coach Esther Forrester',court:'Main Court — NYC',payment:'GCash',notes:'',status:'Confirmed',createdAt:'2026-04-01T10:00:00Z'},
     {id:1002,ref:'BT-100002',name:'Sarah Kim',email:'sarah@email.com',phone:'',type:'Group Class',package:'Group Lesson',price:45,date:'2026-04-15',time:'9:00 AM',skill:'Intermediate',coach:'Coach Maria Santos',court:'Community Center — Brooklyn',payment:'Cash',notes:'',status:'Confirmed',createdAt:'2026-04-01T11:00:00Z'},
     {id:1003,ref:'BT-100003',name:'Marco dela Cruz',email:'marco@email.com',phone:'',type:'Match Coaching',package:'Match Coaching',price:80,date:'2026-04-16',time:'4:00 PM',skill:'Advanced',coach:'Coach Jose Reyes',court:'Main Court — NYC',payment:'Pay Now (Card)',notes:'',status:'Pending',createdAt:'2026-04-02T09:00:00Z'}
-  ]
+  ],
+  students: []
 };
+
+// ── LOCALSTORAGE PERSISTENCE ──
+function saveDB() {
+  try { localStorage.setItem('brainiac_db', JSON.stringify({students: DB.students, bookings: DB.bookings})); } catch(e){}
+}
+function loadDB() {
+  try {
+    var saved = JSON.parse(localStorage.getItem('brainiac_db') || '{}');
+    if (saved.students) DB.students = saved.students;
+    if (saved.bookings) DB.bookings = saved.bookings;
+  } catch(e){}
+}
+loadDB();
 
 // ── AUTH ──
 var ADMIN_USER = {username:'admin',password:'tennis123',role:'admin',name:'Admin User',initials:'AD'};
@@ -931,9 +1146,20 @@ function doLogout() {
 function applyAuth() {
   var isAdmin = currentUser && currentUser.role==='admin';
   var isCoach = currentUser && currentUser.role==='coach';
+  var isStu   = currentUser && currentUser.role==='student';
   document.getElementById('nav-admin').style.display = isAdmin ? '' : 'none';
   document.getElementById('nav-coach').style.display = isCoach ? '' : 'none';
-  document.getElementById('nav-login-btn').style.display = currentUser ? 'none' : '';
+  document.getElementById('nav-login-btn').style.display = (isAdmin||isCoach) ? 'none' : '';
+  document.getElementById('nav-stu-login').style.display  = isStu ? 'none' : (isAdmin||isCoach ? 'none' : '');
+  document.getElementById('nav-stu-signup').style.display = isStu ? 'none' : (isAdmin||isCoach ? 'none' : '');
+  document.getElementById('stuNavBadge').style.display = isStu ? '' : 'none';
+  if (isStu) {
+    var initials = (currentUser.firstName[0]+(currentUser.lastName[0]||'')).toUpperCase();
+    var avEl = document.getElementById('stuNavAv');
+    if (currentUser.photo) avEl.innerHTML = '<img src="'+currentUser.photo+'" alt=""/>';
+    else avEl.textContent = initials;
+    document.getElementById('stuNavName').textContent = currentUser.firstName;
+  }
   if (isAdmin) {
     document.getElementById('admAvatar').textContent = currentUser.initials;
     document.getElementById('admUserLabel').textContent = currentUser.name;
@@ -960,6 +1186,7 @@ document.getElementById('coachLogoutBtn').addEventListener('click', doLogout);
 function goPage(page) {
   if ((page==='admin') && (!currentUser || currentUser.role!=='admin')) { showLogin(); return; }
   if ((page==='coach') && (!currentUser || currentUser.role!=='coach')) { showLogin(); return; }
+  if ((page==='book') && (!currentUser || currentUser.role!=='student')) { showStuLogin(); return; }
   document.querySelectorAll('.pg').forEach(function(p){ p.classList.remove('on'); });
   document.querySelectorAll('.nb-g').forEach(function(b){ b.classList.remove('on'); });
   document.getElementById('pg-'+page).classList.add('on');
@@ -1010,7 +1237,8 @@ document.querySelectorAll('.adm-tab').forEach(function(btn){
     if(t==='coaches')  renderCoachesTab();
     if(t==='payments') renderPaymentsTab();
     if(t==='classes')  renderClassesTab();
-    if(t==='students') renderStudentsTab();
+    if(t==='students')     renderStudentsTab();
+    if(t==='coaches-list') renderCoachesListTab();
   });
 });
 
@@ -1988,6 +2216,180 @@ function mfta(lbl,id,val,ph){ return '<div class="fl"><label>'+lbl+'</label><tex
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // ═══════════════════════════════════════
+// STUDENT AUTH
+// ═══════════════════════════════════════
+var pendingOtp = null; // {email, code, expires}
+
+function showStuLogin() {
+  document.getElementById('stuLoginScreen').classList.add('on');
+  document.getElementById('slErr').textContent = '';
+  document.getElementById('slUser').value = '';
+  document.getElementById('slPass').value = '';
+}
+function hideStuLogin() { document.getElementById('stuLoginScreen').classList.remove('on'); }
+function showStuSignup() {
+  document.getElementById('stuSignupScreen').classList.add('on');
+}
+function hideStuSignup() { document.getElementById('stuSignupScreen').classList.remove('on'); }
+function showReset() {
+  document.getElementById('resetScreen').classList.add('on');
+  document.getElementById('resetStep1').style.display = '';
+  document.getElementById('resetStep2').style.display = 'none';
+  document.getElementById('resetEmail').value = '';
+  document.getElementById('resetErr').textContent = '';
+  document.getElementById('resetSub').textContent = 'Enter your registered email to receive a reset code.';
+}
+function hideReset() { document.getElementById('resetScreen').classList.remove('on'); }
+
+function doStuSignup() {
+  var fn    = document.getElementById('suFN').value.trim();
+  var ln    = document.getElementById('suLN').value.trim();
+  var age   = parseInt(document.getElementById('suAge').value);
+  var gender= document.getElementById('suGender').value;
+  var email = document.getElementById('suEmail').value.trim().toLowerCase();
+  var phone = document.getElementById('suPhone').value.trim();
+  var addr  = document.getElementById('suAddr').value.trim();
+  var guard = document.getElementById('suGuardian').value.trim();
+  var uname = document.getElementById('suUser').value.trim();
+  var pass  = document.getElementById('suPass').value;
+  var err   = document.getElementById('suErr');
+  err.textContent = '';
+
+  if (!fn||!ln||!age||!gender||!email||!phone||!addr||!uname||!pass) {
+    err.textContent = 'Please fill in all required fields.'; return;
+  }
+  if (age < 18 && !guard) {
+    err.textContent = 'Guardian name is required for students under 18.'; return;
+  }
+  if (pass.length < 6) { err.textContent = 'Password must be at least 6 characters.'; return; }
+  if (DB.students.find(function(s){ return s.email===email; })) {
+    err.textContent = 'An account with this email already exists.'; return;
+  }
+  if (DB.students.find(function(s){ return s.username===uname; })) {
+    err.textContent = 'Username already taken. Please choose another.'; return;
+  }
+
+  var photo = document.getElementById('photoWrap').dataset.photo || '';
+  var stu = {
+    id: Date.now(), firstName: fn, lastName: ln, age: age, gender: gender,
+    email: email, phone: phone, address: addr,
+    guardian: age < 18 ? guard : '',
+    username: uname, password: pass, photo: photo,
+    createdAt: new Date().toISOString()
+  };
+  DB.students.push(stu);
+  saveDB();
+  currentUser = {role:'student', firstName: fn, lastName: ln, email: email, username: uname, photo: photo, studentId: stu.id};
+  hideStuSignup();
+  applyAuth();
+  goPage('book');
+}
+
+function doStuLogin() {
+  var u = document.getElementById('slUser').value.trim().toLowerCase();
+  var p = document.getElementById('slPass').value;
+  var err = document.getElementById('slErr');
+  err.textContent = '';
+  if (!u||!p) { err.textContent = 'Please enter your credentials.'; return; }
+  var stu = DB.students.find(function(s){
+    return (s.email===u || s.username===u) && s.password===p;
+  });
+  if (!stu) { err.textContent = 'Incorrect email/username or password.'; return; }
+  currentUser = {role:'student', firstName: stu.firstName, lastName: stu.lastName, email: stu.email, username: stu.username, photo: stu.photo||'', studentId: stu.id};
+  hideStuLogin();
+  applyAuth();
+  goPage('book');
+}
+
+function doStuLogout() {
+  currentUser = null;
+  applyAuth();
+  goPage('home');
+}
+
+function doSendOtp() {
+  var email = document.getElementById('resetEmail').value.trim().toLowerCase();
+  var err = document.getElementById('resetErr');
+  err.textContent = '';
+  var stu = DB.students.find(function(s){ return s.email===email; });
+  if (!stu) { err.textContent = 'No account found with that email.'; return; }
+  var code = String(Math.floor(100000 + Math.random()*900000));
+  pendingOtp = {email: email, code: code, expires: Date.now() + 15*60*1000};
+  // send via EmailJS if configured
+  if (EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email: email,
+      student_name: stu.firstName,
+      booking_ref: code,
+      package: 'Password Reset Code',
+      date: 'Valid for 15 minutes',
+      time: '—', coach: '—', court: '—', payment: '—', notes: '—',
+      status: 'Use this code to reset your password: ' + code
+    });
+  }
+  document.getElementById('resetStep1').style.display = 'none';
+  document.getElementById('resetStep2').style.display = '';
+  document.getElementById('resetSub').textContent = 'Enter the 6-digit code sent to ' + email;
+}
+
+function doConfirmOtp() {
+  var otp  = document.getElementById('resetOtp').value.trim();
+  var newp = document.getElementById('resetNewPass').value;
+  var err2 = document.getElementById('resetErr2');
+  err2.textContent = '';
+  if (!pendingOtp || Date.now() > pendingOtp.expires) { err2.textContent = 'Code expired. Please try again.'; return; }
+  if (otp !== pendingOtp.code) { err2.textContent = 'Incorrect code. Please check your email.'; return; }
+  if (newp.length < 6) { err2.textContent = 'Password must be at least 6 characters.'; return; }
+  var stu = DB.students.find(function(s){ return s.email===pendingOtp.email; });
+  if (stu) { stu.password = newp; saveDB(); }
+  pendingOtp = null;
+  hideReset();
+  alert('Password reset successfully! Please sign in with your new password.');
+  showStuLogin();
+}
+
+// photo preview handler (called after DOM ready, wired below)
+function wirePhotoInput() {
+  var inp = document.getElementById('photoInput');
+  if (!inp) return;
+  inp.addEventListener('change', function(){
+    var file = this.files[0]; if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var prev = document.getElementById('photoPreview');
+      prev.innerHTML = '<img src="'+e.target.result+'" alt=""/>';
+      document.getElementById('photoWrap').dataset.photo = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  // show/hide guardian field based on age
+  document.getElementById('suAge').addEventListener('input', function(){
+    var age = parseInt(this.value)||0;
+    document.getElementById('guardianRow').style.display = (age>0&&age<18) ? '' : 'none';
+  });
+}
+
+// wire student auth event listeners
+document.getElementById('slBtn').addEventListener('click', doStuLogin);
+document.getElementById('slPass').addEventListener('keydown', function(e){ if(e.key==='Enter') doStuLogin(); });
+document.getElementById('slToSignup').addEventListener('click', function(){ hideStuLogin(); showStuSignup(); });
+document.getElementById('slCancelBtn').addEventListener('click', hideStuLogin);
+document.getElementById('slForgotBtn').addEventListener('click', function(){ hideStuLogin(); showReset(); });
+
+document.getElementById('suBtn').addEventListener('click', doStuSignup);
+document.getElementById('suToLogin').addEventListener('click', function(){ hideStuSignup(); showStuLogin(); });
+document.getElementById('suCancelBtn').addEventListener('click', hideStuSignup);
+document.getElementById('nav-stu-login').addEventListener('click', showStuLogin);
+document.getElementById('nav-stu-signup').addEventListener('click', showStuSignup);
+document.getElementById('stuBadgeBtn').addEventListener('click', doStuLogout);
+
+document.getElementById('resetSendBtn').addEventListener('click', doSendOtp);
+document.getElementById('resetConfirmBtn').addEventListener('click', doConfirmOtp);
+document.getElementById('resetBackBtn').addEventListener('click', function(){ hideReset(); showStuLogin(); });
+
+wirePhotoInput();
+
+// ═══════════════════════════════════════
 // EMAILJS CONFIG — fill in your credentials
 // ═══════════════════════════════════════
 var EMAILJS_PUBLIC_KEY   = 'YOUR_PUBLIC_KEY';    // from emailjs.com → Account → API Keys
@@ -2028,62 +2430,62 @@ function sendBookingEmail(bk) {
 // STUDENTS TAB
 // ═══════════════════════════════════════
 function renderStudentsTab() {
-  var stuMap = {};
-  DB.bookings.forEach(function(b) {
-    var key = b.email.toLowerCase();
-    if (!stuMap[key]) {
-      stuMap[key] = { name: b.name, email: b.email, phone: b.phone || '—', skill: b.skill, bookings: [], total: 0 };
-    }
-    stuMap[key].bookings.push(b);
-    stuMap[key].total += b.price || 0;
-    if (b.skill && b.skill !== '—') stuMap[key].skill = b.skill;
-  });
-  var students = Object.values(stuMap);
-
-  var search = (document.getElementById('stuSearch') || {}).value || '';
+  var students = DB.students;
+  var search = (document.getElementById('stuSearch')||{}).value||'';
+  document.getElementById('stuCount').textContent = students.length;
   if (search) {
-    var q = search.toLowerCase();
-    students = students.filter(function(s) {
-      return s.name.toLowerCase().includes(q) || s.email.toLowerCase().includes(q);
-    });
+    var q=search.toLowerCase();
+    students=students.filter(function(s){ return (s.firstName+' '+s.lastName).toLowerCase().includes(q)||s.email.toLowerCase().includes(q); });
   }
-
-  var tb = document.getElementById('stuBody');
-  if (!students.length) {
-    tb.innerHTML = '<tr><td colspan="7" class="empty">No students found.</td></tr>';
+  var tb=document.getElementById('stuBody');
+  if(!students.length){
+    tb.innerHTML='<tr><td colspan="11" class="empty">No registered students yet.</td></tr>';
   } else {
-    tb.innerHTML = '';
-    students.forEach(function(s) {
-      var last = s.bookings.sort(function(a,b){ return new Date(b.date)-new Date(a.date); })[0];
-      var lastDate = last ? new Date(last.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
-      var tr = document.createElement('tr');
-      tr.innerHTML =
-        '<td><div style="font-weight:500">'+esc(s.name)+'</div></td>'+
+    tb.innerHTML='';
+    students.forEach(function(s){
+      var bks=DB.bookings.filter(function(b){ return b.email.toLowerCase()===s.email.toLowerCase(); }).length;
+      var joined=new Date(s.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      var avHtml=s.photo?'<img src="'+s.photo+'" alt=""/>':'<span>'+(s.firstName[0]+s.lastName[0]).toUpperCase()+'</span>';
+      var tr=document.createElement('tr');
+      tr.innerHTML=
+        '<td><div class="stu-card-av" style="margin:auto">'+avHtml+'</div></td>'+
+        '<td><div style="font-weight:500">'+esc(s.firstName+' '+s.lastName)+'</div><div style="font-size:.72rem;color:var(--g4)">@'+esc(s.username)+'</div></td>'+
         '<td style="font-size:.78rem">'+esc(s.email)+'</td>'+
         '<td style="font-size:.78rem">'+esc(s.phone)+'</td>'+
-        '<td><span class="bdg" style="background:var(--gp);color:var(--gd)">'+esc(s.skill||'—')+'</span></td>'+
-        '<td style="text-align:center;font-weight:500">'+s.bookings.length+'</td>'+
-        '<td style="font-size:.78rem">'+lastDate+'</td>'+
-        '<td style="font-weight:600;color:var(--gd)">$'+s.total.toLocaleString()+'</td>';
+        '<td style="text-align:center">'+s.age+'</td>'+
+        '<td>'+esc(s.gender)+'</td>'+
+        '<td style="font-size:.75rem;max-width:140px">'+esc(s.address)+'</td>'+
+        '<td style="font-size:.78rem">'+esc(s.guardian||'—')+'</td>'+
+        '<td style="font-family:monospace;font-size:.78rem">'+esc(s.username)+'</td>'+
+        '<td style="text-align:center;font-weight:500">'+bks+'</td>'+
+        '<td style="font-size:.75rem">'+joined+'</td>';
       tb.appendChild(tr);
     });
   }
+  var searchEl=document.getElementById('stuSearch');
+  if(searchEl&&!searchEl._bound){ searchEl._bound=true; searchEl.addEventListener('input',renderStudentsTab); }
+  var expBk=document.getElementById('exportBookingsBtn');
+  if(expBk&&!expBk._bound){ expBk._bound=true; expBk.addEventListener('click',exportBookingsCSV); }
+  var expStu=document.getElementById('exportStudentsBtn');
+  if(expStu&&!expStu._bound){ expStu._bound=true; expStu.addEventListener('click',exportStudentsCSV); }
+}
 
-  var searchEl = document.getElementById('stuSearch');
-  if (searchEl && !searchEl._bound) {
-    searchEl._bound = true;
-    searchEl.addEventListener('input', renderStudentsTab);
-  }
-  var exportBk = document.getElementById('exportBookingsBtn');
-  if (exportBk && !exportBk._bound) {
-    exportBk._bound = true;
-    exportBk.addEventListener('click', exportBookingsCSV);
-  }
-  var exportCo = document.getElementById('exportCoachesBtn');
-  if (exportCo && !exportCo._bound) {
-    exportCo._bound = true;
-    exportCo.addEventListener('click', exportCoachesCSV);
-  }
+function renderCoachesListTab() {
+  document.getElementById('coachCount').textContent = DB.coaches.length;
+  var tb = document.getElementById('coachListBody');
+  tb.innerHTML = '';
+  DB.coaches.forEach(function(c){
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><div style="font-weight:500">'+esc(c.name)+'</div></td>'+
+      '<td style="font-size:.82rem">'+esc(c.title||'—')+'</td>'+
+      '<td style="font-size:.78rem;max-width:200px">'+esc(c.bio||'—')+'</td>'+
+      '<td style="font-family:monospace;font-size:.78rem">'+esc(c.username)+'</td>'+
+      '<td><span class="bdg '+(c.active?'b-ok':'b-can')+'">'+(c.active?'Active':'Inactive')+'</span></td>';
+    tb.appendChild(tr);
+  });
+  var expCo=document.getElementById('exportCoachesBtn');
+  if(expCo&&!expCo._bound){ expCo._bound=true; expCo.addEventListener('click',exportCoachesCSV); }
 }
 
 // ═══════════════════════════════════════
@@ -2103,6 +2505,15 @@ function downloadCSV(filename, rows) {
   var a = document.createElement('a');
   a.href = url; a.download = filename; a.click();
   URL.revokeObjectURL(url);
+}
+
+function exportStudentsCSV() {
+  var header = ['First Name','Last Name','Age','Gender','Email','Phone','Address','Guardian','Username','Joined','Bookings'];
+  var rows = [header].concat(DB.students.map(function(s){
+    var bks=DB.bookings.filter(function(b){ return b.email.toLowerCase()===s.email.toLowerCase(); }).length;
+    return [s.firstName,s.lastName,s.age,s.gender,s.email,s.phone,s.address,s.guardian||'',s.username,new Date(s.createdAt).toLocaleDateString(),bks];
+  }));
+  downloadCSV('brainiac-students-'+new Date().toISOString().split('T')[0]+'.csv', rows);
 }
 
 function exportBookingsCSV() {
