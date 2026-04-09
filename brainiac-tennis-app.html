@@ -376,22 +376,27 @@ tr:hover td{background:var(--gu)}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 
 /* ═══════════════════════════════════════
-   RESPONSIVE — HAMBURGER NAV
+   NAV LAYOUT
 ═══════════════════════════════════════ */
-.nav{height:58px}
+.nav{height:60px;padding:0 1.5rem}
+.nav-desktop-links{display:flex;gap:4px}
 .nav-right{display:flex;align-items:center;gap:6px}
-.hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:38px;height:38px;background:rgba(255,255,255,.1);border:none;border-radius:8px;cursor:pointer;padding:8px}
+/* hamburger — hidden on desktop */
+.hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:38px;height:38px;background:rgba(255,255,255,.1);border:none;border-radius:8px;cursor:pointer;padding:8px;flex-shrink:0}
 .hamburger span{display:block;width:100%;height:2px;background:#fff;border-radius:2px;transition:all .25s}
 .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .hamburger.open span:nth-child(2){opacity:0}
 .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.nav-drawer{position:fixed;top:58px;left:0;right:0;background:var(--gd);z-index:190;transform:translateY(-110%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+/* drawer — slides in on mobile */
+.nav-drawer{position:fixed;top:60px;left:0;right:0;background:var(--gd);z-index:190;transform:translateY(-110%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 32px rgba(0,0,0,.35);max-height:calc(100vh - 60px);overflow-y:auto}
 .nav-drawer.open{transform:translateY(0)}
-.drawer-links{display:flex;flex-direction:column;padding:1rem 1.25rem 1.5rem;gap:4px}
-.drawer-links .nb{text-align:left;border-radius:10px;padding:10px 14px;font-size:.9rem}
-.drawer-cta{background:var(--gold)!important;color:var(--gd)!important;font-weight:600!important;margin-top:.25rem}
-.drawer-auth{margin-top:2px}
-.drawer-overlay{display:none;position:fixed;inset:0;top:58px;background:rgba(0,0,0,.4);z-index:189}
+.drawer-links{display:flex;flex-direction:column;padding:1rem 1.25rem 2rem;gap:3px}
+.drawer-links .nb{text-align:left;border-radius:10px;padding:11px 16px;font-size:.92rem;width:100%}
+.drawer-pg{color:rgba(255,255,255,.85)!important}
+.drawer-pg:hover,.drawer-pg.on{background:rgba(255,255,255,.12)!important;color:#fff!important}
+.drawer-cta{background:var(--gold)!important;color:var(--gd)!important;font-weight:700!important;margin-top:.25rem;text-align:center!important}
+.drawer-auth{color:rgba(255,255,255,.7)!important}
+.drawer-overlay{display:none;position:fixed;inset:0;top:60px;background:rgba(0,0,0,.45);z-index:189}
 .drawer-overlay.open{display:block}
 
 /* ═══════════════════════════════════════
@@ -413,7 +418,8 @@ tr:hover td{background:var(--gu)}
 /* Large mobile: ≤ 768px */
 @media(max-width:768px){
   .hamburger{display:flex}
-  .nav-hide-mobile{display:none!important}
+  .nav-desktop-links{display:none!important}
+  .nav-desktop-only{display:none!important}
   .sec{padding:2.5rem 1.25rem}
   .hero{padding:3rem 1.25rem 2.5rem}
   .hero h1{font-size:clamp(1.7rem,7vw,2.6rem)}
@@ -704,17 +710,28 @@ tr:hover td{background:var(--gu)}
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93c4.69 4.69 4.69 9.45 0 14.14M19.07 4.93c-4.69 4.69-4.69 9.45 0 14.14"/></svg>
     Brainiac <span class="brand-em">Tennis</span>
   </div>
+  <!-- Desktop page links (hidden on mobile) -->
+  <div class="nav-links nav-desktop-links">
+    <button class="nb nb-g on" id="nav-home">Home</button>
+    <button class="nb nb-g" id="nav-schedule">Schedule</button>
+    <button class="nb nb-g" id="nav-book">Book</button>
+    <button class="nb nb-g" id="nav-about">About</button>
+    <button class="nb nb-g staff-only" id="nav-admin" style="display:none">⚙ Admin</button>
+    <button class="nb nb-g staff-only" id="nav-coach" style="display:none">📋 My Schedule</button>
+  </div>
+  <!-- Desktop action buttons (hidden on mobile) -->
   <div class="nav-right">
-    <button class="nb nb-gold nav-hide-mobile" id="nav-cta">Get a Lesson</button>
+    <button class="nb nb-gold nav-desktop-only" id="nav-cta">Get a Lesson</button>
     <div id="stuNavBadge" style="display:none">
       <div class="stu-badge" id="stuBadgeBtn">
         <div class="stu-av" id="stuNavAv">?</div>
         <span class="stu-name" id="stuNavName">Student</span>
       </div>
     </div>
-    <button class="nb nb-g nav-hide-mobile" id="nav-stu-login" style="background:rgba(255,255,255,.12);color:#fff">Sign In</button>
-    <button class="nb nb-g nav-hide-mobile" id="nav-stu-signup" style="border:1px solid rgba(255,255,255,.3);color:#fff">Sign Up</button>
-    <button class="nb nb-g nav-hide-mobile" id="nav-login-btn">Staff Login</button>
+    <button class="nb nb-g nav-desktop-only" id="nav-stu-login" style="background:rgba(255,255,255,.12);color:#fff">Sign In</button>
+    <button class="nb nb-g nav-desktop-only" id="nav-stu-signup" style="border:1px solid rgba(255,255,255,.3);color:#fff">Sign Up</button>
+    <button class="nb nb-g nav-desktop-only" id="nav-login-btn" style="font-size:.78rem;opacity:.75">Staff</button>
+    <!-- Hamburger (mobile only) -->
     <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -723,17 +740,26 @@ tr:hover td{background:var(--gu)}
 <!-- MOBILE DRAWER -->
 <div class="nav-drawer" id="navDrawer">
   <div class="drawer-links">
-    <button class="nb nb-g on" id="nav-home">Home</button>
-    <button class="nb nb-g" id="nav-schedule">Schedule</button>
-    <button class="nb nb-g" id="nav-book">Book</button>
-    <button class="nb nb-g" id="nav-about">About</button>
-    <button class="nb nb-g staff-only" id="nav-admin" style="display:none">⚙ Admin</button>
-    <button class="nb nb-g staff-only" id="nav-coach" style="display:none">📋 My Schedule</button>
-    <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:.5rem 0"/>
-    <button class="nb nb-gold drawer-cta" id="nav-cta-mobile">Get a Lesson</button>
+    <button class="nb nb-g drawer-pg" data-pg="home">🏠 Home</button>
+    <button class="nb nb-g drawer-pg" data-pg="schedule">📅 Schedule</button>
+    <button class="nb nb-g drawer-pg" data-pg="book">🎾 Book a Lesson</button>
+    <button class="nb nb-g drawer-pg" data-pg="about">ℹ️ About</button>
+    <button class="nb nb-g drawer-pg drawer-admin-only" data-pg="admin" style="display:none">⚙ Admin Panel</button>
+    <button class="nb nb-g drawer-pg drawer-coach-only" data-pg="coach" style="display:none">📋 My Schedule</button>
+    <hr style="border:none;border-top:1px solid rgba(255,255,255,.15);margin:.5rem 0"/>
+    <button class="nb nb-gold drawer-cta" id="nav-cta-mobile">🎾 Get a Lesson</button>
+    <div id="stuDrawerBadge" style="display:none;padding:6px 14px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="stu-av" id="stuDrawerAv" style="width:32px;height:32px">?</div>
+        <div>
+          <div style="color:#fff;font-size:.88rem;font-weight:500" id="stuDrawerName">Student</div>
+          <button class="sauth-link" id="drawerLogoutBtn" style="font-size:.75rem;color:rgba(255,255,255,.55);text-decoration:none">Sign out</button>
+        </div>
+      </div>
+    </div>
     <button class="nb nb-g drawer-auth" id="nav-stu-login-mobile" style="background:rgba(255,255,255,.12);color:#fff">Sign In</button>
     <button class="nb nb-g drawer-auth" id="nav-stu-signup-mobile" style="border:1px solid rgba(255,255,255,.3);color:#fff">Sign Up</button>
-    <button class="nb nb-g drawer-auth" id="nav-login-btn-mobile" style="font-size:.75rem;opacity:.7">Staff Login</button>
+    <button class="nb nb-g drawer-auth" id="nav-login-btn-mobile" style="font-size:.78rem;color:rgba(255,255,255,.55)">Staff Login</button>
   </div>
 </div>
 <div class="drawer-overlay" id="drawerOverlay"></div>
@@ -1271,18 +1297,43 @@ function applyAuth() {
   var isAdmin = currentUser && currentUser.role==='admin';
   var isCoach = currentUser && currentUser.role==='coach';
   var isStu   = currentUser && currentUser.role==='student';
+  var isStaff = isAdmin || isCoach;
+
+  // ── Desktop nav ──
   document.getElementById('nav-admin').style.display = isAdmin ? '' : 'none';
   document.getElementById('nav-coach').style.display = isCoach ? '' : 'none';
-  document.getElementById('nav-login-btn').style.display = (isAdmin||isCoach) ? 'none' : '';
-  document.getElementById('nav-stu-login').style.display  = isStu ? 'none' : (isAdmin||isCoach ? 'none' : '');
-  document.getElementById('nav-stu-signup').style.display = isStu ? 'none' : (isAdmin||isCoach ? 'none' : '');
-  document.getElementById('stuNavBadge').style.display = isStu ? '' : 'none';
+  document.getElementById('nav-login-btn').style.display  = isStaff ? 'none' : '';
+  document.getElementById('nav-stu-login').style.display  = (isStu||isStaff) ? 'none' : '';
+  document.getElementById('nav-stu-signup').style.display = (isStu||isStaff) ? 'none' : '';
+  document.getElementById('stuNavBadge').style.display    = isStu ? '' : 'none';
+
+  // ── Drawer nav ──
+  var dAdmin = document.querySelector('.drawer-admin-only');
+  var dCoach = document.querySelector('.drawer-coach-only');
+  if (dAdmin) dAdmin.style.display = isAdmin ? '' : 'none';
+  if (dCoach) dCoach.style.display = isCoach ? '' : 'none';
+  var dStuBadge = document.getElementById('stuDrawerBadge');
+  var dStuLogin = document.getElementById('nav-stu-login-mobile');
+  var dStuSignup= document.getElementById('nav-stu-signup-mobile');
+  var dStaffBtn = document.getElementById('nav-login-btn-mobile');
+  if (dStuBadge) dStuBadge.style.display  = isStu ? '' : 'none';
+  if (dStuLogin) dStuLogin.style.display  = (isStu||isStaff) ? 'none' : '';
+  if (dStuSignup)dStuSignup.style.display = (isStu||isStaff) ? 'none' : '';
+  if (dStaffBtn) dStaffBtn.style.display  = isStaff ? 'none' : '';
+
+  // ── Student badge data ──
   if (isStu) {
     var initials = (currentUser.firstName[0]+(currentUser.lastName[0]||'')).toUpperCase();
+    // desktop badge
     var avEl = document.getElementById('stuNavAv');
     if (currentUser.photo) avEl.innerHTML = '<img src="'+currentUser.photo+'" alt=""/>';
     else avEl.textContent = initials;
     document.getElementById('stuNavName').textContent = currentUser.firstName;
+    // drawer badge
+    var dAv = document.getElementById('stuDrawerAv');
+    if (dAv) { if (currentUser.photo) dAv.innerHTML='<img src="'+currentUser.photo+'" alt=""/>'; else dAv.textContent=initials; }
+    var dNm = document.getElementById('stuDrawerName');
+    if (dNm) dNm.textContent = currentUser.firstName + ' ' + currentUser.lastName;
   }
   if (isAdmin) {
     document.getElementById('admAvatar').textContent = currentUser.initials;
@@ -1310,7 +1361,7 @@ document.getElementById('coachLogoutBtn').addEventListener('click', doLogout);
 function goPage(page) {
   if ((page==='admin') && (!currentUser || currentUser.role!=='admin')) { showLogin(); return; }
   if ((page==='coach') && (!currentUser || currentUser.role!=='coach')) { showLogin(); return; }
-  if ((page==='book') && (!currentUser || currentUser.role!=='student')) { showStuLogin(); return; }
+  // book page is freely viewable — login only required on submission
   document.querySelectorAll('.pg').forEach(function(p){ p.classList.remove('on'); });
   document.querySelectorAll('.nb-g').forEach(function(b){ b.classList.remove('on'); });
   document.getElementById('pg-'+page).classList.add('on');
@@ -1749,6 +1800,7 @@ function sumUpdate() {
 }
 
 function submitBooking() {
+  if (!currentUser || currentUser.role !== 'student') { showStuLogin(); return; }
   var fn=document.getElementById('bFN').value.trim();
   var ln=document.getElementById('bLN').value.trim();
   var em=document.getElementById('bEM').value.trim();
@@ -2515,9 +2567,10 @@ wirePhotoInput();
 
 // ── HAMBURGER NAV ──
 (function(){
-  var btn      = document.getElementById('hamburgerBtn');
-  var drawer   = document.getElementById('navDrawer');
-  var overlay  = document.getElementById('drawerOverlay');
+  var btn     = document.getElementById('hamburgerBtn');
+  var drawer  = document.getElementById('navDrawer');
+  var overlay = document.getElementById('drawerOverlay');
+
   function closeDrawer(){
     btn.classList.remove('open');
     drawer.classList.remove('open');
@@ -2525,7 +2578,7 @@ wirePhotoInput();
   }
   function toggleDrawer(){
     var isOpen = drawer.classList.contains('open');
-    if(isOpen){ closeDrawer(); } else {
+    if (isOpen) { closeDrawer(); } else {
       btn.classList.add('open');
       drawer.classList.add('open');
       overlay.classList.add('open');
@@ -2534,22 +2587,35 @@ wirePhotoInput();
   btn.addEventListener('click', toggleDrawer);
   overlay.addEventListener('click', closeDrawer);
 
-  // wire mobile drawer nav links
+  // Page navigation buttons (data-pg attribute)
+  document.querySelectorAll('.drawer-pg[data-pg]').forEach(function(b){
+    b.addEventListener('click', function(){
+      goPage(this.getAttribute('data-pg'));
+      closeDrawer();
+    });
+  });
+
+  // Action buttons
   var mobileMap = {
-    'nav-cta-mobile':         function(){ goPage('book'); closeDrawer(); },
-    'nav-stu-login-mobile':   function(){ showStuLogin(); closeDrawer(); },
-    'nav-stu-signup-mobile':  function(){ showStuSignup(); closeDrawer(); },
-    'nav-login-btn-mobile':   function(){ showLogin(); closeDrawer(); }
+    'nav-cta-mobile':        function(){ goPage('book'); closeDrawer(); },
+    'nav-stu-login-mobile':  function(){ showStuLogin(); closeDrawer(); },
+    'nav-stu-signup-mobile': function(){ showStuSignup(); closeDrawer(); },
+    'nav-login-btn-mobile':  function(){ showLogin(); closeDrawer(); },
+    'drawerLogoutBtn':       function(){ doStuLogout(); closeDrawer(); }
   };
   Object.keys(mobileMap).forEach(function(id){
     var el = document.getElementById(id);
-    if(el) el.addEventListener('click', mobileMap[id]);
+    if (el) el.addEventListener('click', mobileMap[id]);
   });
 
-  // also close drawer when any main nav button is clicked
-  document.querySelectorAll('.drawer-links .nb[id^="nav-"]').forEach(function(b){
-    b.addEventListener('click', closeDrawer);
-  });
+  // Highlight active page in drawer
+  var origGoPage = goPage;
+  window.goPage = function(page){
+    origGoPage(page);
+    document.querySelectorAll('.drawer-pg').forEach(function(b){
+      b.classList.toggle('on', b.getAttribute('data-pg') === page);
+    });
+  };
 })();
 
 // ═══════════════════════════════════════
