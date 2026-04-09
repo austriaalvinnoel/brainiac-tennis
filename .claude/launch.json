@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Brainiac Tennis (Static)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "C:/Users/lindol/Downloads/brainiac mobile app", "-l", "3000"],
+      "port": 3000
+    },
+    {
+      "name": "Brainiac Tennis (Python)",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8080"],
+      "port": 8080
+    }
+  ]
+}
