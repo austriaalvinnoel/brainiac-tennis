@@ -375,12 +375,122 @@ tr:hover td{background:var(--gu)}
 .qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 
-@media(max-width:700px){
-  .fg{grid-template-columns:1fr}
-  .about-grid{grid-template-columns:1fr}
-  .qa-grid{grid-template-columns:1fr}
-  .slots-grid{grid-template-columns:repeat(3,1fr)}
+/* ═══════════════════════════════════════
+   RESPONSIVE — HAMBURGER NAV
+═══════════════════════════════════════ */
+.nav{height:58px}
+.nav-right{display:flex;align-items:center;gap:6px}
+.hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;width:38px;height:38px;background:rgba(255,255,255,.1);border:none;border-radius:8px;cursor:pointer;padding:8px}
+.hamburger span{display:block;width:100%;height:2px;background:#fff;border-radius:2px;transition:all .25s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-drawer{position:fixed;top:58px;left:0;right:0;background:var(--gd);z-index:190;transform:translateY(-110%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.nav-drawer.open{transform:translateY(0)}
+.drawer-links{display:flex;flex-direction:column;padding:1rem 1.25rem 1.5rem;gap:4px}
+.drawer-links .nb{text-align:left;border-radius:10px;padding:10px 14px;font-size:.9rem}
+.drawer-cta{background:var(--gold)!important;color:var(--gd)!important;font-weight:600!important;margin-top:.25rem}
+.drawer-auth{margin-top:2px}
+.drawer-overlay{display:none;position:fixed;inset:0;top:58px;background:rgba(0,0,0,.4);z-index:189}
+.drawer-overlay.open{display:block}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — ALL BREAKPOINTS
+═══════════════════════════════════════ */
+
+/* Tablet + mobile: ≤ 900px */
+@media(max-width:900px){
   .cms-grid{grid-template-columns:1fr}
+  .csb-grid{grid-template-columns:1fr}
+  .adm-wrap{padding:1.25rem 1rem}
+  .adm-hd{margin-bottom:1.25rem}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .adm-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap}
+  .adm-tab{min-width:80px;white-space:nowrap;flex:0 0 auto}
+  .bk-wrap{grid-template-columns:1fr}
+}
+
+/* Large mobile: ≤ 768px */
+@media(max-width:768px){
+  .hamburger{display:flex}
+  .nav-hide-mobile{display:none!important}
+  .sec{padding:2.5rem 1.25rem}
+  .hero{padding:3rem 1.25rem 2.5rem}
+  .hero h1{font-size:clamp(1.7rem,7vw,2.6rem)}
+  .hero p{font-size:.9rem}
+  .hero-btns{flex-direction:column;align-items:center}
+  .hero-btns .btn-p,.hero-btns .btn-o{width:100%;max-width:280px;text-align:center}
+  .info-bar{grid-template-columns:repeat(2,1fr)}
+  .ib{border-right:none;border-bottom:1px solid rgba(255,255,255,.1)}
+  .pkg-grid{grid-template-columns:1fr}
+  .avail-grid{grid-template-columns:1fr}
+  .sec-hd h2{font-size:1.55rem}
+  .sum-card{position:static;margin-top:0}
+  .adm-wrap{padding:1rem .75rem}
+  .adm-hd h2{font-size:1.35rem}
+  .adm-tabs{gap:0}
+  .adm-tab{padding:9px 6px;font-size:.72rem}
+  .stats{grid-template-columns:repeat(2,1fr);gap:.75rem}
+  .tbl-card{border-radius:var(--rs)}
+  .tbl-head{padding:.75rem 1rem}
+  table{font-size:.78rem}
+  th,td{padding:8px 10px}
+  .about-grid{grid-template-columns:1fr}
+  .coach-panel-wrap{padding:1.25rem 1rem}
+  .login-box{padding:1.75rem 1.25rem}
+  .sauth-box{padding:1.5rem 1.25rem;border-radius:14px}
+  .sauth-grid{grid-template-columns:1fr}
+  .sauth-screen{padding:.75rem}
+}
+
+/* Small mobile: ≤ 480px */
+@media(max-width:480px){
+  .nav{padding:0 1rem}
+  .brand{font-size:1.05rem}
+  .sec{padding:2rem 1rem}
+  .hero{padding:2.5rem 1rem 2rem}
+  .bk-card{padding:1.25rem 1rem}
+  .bk-card h3{font-size:1.1rem}
+  .fg{grid-template-columns:1fr}
+  .fg1{grid-template-columns:1fr}
+  .slots-grid{grid-template-columns:repeat(3,1fr)}
+  .qa-grid{grid-template-columns:1fr}
+  .cms-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr;gap:.5rem}
+  .stat{padding:.85rem 1rem}
+  .stat .sv{font-size:1.5rem}
+  .info-bar{grid-template-columns:1fr 1fr}
+  .cal-strip{gap:4px}
+  .cal-day{min-width:44px;padding:8px 4px}
+  .cal-day .d-num{font-size:.95rem}
+  .adm-tabs{gap:0}
+  .adm-tab{padding:8px 5px;font-size:.68rem}
+  .adm-wrap{padding:.75rem .5rem}
+  .tbl-head{flex-direction:column;align-items:flex-start}
+  .tbl-head .srch{width:100%}
+  .tbl-head>div{width:100%;flex-wrap:wrap}
+  th,td{padding:7px 8px;font-size:.72rem}
+  .pkg-grid{grid-template-columns:1fr}
+  .avail-section{padding:1.25rem 1rem}
+  .coach-bk-card{flex-wrap:wrap;gap:10px}
+  .cbc-right{text-align:left;width:100%}
+  .login-box{padding:1.5rem 1rem}
+  .sauth-box{padding:1.25rem 1rem}
+  .sauth-grid{grid-template-columns:1fr}
+  .sum-card{padding:1.25rem 1rem}
+  .pay-grid{grid-template-columns:1fr 1fr}
+  .stu-name{max-width:60px}
+  .adm-user-badge span{display:none}
+}
+
+/* Fix iOS input zoom — inputs need font-size 16px minimum on mobile */
+@media(max-width:768px){
+  input,select,textarea{font-size:16px!important}
+  .fl input,.fl select,.fl textarea,
+  .sauth-fl input,.sauth-fl select,
+  .login-fl input,.modal .fl input,
+  .modal .fl select,.modal .fl textarea,
+  .srch,.otp-input{font-size:16px!important}
 }
 /* ── STUDENT AUTH SCREENS ── */
 .sauth-screen{display:none;position:fixed;inset:0;background:var(--gd);z-index:1000;align-items:flex-start;justify-content:center;padding:1.5rem;overflow-y:auto}
@@ -594,25 +704,39 @@ tr:hover td{background:var(--gu)}
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93c4.69 4.69 4.69 9.45 0 14.14M19.07 4.93c-4.69 4.69-4.69 9.45 0 14.14"/></svg>
     Brainiac <span class="brand-em">Tennis</span>
   </div>
-  <div class="nav-links">
-    <button class="nb nb-g on" id="nav-home">Home</button>
-    <button class="nb nb-g" id="nav-schedule">Schedule</button>
-    <button class="nb nb-g" id="nav-book">Book</button>
-    <button class="nb nb-g" id="nav-about">About</button>
-    <button class="nb nb-g staff-only" id="nav-admin" style="display:none">⚙ Admin</button>
-    <button class="nb nb-g staff-only" id="nav-coach" style="display:none">📋 My Schedule</button>
-    <button class="nb nb-gold" id="nav-cta">Get a Lesson</button>
+  <div class="nav-right">
+    <button class="nb nb-gold nav-hide-mobile" id="nav-cta">Get a Lesson</button>
     <div id="stuNavBadge" style="display:none">
       <div class="stu-badge" id="stuBadgeBtn">
         <div class="stu-av" id="stuNavAv">?</div>
         <span class="stu-name" id="stuNavName">Student</span>
       </div>
     </div>
-    <button class="nb nb-g" id="nav-stu-login" style="background:rgba(255,255,255,.12);color:#fff">Sign In</button>
-    <button class="nb nb-g" id="nav-stu-signup" style="border:1px solid rgba(255,255,255,.3);color:#fff">Sign Up</button>
-    <button class="nb nb-g" id="nav-login-btn">Staff Login</button>
+    <button class="nb nb-g nav-hide-mobile" id="nav-stu-login" style="background:rgba(255,255,255,.12);color:#fff">Sign In</button>
+    <button class="nb nb-g nav-hide-mobile" id="nav-stu-signup" style="border:1px solid rgba(255,255,255,.3);color:#fff">Sign Up</button>
+    <button class="nb nb-g nav-hide-mobile" id="nav-login-btn">Staff Login</button>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+<!-- MOBILE DRAWER -->
+<div class="nav-drawer" id="navDrawer">
+  <div class="drawer-links">
+    <button class="nb nb-g on" id="nav-home">Home</button>
+    <button class="nb nb-g" id="nav-schedule">Schedule</button>
+    <button class="nb nb-g" id="nav-book">Book</button>
+    <button class="nb nb-g" id="nav-about">About</button>
+    <button class="nb nb-g staff-only" id="nav-admin" style="display:none">⚙ Admin</button>
+    <button class="nb nb-g staff-only" id="nav-coach" style="display:none">📋 My Schedule</button>
+    <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:.5rem 0"/>
+    <button class="nb nb-gold drawer-cta" id="nav-cta-mobile">Get a Lesson</button>
+    <button class="nb nb-g drawer-auth" id="nav-stu-login-mobile" style="background:rgba(255,255,255,.12);color:#fff">Sign In</button>
+    <button class="nb nb-g drawer-auth" id="nav-stu-signup-mobile" style="border:1px solid rgba(255,255,255,.3);color:#fff">Sign Up</button>
+    <button class="nb nb-g drawer-auth" id="nav-login-btn-mobile" style="font-size:.75rem;opacity:.7">Staff Login</button>
+  </div>
+</div>
+<div class="drawer-overlay" id="drawerOverlay"></div>
 
 <!-- SUCCESS MODAL -->
 <div class="overlay" id="successModal">
@@ -2388,6 +2512,45 @@ document.getElementById('resetConfirmBtn').addEventListener('click', doConfirmOt
 document.getElementById('resetBackBtn').addEventListener('click', function(){ hideReset(); showStuLogin(); });
 
 wirePhotoInput();
+
+// ── HAMBURGER NAV ──
+(function(){
+  var btn      = document.getElementById('hamburgerBtn');
+  var drawer   = document.getElementById('navDrawer');
+  var overlay  = document.getElementById('drawerOverlay');
+  function closeDrawer(){
+    btn.classList.remove('open');
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+  function toggleDrawer(){
+    var isOpen = drawer.classList.contains('open');
+    if(isOpen){ closeDrawer(); } else {
+      btn.classList.add('open');
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+    }
+  }
+  btn.addEventListener('click', toggleDrawer);
+  overlay.addEventListener('click', closeDrawer);
+
+  // wire mobile drawer nav links
+  var mobileMap = {
+    'nav-cta-mobile':         function(){ goPage('book'); closeDrawer(); },
+    'nav-stu-login-mobile':   function(){ showStuLogin(); closeDrawer(); },
+    'nav-stu-signup-mobile':  function(){ showStuSignup(); closeDrawer(); },
+    'nav-login-btn-mobile':   function(){ showLogin(); closeDrawer(); }
+  };
+  Object.keys(mobileMap).forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.addEventListener('click', mobileMap[id]);
+  });
+
+  // also close drawer when any main nav button is clicked
+  document.querySelectorAll('.drawer-links .nb[id^="nav-"]').forEach(function(b){
+    b.addEventListener('click', closeDrawer);
+  });
+})();
 
 // ═══════════════════════════════════════
 // EMAILJS CONFIG — fill in your credentials
