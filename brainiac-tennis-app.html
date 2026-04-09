@@ -4,6 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Brainiac Tennis — Booking</title>
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <!-- PWA -->
 <link rel="manifest" href="manifest.json"/>
 <meta name="theme-color" content="#1a3a2a"/>
@@ -404,7 +406,6 @@ tr:hover td{background:var(--gu)}
     </div>
     <div class="login-err" id="loginErr"></div>
     <button class="login-btn" id="loginBtn">Sign In</button>
-    <div class="login-hint" id="loginHint">Admin: admin / tennis123 &nbsp;|&nbsp; Coaches: esther / coach123</div>
     <button style="margin-top:1rem;background:none;border:none;color:var(--g4);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer" id="loginCancelBtn">← Back to booking site</button>
   </div>
 </div>
@@ -644,6 +645,7 @@ tr:hover td{background:var(--gu)}
       <button class="adm-tab" data-tab="coaches">👤 Coaches</button>
       <button class="adm-tab" data-tab="payments">💳 Payments</button>
       <button class="adm-tab" data-tab="classes">📆 Classes</button>
+      <button class="adm-tab" data-tab="students">🎓 Students</button>
     </div>
     <!-- BOOKINGS -->
     <div class="adm-pane on" id="ap-bookings">
@@ -755,6 +757,24 @@ tr:hover td{background:var(--gu)}
       <div class="cms-card" style="max-width:700px">
         <div class="cms-hd"><h4>Payment Methods</h4><button class="add-btn" id="addPayBtn">+ Add Method</button></div>
         <div class="cms-body" id="payMethodsList"></div>
+      </div>
+    </div>
+    <!-- STUDENTS -->
+    <div class="adm-pane" id="ap-students">
+      <div class="tbl-card">
+        <div class="tbl-head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem">
+          <h4>🎓 All Students</h4>
+          <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+            <input class="srch" id="stuSearch" placeholder="Search name or email..."/>
+            <button class="add-btn" id="exportBookingsBtn">⬇ Export Bookings CSV</button>
+            <button class="add-btn" id="exportCoachesBtn" style="background:var(--gm)">⬇ Export Coaches CSV</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table><thead><tr>
+            <th>Name</th><th>Email</th><th>Phone</th><th>Skill</th><th>Bookings</th><th>Last Booking</th><th>Total Spent</th>
+          </tr></thead><tbody id="stuBody"></tbody></table>
+        </div>
       </div>
     </div>
   </div>
@@ -884,10 +904,6 @@ function setLoginRole(role) {
   loginRole = role;
   document.getElementById('roleAdmin').classList.toggle('on', role==='admin');
   document.getElementById('roleCoach').classList.toggle('on', role==='coach');
-  document.getElementById('loginHint').textContent =
-    role === 'admin'
-      ? 'Admin: admin / tennis123'
-      : 'Coaches: esther / coach123  |  maria / coach123  |  jose / coach123';
 }
 function doLogin() {
   var u = document.getElementById('loginUser').value.trim();
@@ -994,6 +1010,7 @@ document.querySelectorAll('.adm-tab').forEach(function(btn){
     if(t==='coaches')  renderCoachesTab();
     if(t==='payments') renderPaymentsTab();
     if(t==='classes')  renderClassesTab();
+    if(t==='students') renderStudentsTab();
   });
 });
 
@@ -1414,6 +1431,7 @@ function submitBooking() {
   var sl=DB.schedule[dayKey].slots.find(function(s){ return s.time===pickedSlot; });
   if(sl) sl.booked++;
   DB.bookings.push(bk);
+  sendBookingEmail(bk);
   document.getElementById('bkRef').textContent=ref;
   document.getElementById('successModal').classList.add('on');
 }
@@ -1968,6 +1986,140 @@ function closeModal(){ document.getElementById('cmsModal').classList.remove('on'
 function mfl(lbl,id,val,ph,type){ return '<div class="fl"><label>'+lbl+'</label><input type="'+(type||'text')+'" id="'+id+'" value="'+esc(String(val===undefined?'':val))+'" placeholder="'+esc(ph||'')+'"/></div>'; }
 function mfta(lbl,id,val,ph){ return '<div class="fl"><label>'+lbl+'</label><textarea id="'+id+'" placeholder="'+esc(ph||'')+'">'+esc(val||'')+'</textarea></div>'; }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ═══════════════════════════════════════
+// EMAILJS CONFIG — fill in your credentials
+// ═══════════════════════════════════════
+var EMAILJS_PUBLIC_KEY   = 'YOUR_PUBLIC_KEY';    // from emailjs.com → Account → API Keys
+var EMAILJS_SERVICE_ID   = 'YOUR_SERVICE_ID';    // from emailjs.com → Email Services
+var EMAILJS_TEMPLATE_ID  = 'YOUR_TEMPLATE_ID';   // from emailjs.com → Email Templates
+var ADMIN_NOTIFY_EMAIL   = 'your@email.com';     // your email address
+
+(function(){
+  if (EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  }
+})();
+
+function sendBookingEmail(bk) {
+  if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') return; // not configured yet
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    to_email:      ADMIN_NOTIFY_EMAIL,
+    booking_ref:   bk.ref,
+    student_name:  bk.name,
+    student_email: bk.email,
+    student_phone: bk.phone || '—',
+    lesson_type:   bk.type,
+    package:       bk.package,
+    price:         '$' + bk.price,
+    date:          bk.date,
+    time:          bk.time,
+    skill_level:   bk.skill,
+    coach:         bk.coach,
+    court:         bk.court,
+    payment:       bk.payment,
+    notes:         bk.notes || '—',
+    status:        bk.status,
+    booked_at:     new Date(bk.createdAt).toLocaleString()
+  });
+}
+
+// ═══════════════════════════════════════
+// STUDENTS TAB
+// ═══════════════════════════════════════
+function renderStudentsTab() {
+  var stuMap = {};
+  DB.bookings.forEach(function(b) {
+    var key = b.email.toLowerCase();
+    if (!stuMap[key]) {
+      stuMap[key] = { name: b.name, email: b.email, phone: b.phone || '—', skill: b.skill, bookings: [], total: 0 };
+    }
+    stuMap[key].bookings.push(b);
+    stuMap[key].total += b.price || 0;
+    if (b.skill && b.skill !== '—') stuMap[key].skill = b.skill;
+  });
+  var students = Object.values(stuMap);
+
+  var search = (document.getElementById('stuSearch') || {}).value || '';
+  if (search) {
+    var q = search.toLowerCase();
+    students = students.filter(function(s) {
+      return s.name.toLowerCase().includes(q) || s.email.toLowerCase().includes(q);
+    });
+  }
+
+  var tb = document.getElementById('stuBody');
+  if (!students.length) {
+    tb.innerHTML = '<tr><td colspan="7" class="empty">No students found.</td></tr>';
+  } else {
+    tb.innerHTML = '';
+    students.forEach(function(s) {
+      var last = s.bookings.sort(function(a,b){ return new Date(b.date)-new Date(a.date); })[0];
+      var lastDate = last ? new Date(last.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td><div style="font-weight:500">'+esc(s.name)+'</div></td>'+
+        '<td style="font-size:.78rem">'+esc(s.email)+'</td>'+
+        '<td style="font-size:.78rem">'+esc(s.phone)+'</td>'+
+        '<td><span class="bdg" style="background:var(--gp);color:var(--gd)">'+esc(s.skill||'—')+'</span></td>'+
+        '<td style="text-align:center;font-weight:500">'+s.bookings.length+'</td>'+
+        '<td style="font-size:.78rem">'+lastDate+'</td>'+
+        '<td style="font-weight:600;color:var(--gd)">$'+s.total.toLocaleString()+'</td>';
+      tb.appendChild(tr);
+    });
+  }
+
+  var searchEl = document.getElementById('stuSearch');
+  if (searchEl && !searchEl._bound) {
+    searchEl._bound = true;
+    searchEl.addEventListener('input', renderStudentsTab);
+  }
+  var exportBk = document.getElementById('exportBookingsBtn');
+  if (exportBk && !exportBk._bound) {
+    exportBk._bound = true;
+    exportBk.addEventListener('click', exportBookingsCSV);
+  }
+  var exportCo = document.getElementById('exportCoachesBtn');
+  if (exportCo && !exportCo._bound) {
+    exportCo._bound = true;
+    exportCo.addEventListener('click', exportCoachesCSV);
+  }
+}
+
+// ═══════════════════════════════════════
+// CSV EXPORT
+// ═══════════════════════════════════════
+function csvEscape(v) {
+  var s = String(v === null || v === undefined ? '' : v);
+  if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+}
+function downloadCSV(filename, rows) {
+  var csv = rows.map(function(r){ return r.map(csvEscape).join(','); }).join('\r\n');
+  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportBookingsCSV() {
+  var header = ['Ref','Student Name','Email','Phone','Lesson Type','Package','Price','Date','Time','Skill Level','Coach','Court','Payment','Notes','Status','Booked At'];
+  var rows = [header].concat(DB.bookings.map(function(b){
+    return [b.ref, b.name, b.email, b.phone||'', b.type, b.package, b.price, b.date, b.time, b.skill, b.coach, b.court, b.payment, b.notes||'', b.status, b.createdAt ? new Date(b.createdAt).toLocaleString() : ''];
+  }));
+  downloadCSV('brainiac-bookings-'+new Date().toISOString().split('T')[0]+'.csv', rows);
+}
+
+function exportCoachesCSV() {
+  var header = ['Name','Title','Bio','Username','Active'];
+  var rows = [header].concat(DB.coaches.map(function(c){
+    return [c.name, c.title||'', c.bio||'', c.username, c.active?'Yes':'No'];
+  }));
+  downloadCSV('brainiac-coaches-'+new Date().toISOString().split('T')[0]+'.csv', rows);
+}
 
 // ═══════════════════════════════════════
 // INIT
