@@ -1032,7 +1032,6 @@ tr:hover td{background:var(--gu)}
       <button class="adm-tab" data-tab="payments">💳 Payments</button>
       <button class="adm-tab" data-tab="classes">📆 Classes</button>
       <button class="adm-tab" data-tab="students">🎓 Students</button>
-      <button class="adm-tab" data-tab="coaches-list">👤 Coaches</button>
     </div>
     <!-- BOOKINGS -->
     <div class="adm-pane on" id="ap-bookings">
@@ -1135,7 +1134,13 @@ tr:hover td{background:var(--gu)}
     <!-- COACHES -->
     <div class="adm-pane" id="ap-coaches">
       <div class="cms-card" style="max-width:700px">
-        <div class="cms-hd"><h4>Coaches &amp; Login Credentials</h4><button class="add-btn" id="addCoachBtn">+ Add Coach</button></div>
+        <div class="cms-hd">
+          <h4>👤 Coaches (<span id="coachCount">0</span>)</h4>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <button class="add-btn" id="addCoachBtn">+ Add Coach</button>
+            <button class="add-btn" id="exportCoachesBtn" style="background:var(--gm)">⬇ Export CSV</button>
+          </div>
+        </div>
         <div class="cms-body" id="coachesList"></div>
       </div>
     </div>
@@ -1161,20 +1166,6 @@ tr:hover td{background:var(--gu)}
           <table><thead><tr>
             <th>Photo</th><th>Name</th><th>Email</th><th>Phone</th><th>Age</th><th>Gender</th><th>Address</th><th>Guardian</th><th>Username</th><th>Bookings</th><th>Joined</th>
           </tr></thead><tbody id="stuBody"></tbody></table>
-        </div>
-      </div>
-    </div>
-    <!-- COACHES LIST (admin view) -->
-    <div class="adm-pane" id="ap-coaches-list">
-      <div class="tbl-card">
-        <div class="tbl-head">
-          <h4>👤 Coaches (<span id="coachCount">0</span>)</h4>
-          <button class="add-btn" id="exportCoachesBtn" style="background:var(--gm)">⬇ Coaches CSV</button>
-        </div>
-        <div style="overflow-x:auto">
-          <table><thead><tr>
-            <th>Name</th><th>Title</th><th>Bio</th><th>Username</th><th>Status</th>
-          </tr></thead><tbody id="coachListBody"></tbody></table>
         </div>
       </div>
     </div>
@@ -1548,8 +1539,7 @@ document.querySelectorAll('.adm-tab').forEach(function(btn){
     if(t==='coaches')  renderCoachesTab();
     if(t==='payments') renderPaymentsTab();
     if(t==='classes')  renderClassesTab();
-    if(t==='students')     renderStudentsTab();
-    if(t==='coaches-list') renderCoachesListTab();
+    if(t==='students') renderStudentsTab();
   });
 });
 
@@ -2414,6 +2404,9 @@ function openLessonModal(){
 // ═══════════════════════════════════════
 function renderCoachesTab(){
   var list=document.getElementById('coachesList'); list.innerHTML='';
+  document.getElementById('coachCount').textContent = DB.coaches.length;
+  var expBtn=document.getElementById('exportCoachesBtn');
+  if(expBtn&&!expBtn._bound){ expBtn._bound=true; expBtn.addEventListener('click',exportCoachesCSV); }
   DB.coaches.forEach(function(c){
     var div=document.createElement('div'); div.className='lesson-item';
     div.innerHTML='<div style="width:38px;height:38px;border-radius:50%;background:var(--gp);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:600;color:var(--gd);flex-shrink:0">'+esc(c.initials)+'</div>'+
@@ -2894,6 +2887,12 @@ function sendBookingEmail(bk) {
 // STUDENTS TAB
 // ═══════════════════════════════════════
 function renderStudentsTab() {
+  // Always pull the latest from localStorage so new sign-ups are visible
+  try {
+    var fresh = JSON.parse(localStorage.getItem('brainiac_db') || '{}');
+    if (fresh.students) DB.students = fresh.students;
+    if (fresh.bookings) DB.bookings = fresh.bookings;
+  } catch(e){}
   var students = DB.students;
   var search = (document.getElementById('stuSearch')||{}).value||'';
   document.getElementById('stuCount').textContent = students.length;
@@ -2934,23 +2933,6 @@ function renderStudentsTab() {
   if(expStu&&!expStu._bound){ expStu._bound=true; expStu.addEventListener('click',exportStudentsCSV); }
 }
 
-function renderCoachesListTab() {
-  document.getElementById('coachCount').textContent = DB.coaches.length;
-  var tb = document.getElementById('coachListBody');
-  tb.innerHTML = '';
-  DB.coaches.forEach(function(c){
-    var tr = document.createElement('tr');
-    tr.innerHTML =
-      '<td><div style="font-weight:500">'+esc(c.name)+'</div></td>'+
-      '<td style="font-size:.82rem">'+esc(c.title||'—')+'</td>'+
-      '<td style="font-size:.78rem;max-width:200px">'+esc(c.bio||'—')+'</td>'+
-      '<td style="font-family:monospace;font-size:.78rem">'+esc(c.username)+'</td>'+
-      '<td><span class="bdg '+(c.active?'b-ok':'b-can')+'">'+(c.active?'Active':'Inactive')+'</span></td>';
-    tb.appendChild(tr);
-  });
-  var expCo=document.getElementById('exportCoachesBtn');
-  if(expCo&&!expCo._bound){ expCo._bound=true; expCo.addEventListener('click',exportCoachesCSV); }
-}
 
 // ═══════════════════════════════════════
 // CSV EXPORT
