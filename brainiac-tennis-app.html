@@ -539,6 +539,50 @@ tr:hover td{background:var(--gu)}
 .stu-card-name{font-size:.92rem;font-weight:600;color:var(--g9)}
 .stu-card-sub{font-size:.75rem;color:var(--g4);margin-top:2px}
 .stu-card-badge{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap}
+/* ── COACH PROFILE ── */
+.coach-photo-wrap{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;padding:1rem;background:var(--gu);border-radius:var(--r);border:1px solid var(--gp)}
+.coach-photo-av{width:64px;height:64px;border-radius:50%;background:var(--gm);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;overflow:hidden;flex-shrink:0;cursor:pointer;border:3px solid var(--gl)}
+.coach-photo-av img{width:100%;height:100%;object-fit:cover}
+.coach-photo-info{flex:1}
+.coach-photo-info strong{display:block;font-size:.9rem;color:var(--gd);margin-bottom:3px}
+.coach-photo-info span{font-size:.78rem;color:var(--g4)}
+/* ── COACH COMMENT ── */
+.comment-row{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--g2)}
+.comment-label{font-size:.7rem;font-weight:600;color:var(--g4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.comment-saved{font-size:.82rem;color:var(--g6);font-style:italic;padding:6px 10px;background:var(--gu);border-radius:var(--rs);border-left:3px solid var(--gl)}
+.comment-area{width:100%;padding:8px 10px;border:1.5px solid var(--g2);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:.85rem;color:var(--g9);resize:vertical;min-height:60px;background:var(--off)}
+.comment-area:focus{outline:none;border-color:var(--gl);background:var(--w)}
+.comment-btns{display:flex;gap:6px;margin-top:5px}
+.comment-save-btn{padding:5px 14px;background:var(--gd);color:#fff;border:none;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer}
+.comment-save-btn:hover{background:var(--gm)}
+.comment-edit-btn{padding:5px 12px;background:transparent;color:var(--g6);border:1px solid var(--g2);border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer}
+.comment-edit-btn:hover{background:var(--g1)}
+/* ── STUDENT PROFILE PAGE ── */
+.profile-wrap{max-width:860px;margin:0 auto;padding:2rem 1.5rem}
+.profile-hd{display:flex;align-items:center;gap:1.25rem;margin-bottom:2rem;flex-wrap:wrap}
+.profile-av-wrap{position:relative;cursor:pointer;flex-shrink:0}
+.profile-av{width:80px;height:80px;border-radius:50%;background:var(--gm);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:700;overflow:hidden;border:3px solid var(--gl)}
+.profile-av img{width:100%;height:100%;object-fit:cover}
+.profile-av-edit{position:absolute;bottom:0;right:0;width:24px;height:24px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--gd);font-weight:700}
+.profile-name{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--gd)}
+.profile-sub{font-size:.85rem;color:var(--g4);margin-top:3px}
+.profile-tabs{display:flex;gap:0;background:var(--w);border:1px solid var(--g2);border-radius:var(--r);overflow:hidden;margin-bottom:1.75rem;flex-wrap:wrap}
+.ptab{flex:1;min-width:100px;padding:10px 8px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;color:var(--g6);border-right:1px solid var(--g2);transition:all .15s}
+.ptab:last-child{border:none}
+.ptab.on{background:var(--gd);color:#fff}
+.ptab:hover:not(.on){background:var(--gu);color:var(--gd)}
+.ppane{display:none}.ppane.on{display:block}
+/* booking history card */
+.bh-card{background:var(--w);border:1px solid var(--g2);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:.75rem}
+.bh-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.bh-ref{font-family:monospace;font-size:.75rem;color:var(--g4)}
+.bh-pkg{font-size:.9rem;font-weight:600;color:var(--g9)}
+.bh-meta{font-size:.78rem;color:var(--g6);display:flex;gap:1rem;flex-wrap:wrap;margin-top:3px}
+.bh-feedback{margin-top:.75rem;padding:.75rem;background:var(--gu);border-left:3px solid var(--gl);border-radius:0 var(--rs) var(--rs) 0}
+.bh-feedback-lbl{font-size:.68rem;font-weight:600;color:var(--gl);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.bh-feedback-txt{font-size:.85rem;color:var(--g6);font-style:italic}
+@media(max-width:768px){.profile-wrap{padding:1.5rem 1rem}.profile-tabs{overflow-x:auto;flex-wrap:nowrap}.ptab{min-width:90px;white-space:nowrap;flex:0 0 auto}}
+@media(max-width:480px){.profile-hd{gap:.75rem}.profile-av{width:64px;height:64px;font-size:1.2rem}}
 </style>
 </head>
 <body>
@@ -722,12 +766,15 @@ tr:hover td{background:var(--gu)}
   <!-- Desktop action buttons (hidden on mobile) -->
   <div class="nav-right">
     <button class="nb nb-gold nav-desktop-only" id="nav-cta">Get a Lesson</button>
+    <button class="nb nb-g nav-desktop-only" id="nav-coach-signout" style="display:none;background:rgba(255,255,255,.12);color:#fff">Sign Out</button>
     <div id="stuNavBadge" style="display:none">
       <div class="stu-badge" id="stuBadgeBtn">
         <div class="stu-av" id="stuNavAv">?</div>
         <span class="stu-name" id="stuNavName">Student</span>
       </div>
     </div>
+    <button class="nb nb-g nav-desktop-only" id="nav-profile-btn" style="display:none;background:rgba(255,255,255,.1);color:#fff">👤 My Profile</button>
+    <button class="nb nb-g nav-desktop-only" id="nav-stu-signout" style="display:none;background:rgba(192,57,43,.25);color:#ffb3b3;font-size:.78rem">Sign Out</button>
     <button class="nb nb-g nav-desktop-only" id="nav-stu-login" style="background:rgba(255,255,255,.12);color:#fff">Sign In</button>
     <button class="nb nb-g nav-desktop-only" id="nav-stu-signup" style="border:1px solid rgba(255,255,255,.3);color:#fff">Sign Up</button>
     <button class="nb nb-g nav-desktop-only" id="nav-login-btn" style="font-size:.78rem;opacity:.75">Staff</button>
@@ -742,12 +789,14 @@ tr:hover td{background:var(--gu)}
   <div class="drawer-links">
     <button class="nb nb-g drawer-pg" data-pg="home">🏠 Home</button>
     <button class="nb nb-g drawer-pg" data-pg="schedule">📅 Schedule</button>
-    <button class="nb nb-g drawer-pg" data-pg="book">🎾 Book a Lesson</button>
+    <button class="nb nb-g drawer-pg drawer-student-page" data-pg="book">🎾 Book a Lesson</button>
     <button class="nb nb-g drawer-pg" data-pg="about">ℹ️ About</button>
     <button class="nb nb-g drawer-pg drawer-admin-only" data-pg="admin" style="display:none">⚙ Admin Panel</button>
     <button class="nb nb-g drawer-pg drawer-coach-only" data-pg="coach" style="display:none">📋 My Schedule</button>
+    <button class="nb nb-g drawer-pg drawer-student-only" data-pg="profile" style="display:none">👤 My Profile</button>
     <hr style="border:none;border-top:1px solid rgba(255,255,255,.15);margin:.5rem 0"/>
-    <button class="nb nb-gold drawer-cta" id="nav-cta-mobile">🎾 Get a Lesson</button>
+    <button class="nb nb-gold drawer-cta drawer-student-page" id="nav-cta-mobile">🎾 Get a Lesson</button>
+    <button class="nb nb-g drawer-auth drawer-coach-signout" id="nav-coach-signout-mobile" style="display:none;background:rgba(255,255,255,.12);color:#fff">Sign Out</button>
     <div id="stuDrawerBadge" style="display:none;padding:6px 14px">
       <div style="display:flex;align-items:center;gap:8px">
         <div class="stu-av" id="stuDrawerAv" style="width:32px;height:32px">?</div>
@@ -757,6 +806,7 @@ tr:hover td{background:var(--gu)}
         </div>
       </div>
     </div>
+    <button class="nb nb-g drawer-auth drawer-student-signout" id="nav-stu-signout-mobile" style="display:none;background:rgba(192,57,43,.2);color:#ffb3b3;font-size:.82rem">Sign Out</button>
     <button class="nb nb-g drawer-auth" id="nav-stu-login-mobile" style="background:rgba(255,255,255,.12);color:#fff">Sign In</button>
     <button class="nb nb-g drawer-auth" id="nav-stu-signup-mobile" style="border:1px solid rgba(255,255,255,.3);color:#fff">Sign Up</button>
     <button class="nb nb-g drawer-auth" id="nav-login-btn-mobile" style="font-size:.78rem;color:rgba(255,255,255,.55)">Staff Login</button>
@@ -1147,6 +1197,14 @@ tr:hover td{background:var(--gu)}
         <button class="logout-btn" id="coachLogoutBtn">Sign out</button>
       </div>
     </div>
+    <div class="coach-photo-wrap">
+      <div class="coach-photo-av" id="coachPhotoAv" title="Click to upload photo">?</div>
+      <div class="coach-photo-info">
+        <strong id="coachPhotoName">Coach</strong>
+        <span>Click your photo to update it — students will see it when booking</span>
+      </div>
+      <input type="file" id="coachPhotoInput" accept="image/*" style="display:none"/>
+    </div>
     <div class="stats" id="coachStats"></div>
     <div class="coach-filter-row">
       <label>Filter:</label>
@@ -1155,6 +1213,54 @@ tr:hover td{background:var(--gu)}
       <button class="cf-btn" data-filter="today" id="cfToday">Today</button>
     </div>
     <div id="coachBookingsList"></div>
+  </div>
+</div>
+
+<!-- ══ STUDENT PROFILE ══ -->
+<div id="pg-profile" class="pg">
+  <div class="profile-wrap">
+    <div class="profile-hd">
+      <div class="profile-av-wrap" id="profileAvWrap">
+        <div class="profile-av" id="profileAv">?</div>
+        <div class="profile-av-edit">✎</div>
+        <input type="file" id="profilePhotoInput" accept="image/*" style="display:none"/>
+      </div>
+      <div>
+        <div class="profile-name" id="profileFullName">Student</div>
+        <div class="profile-sub" id="profileEmail"></div>
+        <div class="profile-sub" id="profileMember"></div>
+      </div>
+    </div>
+    <div class="profile-tabs">
+      <button class="ptab on" data-ptab="edit">✏️ Edit Profile</button>
+      <button class="ptab" data-ptab="history">📋 Booking History</button>
+      <button class="ptab" data-ptab="feedback">💬 Coach Feedback</button>
+    </div>
+    <!-- Edit Profile -->
+    <div class="ppane on" id="pp-edit">
+      <div class="bk-card">
+        <h3>Personal Details</h3>
+        <div class="fg">
+          <div class="fl"><label>First Name</label><input type="text" id="pFN" placeholder="First name"/></div>
+          <div class="fl"><label>Last Name</label><input type="text" id="pLN" placeholder="Last name"/></div>
+          <div class="fl"><label>Phone</label><input type="tel" id="pPH" placeholder="Phone number"/></div>
+          <div class="fl"><label>Email</label><input type="email" id="pEM" placeholder="Email address"/></div>
+          <div class="fl" style="grid-column:1/-1"><label>Address</label><input type="text" id="pAD" placeholder="Street, City, State"/></div>
+        </div>
+        <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap">
+          <button class="btn-p" id="saveProfileBtn">Save Changes</button>
+          <div style="font-size:.82rem;color:var(--gl);align-self:center;display:none" id="profileSaved">✓ Saved!</div>
+        </div>
+      </div>
+    </div>
+    <!-- Booking History -->
+    <div class="ppane" id="pp-history">
+      <div id="profileHistoryList"></div>
+    </div>
+    <!-- Coach Feedback -->
+    <div class="ppane" id="pp-feedback">
+      <div id="profileFeedbackList"></div>
+    </div>
   </div>
 </div>
 
@@ -1223,13 +1329,29 @@ var DB = {
 
 // ── LOCALSTORAGE PERSISTENCE ──
 function saveDB() {
-  try { localStorage.setItem('brainiac_db', JSON.stringify({students: DB.students, bookings: DB.bookings})); } catch(e){}
+  try {
+    // Save coach photos separately (only photo field, merged on load)
+    var coachPhotos = {};
+    DB.coaches.forEach(function(c){ if (c.photo) coachPhotos[c.id] = c.photo; });
+    localStorage.setItem('brainiac_db', JSON.stringify({
+      students: DB.students,
+      bookings: DB.bookings,
+      coachPhotos: coachPhotos
+    }));
+  } catch(e){}
 }
 function loadDB() {
   try {
     var saved = JSON.parse(localStorage.getItem('brainiac_db') || '{}');
     if (saved.students) DB.students = saved.students;
     if (saved.bookings) DB.bookings = saved.bookings;
+    // Restore coach photos without overwriting other coach data
+    if (saved.coachPhotos) {
+      Object.keys(saved.coachPhotos).forEach(function(idStr){
+        var coach = DB.coaches.find(function(c){ return c.id === parseInt(idStr); });
+        if (coach) coach.photo = saved.coachPhotos[idStr];
+      });
+    }
   } catch(e){}
 }
 loadDB();
@@ -1299,37 +1421,50 @@ function applyAuth() {
   var isStu   = currentUser && currentUser.role==='student';
   var isStaff = isAdmin || isCoach;
 
-  // ── Desktop nav ──
-  document.getElementById('nav-admin').style.display = isAdmin ? '' : 'none';
-  document.getElementById('nav-coach').style.display = isCoach ? '' : 'none';
-  document.getElementById('nav-login-btn').style.display  = isStaff ? 'none' : '';
-  document.getElementById('nav-stu-login').style.display  = (isStu||isStaff) ? 'none' : '';
-  document.getElementById('nav-stu-signup').style.display = (isStu||isStaff) ? 'none' : '';
-  document.getElementById('stuNavBadge').style.display    = isStu ? '' : 'none';
+  // ── Desktop nav visibility ──
+  document.getElementById('nav-admin').style.display        = isAdmin ? '' : 'none';
+  document.getElementById('nav-coach').style.display        = isCoach ? '' : 'none';
+  document.getElementById('nav-cta').style.display          = isCoach ? 'none' : '';
+  document.getElementById('nav-book').style.display         = isCoach ? 'none' : '';
+  document.getElementById('nav-coach-signout').style.display= isCoach ? '' : 'none';
+  document.getElementById('nav-login-btn').style.display    = isStaff ? 'none' : '';
+  document.getElementById('nav-stu-login').style.display    = (isStu||isStaff) ? 'none' : '';
+  document.getElementById('nav-stu-signup').style.display   = (isStu||isStaff) ? 'none' : '';
+  document.getElementById('stuNavBadge').style.display      = isStu ? '' : 'none';
+  document.getElementById('nav-profile-btn').style.display  = isStu ? '' : 'none';
+  document.getElementById('nav-stu-signout').style.display  = isStu ? '' : 'none';
 
   // ── Drawer nav ──
-  var dAdmin = document.querySelector('.drawer-admin-only');
-  var dCoach = document.querySelector('.drawer-coach-only');
+  var dAdmin  = document.querySelector('.drawer-admin-only');
+  var dCoach  = document.querySelector('.drawer-coach-only');
+  var dStuOnly= document.querySelectorAll('.drawer-student-only');
+  var dStuPage= document.querySelectorAll('.drawer-student-page');
   if (dAdmin) dAdmin.style.display = isAdmin ? '' : 'none';
   if (dCoach) dCoach.style.display = isCoach ? '' : 'none';
-  var dStuBadge = document.getElementById('stuDrawerBadge');
-  var dStuLogin = document.getElementById('nav-stu-login-mobile');
-  var dStuSignup= document.getElementById('nav-stu-signup-mobile');
-  var dStaffBtn = document.getElementById('nav-login-btn-mobile');
-  if (dStuBadge) dStuBadge.style.display  = isStu ? '' : 'none';
-  if (dStuLogin) dStuLogin.style.display  = (isStu||isStaff) ? 'none' : '';
-  if (dStuSignup)dStuSignup.style.display = (isStu||isStaff) ? 'none' : '';
-  if (dStaffBtn) dStaffBtn.style.display  = isStaff ? 'none' : '';
+  dStuOnly.forEach(function(el){ el.style.display = isStu ? '' : 'none'; });
+  dStuPage.forEach(function(el){ el.style.display = isCoach ? 'none' : ''; });
+
+  var dCoachSignout = document.querySelector('.drawer-coach-signout');
+  if (dCoachSignout) dCoachSignout.style.display = isCoach ? '' : 'none';
+
+  var dStuBadge  = document.getElementById('stuDrawerBadge');
+  var dStuLogin  = document.getElementById('nav-stu-login-mobile');
+  var dStuSignup = document.getElementById('nav-stu-signup-mobile');
+  var dStaffBtn  = document.getElementById('nav-login-btn-mobile');
+  var dStuSignout= document.querySelector('.drawer-student-signout');
+  if (dStuBadge)  dStuBadge.style.display  = isStu ? '' : 'none';
+  if (dStuLogin)  dStuLogin.style.display  = (isStu||isStaff) ? 'none' : '';
+  if (dStuSignup) dStuSignup.style.display = (isStu||isStaff) ? 'none' : '';
+  if (dStaffBtn)  dStaffBtn.style.display  = isStaff ? 'none' : '';
+  if (dStuSignout)dStuSignout.style.display= isStu ? '' : 'none';
 
   // ── Student badge data ──
   if (isStu) {
     var initials = (currentUser.firstName[0]+(currentUser.lastName[0]||'')).toUpperCase();
-    // desktop badge
     var avEl = document.getElementById('stuNavAv');
     if (currentUser.photo) avEl.innerHTML = '<img src="'+currentUser.photo+'" alt=""/>';
     else avEl.textContent = initials;
     document.getElementById('stuNavName').textContent = currentUser.firstName;
-    // drawer badge
     var dAv = document.getElementById('stuDrawerAv');
     if (dAv) { if (currentUser.photo) dAv.innerHTML='<img src="'+currentUser.photo+'" alt=""/>'; else dAv.textContent=initials; }
     var dNm = document.getElementById('stuDrawerName');
@@ -1373,6 +1508,7 @@ function goPage(page) {
   if (page==='book') initBook();
   if (page==='admin') renderAdminBookings();
   if (page==='coach') renderCoachPanel();
+  if (page==='profile') renderProfilePage();
   window.scrollTo(0,0);
 }
 
@@ -1603,7 +1739,9 @@ function buildStudentClassCard(cls) {
       '<div class="scc-tags">'+
         '<span class="cc-tag cc-court">📍 '+esc(court?court.name:'TBA')+'</span>'+
         '<span class="cc-tag cc-lesson">🎾 '+esc(lesson?lesson.name:'TBA')+'</span>'+
-        '<span class="cc-tag cc-coach">👤 '+esc(coach?coach.name:'TBA')+'</span>'+
+        (coach && coach.photo
+          ? '<span class="cc-tag cc-coach" style="display:inline-flex;align-items:center;gap:5px"><img src="'+coach.photo+'" alt="" style="width:18px;height:18px;border-radius:50%;object-fit:cover;flex-shrink:0"/> '+esc(coach.name)+'</span>'
+          : '<span class="cc-tag cc-coach">👤 '+esc(coach?coach.name:'TBA')+'</span>')+
         '<span class="cc-tag cc-time">⏰ '+esc(cls.time)+' · '+cls.duration+'min</span>'+
       '</div>'+
       (cls.notes?'<div class="scc-desc">'+esc(cls.notes)+'</div>':'')+
@@ -1696,10 +1834,31 @@ function initBook() {
   DB.coaches.filter(function(c){ return c.active; }).forEach(function(c){
     var opt=document.createElement('option'); opt.textContent=c.name; ch.appendChild(opt);
   });
+  // Show default coach photo/initials on init
+  (function(){
+    var def=DB.coaches.find(function(c){ return c.active; });
+    var avEl=document.getElementById('sumCoachAv');
+    var nmEl=document.getElementById('sumCoachName');
+    if(def){
+      if(def.photo) avEl.innerHTML='<img src="'+def.photo+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>';
+      else avEl.textContent=def.initials;
+      nmEl.textContent=def.name;
+    }
+  })();
   ch.onchange=function(){
     var coach=DB.coaches.find(function(c){ return c.name===ch.value; });
-    if(coach){ document.getElementById('sumCoachAv').textContent=coach.initials; document.getElementById('sumCoachName').textContent=coach.name; }
-    else { document.getElementById('sumCoachAv').textContent='EF'; document.getElementById('sumCoachName').textContent='Esther Forrester'; }
+    var avEl = document.getElementById('sumCoachAv');
+    var nmEl = document.getElementById('sumCoachName');
+    if(coach){
+      if (coach.photo) avEl.innerHTML='<img src="'+coach.photo+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>';
+      else avEl.textContent=coach.initials;
+      nmEl.textContent=coach.name;
+    } else {
+      var def=DB.coaches[0];
+      if (def && def.photo) avEl.innerHTML='<img src="'+def.photo+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>';
+      else avEl.textContent=def?def.initials:'EF';
+      nmEl.textContent=def?def.name:'Esther Forrester';
+    }
     sumUpdate();
   };
 
@@ -1856,19 +2015,45 @@ function renderCoachPanel() {
   if(!currentUser||currentUser.role!=='coach') return;
   var coach=DB.coaches.find(function(c){ return c.id===currentUser.coachId; });
   if(!coach) return;
+
+  // Photo section
+  var photoAv = document.getElementById('coachPhotoAv');
+  var photoName = document.getElementById('coachPhotoName');
+  if (photoAv) {
+    if (coach.photo) photoAv.innerHTML = '<img src="'+coach.photo+'" alt=""/>';
+    else photoAv.textContent = coach.initials||coach.name[0];
+  }
+  if (photoName) photoName.textContent = coach.name;
+
+  // Photo upload
+  var photoInput = document.getElementById('coachPhotoInput');
+  var photoWrapEl = document.getElementById('coachPhotoAv');
+  if (photoInput && photoWrapEl && !photoInput._coachBound) {
+    photoInput._coachBound = true;
+    photoWrapEl.addEventListener('click', function(){ photoInput.click(); });
+    photoInput.addEventListener('change', function(){
+      var file = this.files[0]; if(!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e){
+        coach.photo = e.target.result;
+        saveDB();
+        renderCoachPanel();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   var myBks=DB.bookings.filter(function(b){ return b.coach===coach.name; });
   var today=new Date(); today.setHours(0,0,0,0);
   var upcoming=myBks.filter(function(b){ return new Date(b.date+'T00:00:00')>=today; });
   var todayBks=myBks.filter(function(b){ return b.date===today.toISOString().split('T')[0]; });
 
-  // Stats
   document.getElementById('coachStats').innerHTML=
     stat('My Total',myBks.length,'All lessons')+
     stat('Upcoming',upcoming.length,'Future lessons')+
     stat('Today',todayBks.length,'Today\'s classes')+
     stat('Confirmed',myBks.filter(function(b){ return b.status==='Confirmed'; }).length,'Active');
 
-  // Filters
   document.querySelectorAll('[data-filter]').forEach(function(btn){
     btn.classList.toggle('on', btn.getAttribute('data-filter')===coachFilter);
     btn.onclick=function(){
@@ -1897,27 +2082,75 @@ function renderCoachBookings(coach, myBks, today) {
     var d=new Date(b.date+'T00:00:00');
     var isToday=b.date===today.toISOString().split('T')[0];
     var sc=b.status==='Confirmed'?'b-ok':'b-pend';
+    var firstName=b.name?b.name.split(' ')[0]:'Student';
     var card=document.createElement('div');
     card.className='coach-bk-card';
+    card.style.flexDirection='column';
+    card.style.alignItems='stretch';
+
+    var hasComment = b.coachComment && b.coachComment.trim();
     card.innerHTML=
-      '<div class="cbc-date">'+
-        '<div class="cbc-day">'+DAYS[d.getDay()]+'</div>'+
-        '<div class="cbc-num">'+d.getDate()+'</div>'+
-        '<div class="cbc-mo">'+MONTHS[d.getMonth()]+'</div>'+
+      '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">'+
+        '<div class="cbc-date">'+
+          '<div class="cbc-day">'+DAYS[d.getDay()]+'</div>'+
+          '<div class="cbc-num">'+d.getDate()+'</div>'+
+          '<div class="cbc-mo">'+MONTHS[d.getMonth()]+'</div>'+
+        '</div>'+
+        '<div class="cbc-info" style="flex:1">'+
+          '<div class="cbc-name">'+esc(firstName)+'</div>'+
+          '<div class="cbc-sub" style="font-size:.82rem;color:var(--g4)">Full name: '+esc(b.name)+'</div>'+
+          '<div class="cbc-sub">'+esc(b.type)+' · '+esc(b.package)+'</div>'+
+          '<div class="cbc-sub">📍 '+esc(b.court)+'</div>'+
+          '<div class="cbc-sub">⏰ '+esc(b.time)+(isToday?' <strong style="color:var(--gold)">TODAY</strong>':'')+'</div>'+
+        '</div>'+
+        '<div class="cbc-right">'+
+          '<span class="bdg '+sc+'">'+esc(b.status)+'</span>'+
+          '<div style="font-size:.72rem;color:var(--g4);margin-top:5px">'+esc(b.skill)+' level</div>'+
+          '<div style="font-size:.75rem;color:var(--g4);margin-top:2px">'+esc(b.ref)+'</div>'+
+        '</div>'+
       '</div>'+
-      '<div class="cbc-info">'+
-        '<div class="cbc-name">'+esc(b.name)+'</div>'+
-        '<div class="cbc-sub">'+esc(b.type)+' · '+esc(b.package)+'</div>'+
-        '<div class="cbc-sub">📍 '+esc(b.court)+'</div>'+
-        '<div class="cbc-sub">⏰ '+esc(b.time)+(isToday?' <strong style="color:var(--gold)">TODAY</strong>':'')+'</div>'+
-      '</div>'+
-      '<div class="cbc-right">'+
-        '<span class="bdg '+sc+'">'+esc(b.status)+'</span>'+
-        '<div style="font-size:.72rem;color:var(--g4);margin-top:5px">'+esc(b.skill)+' level</div>'+
-        '<div style="font-size:.75rem;color:var(--g4);margin-top:2px">'+esc(b.ref)+'</div>'+
+      '<div class="comment-row">'+
+        '<div class="comment-label">Coach Notes / Feedback for '+esc(firstName)+'</div>'+
+        (hasComment
+          ? '<div class="comment-saved" id="csaved-'+b.id+'">'+esc(b.coachComment)+'</div>'+
+            '<div class="comment-btns"><button class="comment-edit-btn" data-edit="'+b.id+'">✎ Edit</button></div>'
+          : '<textarea class="comment-area" id="ctxt-'+b.id+'" placeholder="Enter feedback or notes for '+esc(firstName)+'...">'+esc(b.coachComment||'')+'</textarea>'+
+            '<div class="comment-btns"><button class="comment-save-btn" data-save="'+b.id+'">Save Feedback</button></div>'
+        )+
       '</div>';
+    card.querySelectorAll('[data-save]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var id=parseInt(this.getAttribute('data-save'));
+        var txt=document.getElementById('ctxt-'+id);
+        if(txt){ saveCoachComment(id, txt.value); renderCoachBookings(coach,myBks,today); }
+      });
+    });
+    card.querySelectorAll('[data-edit]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var id=parseInt(this.getAttribute('data-edit'));
+        var bk=DB.bookings.find(function(x){ return x.id===id; });
+        var savedDiv=document.getElementById('csaved-'+id);
+        var commentRow=savedDiv?savedDiv.parentElement:null;
+        if(commentRow && bk){
+          var fn2=bk.name?bk.name.split(' ')[0]:'Student';
+          commentRow.innerHTML=
+            '<div class="comment-label">Coach Notes / Feedback for '+esc(fn2)+'</div>'+
+            '<textarea class="comment-area" id="ctxt-'+id+'">'+esc(bk.coachComment||'')+'</textarea>'+
+            '<div class="comment-btns"><button class="comment-save-btn" data-save="'+id+'">Save Feedback</button></div>';
+          commentRow.querySelector('[data-save]').addEventListener('click',function(){
+            var txt2=document.getElementById('ctxt-'+id);
+            if(txt2){ saveCoachComment(id,txt2.value); renderCoachBookings(coach,myBks,today); }
+          });
+        }
+      });
+    });
     list.appendChild(card);
   });
+}
+
+function saveCoachComment(bookingId, comment) {
+  var bk = DB.bookings.find(function(b){ return b.id===bookingId; });
+  if (bk) { bk.coachComment = comment.trim(); saveDB(); }
 }
 
 // ═══════════════════════════════════════
@@ -2597,11 +2830,13 @@ wirePhotoInput();
 
   // Action buttons
   var mobileMap = {
-    'nav-cta-mobile':        function(){ goPage('book'); closeDrawer(); },
-    'nav-stu-login-mobile':  function(){ showStuLogin(); closeDrawer(); },
-    'nav-stu-signup-mobile': function(){ showStuSignup(); closeDrawer(); },
-    'nav-login-btn-mobile':  function(){ showLogin(); closeDrawer(); },
-    'drawerLogoutBtn':       function(){ doStuLogout(); closeDrawer(); }
+    'nav-cta-mobile':           function(){ goPage('book'); closeDrawer(); },
+    'nav-stu-login-mobile':     function(){ showStuLogin(); closeDrawer(); },
+    'nav-stu-signup-mobile':    function(){ showStuSignup(); closeDrawer(); },
+    'nav-login-btn-mobile':     function(){ showLogin(); closeDrawer(); },
+    'drawerLogoutBtn':          function(){ doStuLogout(); closeDrawer(); },
+    'nav-stu-signout-mobile':   function(){ doStuLogout(); closeDrawer(); },
+    'nav-coach-signout-mobile': function(){ doLogout(); closeDrawer(); }
   };
   Object.keys(mobileMap).forEach(function(id){
     var el = document.getElementById(id);
@@ -2760,6 +2995,128 @@ function exportCoachesCSV() {
   }));
   downloadCSV('brainiac-coaches-'+new Date().toISOString().split('T')[0]+'.csv', rows);
 }
+
+// ═══════════════════════════════════════
+// STUDENT PROFILE PAGE
+// ═══════════════════════════════════════
+function renderProfilePage() {
+  if (!currentUser || currentUser.role !== 'student') { showStuLogin(); return; }
+  var stu = DB.students.find(function(s){ return s.id === currentUser.studentId; });
+  if (!stu) return;
+
+  // Header
+  var av = document.getElementById('profileAv');
+  if (stu.photo) av.innerHTML = '<img src="'+stu.photo+'" alt=""/>';
+  else av.textContent = (stu.firstName[0]+stu.lastName[0]).toUpperCase();
+  document.getElementById('profileFullName').textContent = stu.firstName + ' ' + stu.lastName;
+  document.getElementById('profileEmail').textContent = stu.email;
+  document.getElementById('profileMember').textContent = 'Member since ' + new Date(stu.createdAt).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+
+  // Fill edit form
+  document.getElementById('pFN').value = stu.firstName;
+  document.getElementById('pLN').value = stu.lastName;
+  document.getElementById('pPH').value = stu.phone||'';
+  document.getElementById('pEM').value = stu.email;
+  document.getElementById('pAD').value = stu.address||'';
+
+  // Profile photo upload
+  var profileAvWrap = document.getElementById('profileAvWrap');
+  var profilePhotoInput = document.getElementById('profilePhotoInput');
+  if (profileAvWrap && !profileAvWrap._bound) {
+    profileAvWrap._bound = true;
+    profileAvWrap.addEventListener('click', function(){ profilePhotoInput.click(); });
+    profilePhotoInput.addEventListener('change', function(){
+      var file = this.files[0]; if(!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e){
+        stu.photo = e.target.result;
+        currentUser.photo = e.target.result;
+        saveDB(); applyAuth(); renderProfilePage();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Tab switching
+  document.querySelectorAll('.ptab').forEach(function(tab){
+    tab.onclick = function(){
+      document.querySelectorAll('.ptab').forEach(function(t){ t.classList.remove('on'); });
+      document.querySelectorAll('.ppane').forEach(function(p){ p.classList.remove('on'); });
+      tab.classList.add('on');
+      document.getElementById('pp-'+tab.getAttribute('data-ptab')).classList.add('on');
+      if (tab.getAttribute('data-ptab') === 'history') renderBookingHistory(stu);
+      if (tab.getAttribute('data-ptab') === 'feedback') renderCoachFeedback(stu);
+    };
+  });
+
+  // Save profile
+  var saveBtn = document.getElementById('saveProfileBtn');
+  if (saveBtn && !saveBtn._bound) {
+    saveBtn._bound = true;
+    saveBtn.addEventListener('click', function(){
+      stu.firstName = document.getElementById('pFN').value.trim()||stu.firstName;
+      stu.lastName  = document.getElementById('pLN').value.trim()||stu.lastName;
+      stu.phone     = document.getElementById('pPH').value.trim();
+      stu.email     = document.getElementById('pEM').value.trim()||stu.email;
+      stu.address   = document.getElementById('pAD').value.trim();
+      currentUser.firstName = stu.firstName;
+      currentUser.lastName  = stu.lastName;
+      saveDB(); applyAuth();
+      var saved = document.getElementById('profileSaved');
+      saved.style.display='';
+      setTimeout(function(){ saved.style.display='none'; }, 2500);
+      renderProfilePage();
+    });
+  }
+}
+
+function renderBookingHistory(stu) {
+  var myBks = DB.bookings.filter(function(b){ return b.email.toLowerCase()===stu.email.toLowerCase(); });
+  myBks.sort(function(a,b){ return new Date(b.date)-new Date(a.date); });
+  var el = document.getElementById('profileHistoryList');
+  if (!myBks.length) { el.innerHTML='<div class="no-slots" style="padding:2rem;text-align:center;color:var(--g4)">No bookings yet.</div>'; return; }
+  el.innerHTML = '';
+  myBks.forEach(function(b){
+    var d = new Date(b.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+    var sc = b.status==='Confirmed'?'b-ok':b.status==='Pending'?'b-pend':'b-can';
+    var div = document.createElement('div');
+    div.className = 'bh-card';
+    div.innerHTML =
+      '<div class="bh-top">'+
+        '<div><div class="bh-pkg">'+esc(b.package)+'</div><div class="bh-meta"><span>📅 '+esc(d)+'</span><span>⏰ '+esc(b.time)+'</span><span>👤 '+esc(b.coach)+'</span><span>📍 '+esc(b.court)+'</span></div></div>'+
+        '<div><span class="bdg '+sc+'">'+esc(b.status)+'</span><div class="bh-ref">'+esc(b.ref)+'</div></div>'+
+      '</div>'+
+      (b.coachComment ? '<div class="bh-feedback"><div class="bh-feedback-lbl">💬 Coach Feedback</div><div class="bh-feedback-txt">'+esc(b.coachComment)+'</div></div>' : '');
+    el.appendChild(div);
+  });
+}
+
+function renderCoachFeedback(stu) {
+  var withFeedback = DB.bookings.filter(function(b){ return b.email.toLowerCase()===stu.email.toLowerCase() && b.coachComment && b.coachComment.trim(); });
+  withFeedback.sort(function(a,b){ return new Date(b.date)-new Date(a.date); });
+  var el = document.getElementById('profileFeedbackList');
+  if (!withFeedback.length) { el.innerHTML='<div class="no-slots" style="padding:2rem;text-align:center;color:var(--g4)">No coach feedback yet. Feedback will appear here after your sessions.</div>'; return; }
+  el.innerHTML = '';
+  withFeedback.forEach(function(b){
+    var d = new Date(b.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+    var div = document.createElement('div');
+    div.className = 'bh-card';
+    div.innerHTML =
+      '<div style="font-weight:600;color:var(--g9);margin-bottom:4px">'+esc(b.package)+' · '+esc(d)+'</div>'+
+      '<div style="font-size:.78rem;color:var(--g4);margin-bottom:.75rem">👤 '+esc(b.coach)+' · 📍 '+esc(b.court)+'</div>'+
+      '<div class="bh-feedback"><div class="bh-feedback-lbl">💬 Feedback from '+esc(b.coach)+'</div><div class="bh-feedback-txt">'+esc(b.coachComment)+'</div></div>';
+    el.appendChild(div);
+  });
+}
+
+// Wire profile nav buttons
+document.getElementById('nav-profile-btn').addEventListener('click', function(){ goPage('profile'); });
+document.getElementById('nav-stu-signout').addEventListener('click', doStuLogout);
+document.getElementById('nav-coach-signout').addEventListener('click', doLogout);
+var coachSignoutMobile = document.getElementById('nav-coach-signout-mobile');
+if (coachSignoutMobile) coachSignoutMobile.addEventListener('click', function(){ doLogout(); });
+var stuSignoutMobile = document.getElementById('nav-stu-signout-mobile');
+if (stuSignoutMobile) stuSignoutMobile.addEventListener('click', function(){ doStuLogout(); });
 
 // ═══════════════════════════════════════
 // INIT
