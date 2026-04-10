@@ -1180,21 +1180,33 @@ tr:hover td{background:var(--gu)}
         <h2 id="coachPanelTitle">My Schedule</h2>
         <p style="font-size:.85rem;color:var(--g6);margin-top:3px" id="coachPanelSub">Your upcoming lessons</p>
       </div>
-      <div style="display:flex;align-items:center;gap:.75rem">
-        <div class="adm-user-badge">
-          <div class="adm-av" id="coachAvatar">EF</div>
-          <span id="coachUserLabel">Coach</span>
-        </div>
-        <button class="logout-btn" id="coachLogoutBtn">Sign out</button>
+      <div class="adm-user-badge">
+        <div class="adm-av" id="coachAvatar">EF</div>
+        <span id="coachUserLabel">Coach</span>
       </div>
     </div>
-    <div class="coach-photo-wrap">
-      <div class="coach-photo-av" id="coachPhotoAv" title="Click to upload photo">?</div>
-      <div class="coach-photo-info">
-        <strong id="coachPhotoName">Coach</strong>
-        <span>Click your photo to update it — students will see it when booking</span>
+    <!-- Photo + editable profile -->
+    <div class="coach-photo-wrap" style="flex-wrap:wrap;gap:1rem;align-items:flex-start">
+      <div style="display:flex;align-items:center;gap:12px;flex:0 0 auto">
+        <div class="coach-photo-av" id="coachPhotoAv" title="Click to upload photo">?</div>
+        <div class="coach-photo-info">
+          <strong id="coachPhotoName">Coach</strong>
+          <span>Click photo to update — students see it when booking</span>
+        </div>
+        <input type="file" id="coachPhotoInput" accept="image/*" style="display:none"/>
       </div>
-      <input type="file" id="coachPhotoInput" accept="image/*" style="display:none"/>
+      <div style="flex:1;min-width:240px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem" id="coachProfileFields">
+          <div class="fl"><label>Name</label><input type="text" id="cPfName" placeholder="Full name"/></div>
+          <div class="fl"><label>Contact Number</label><input type="tel" id="cPfPhone" placeholder="Phone number"/></div>
+          <div class="fl"><label>Email</label><input type="email" id="cPfEmail" placeholder="Email address"/></div>
+          <div class="fl" style="grid-column:1/-1"><label>Address</label><input type="text" id="cPfAddr" placeholder="Street, City, State"/></div>
+        </div>
+        <div style="margin-top:.6rem;display:flex;align-items:center;gap:.75rem">
+          <button class="add-btn" id="coachSaveProfileBtn">Save Profile</button>
+          <span id="coachProfileSaved" style="font-size:.82rem;color:var(--gl);display:none">✓ Saved!</span>
+        </div>
+      </div>
     </div>
     <div class="stats" id="coachStats"></div>
     <div class="coach-filter-row">
@@ -1321,13 +1333,21 @@ var DB = {
 // ── LOCALSTORAGE PERSISTENCE ──
 function saveDB() {
   try {
-    // Save coach photos separately (only photo field, merged on load)
-    var coachPhotos = {};
-    DB.coaches.forEach(function(c){ if (c.photo) coachPhotos[c.id] = c.photo; });
+    // Save coach profile overrides (photo, phone, email, address)
+    var coachProfiles = {};
+    DB.coaches.forEach(function(c){
+      var ov = {};
+      if (c.photo)   ov.photo   = c.photo;
+      if (c.phone)   ov.phone   = c.phone;
+      if (c.email)   ov.email   = c.email;
+      if (c.address) ov.address = c.address;
+      if (c.name)    ov.name    = c.name;
+      if (Object.keys(ov).length) coachProfiles[c.id] = ov;
+    });
     localStorage.setItem('brainiac_db', JSON.stringify({
       students: DB.students,
       bookings: DB.bookings,
-      coachPhotos: coachPhotos
+      coachProfiles: coachProfiles
     }));
   } catch(e){}
 }
@@ -1336,11 +1356,18 @@ function loadDB() {
     var saved = JSON.parse(localStorage.getItem('brainiac_db') || '{}');
     if (saved.students) DB.students = saved.students;
     if (saved.bookings) DB.bookings = saved.bookings;
-    // Restore coach photos without overwriting other coach data
-    if (saved.coachPhotos) {
-      Object.keys(saved.coachPhotos).forEach(function(idStr){
+    // Restore coach profile overrides (photo, phone, email, address, name)
+    if (saved.coachProfiles) {
+      Object.keys(saved.coachProfiles).forEach(function(idStr){
         var coach = DB.coaches.find(function(c){ return c.id === parseInt(idStr); });
-        if (coach) coach.photo = saved.coachPhotos[idStr];
+        if (coach) {
+          var ov = saved.coachProfiles[idStr];
+          if (ov.photo)   coach.photo   = ov.photo;
+          if (ov.phone)   coach.phone   = ov.phone;
+          if (ov.email)   coach.email   = ov.email;
+          if (ov.address) coach.address = ov.address;
+          if (ov.name)    coach.name    = ov.name;
+        }
       });
     }
   } catch(e){}
@@ -1418,7 +1445,8 @@ function applyAuth() {
   document.getElementById('nav-cta').style.display          = isCoach ? 'none' : '';
   document.getElementById('nav-book').style.display         = isCoach ? 'none' : '';
   document.getElementById('nav-coach-signout').style.display= isCoach ? '' : 'none';
-  document.getElementById('nav-login-btn').style.display    = isStaff ? 'none' : '';
+  // Hide Staff button when student is logged in
+  document.getElementById('nav-login-btn').style.display    = (isStaff||isStu) ? 'none' : '';
   document.getElementById('nav-stu-login').style.display    = (isStu||isStaff) ? 'none' : '';
   document.getElementById('nav-stu-signup').style.display   = (isStu||isStaff) ? 'none' : '';
   document.getElementById('stuNavBadge').style.display      = isStu ? '' : 'none';
@@ -1446,7 +1474,7 @@ function applyAuth() {
   if (dStuBadge)  dStuBadge.style.display  = isStu ? '' : 'none';
   if (dStuLogin)  dStuLogin.style.display  = (isStu||isStaff) ? 'none' : '';
   if (dStuSignup) dStuSignup.style.display = (isStu||isStaff) ? 'none' : '';
-  if (dStaffBtn)  dStaffBtn.style.display  = isStaff ? 'none' : '';
+  if (dStaffBtn)  dStaffBtn.style.display  = (isStaff||isStu) ? 'none' : '';
   if (dStuSignout)dStuSignout.style.display= isStu ? '' : 'none';
 
   // ── Student badge data ──
@@ -1479,7 +1507,6 @@ document.getElementById('loginCancelBtn').addEventListener('click', hideLogin);
 document.getElementById('loginUser').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('loginPass').focus(); });
 document.getElementById('loginPass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
 document.getElementById('adminLogoutBtn').addEventListener('click', doLogout);
-document.getElementById('coachLogoutBtn').addEventListener('click', doLogout);
 
 // ═══════════════════════════════════════
 // NAVIGATION
@@ -2030,6 +2057,38 @@ function renderCoachPanel() {
         renderCoachPanel();
       };
       reader.readAsDataURL(file);
+    });
+  }
+
+  // Populate editable profile fields
+  var pfName  = document.getElementById('cPfName');
+  var pfPhone = document.getElementById('cPfPhone');
+  var pfEmail = document.getElementById('cPfEmail');
+  var pfAddr  = document.getElementById('cPfAddr');
+  if (pfName)  pfName.value  = coach.name  || '';
+  if (pfPhone) pfPhone.value = coach.phone || '';
+  if (pfEmail) pfEmail.value = coach.email || '';
+  if (pfAddr)  pfAddr.value  = coach.address || '';
+
+  // Save profile button
+  var saveBtn = document.getElementById('coachSaveProfileBtn');
+  if (saveBtn && !saveBtn._bound) {
+    saveBtn._bound = true;
+    saveBtn.addEventListener('click', function(){
+      coach.name    = document.getElementById('cPfName').value.trim()  || coach.name;
+      coach.phone   = document.getElementById('cPfPhone').value.trim();
+      coach.email   = document.getElementById('cPfEmail').value.trim();
+      coach.address = document.getElementById('cPfAddr').value.trim();
+      // Sync current session display name
+      currentUser.name = coach.name;
+      saveDB();
+      applyAuth();
+      var saved = document.getElementById('coachProfileSaved');
+      if (saved){ saved.style.display=''; setTimeout(function(){ saved.style.display='none'; }, 2500); }
+      // Refresh name in panel header
+      document.getElementById('coachUserLabel').textContent = coach.name;
+      document.getElementById('coachPhotoName').textContent = coach.name;
+      document.getElementById('coachPanelTitle').textContent = coach.name + "'s Schedule";
     });
   }
 
@@ -2783,7 +2842,7 @@ document.getElementById('suToLogin').addEventListener('click', function(){ hideS
 document.getElementById('suCancelBtn').addEventListener('click', hideStuSignup);
 document.getElementById('nav-stu-login').addEventListener('click', showStuLogin);
 document.getElementById('nav-stu-signup').addEventListener('click', showStuSignup);
-document.getElementById('stuBadgeBtn').addEventListener('click', doStuLogout);
+document.getElementById('stuBadgeBtn').addEventListener('click', function(){ goPage('profile'); });
 
 document.getElementById('resetSendBtn').addEventListener('click', doSendOtp);
 document.getElementById('resetConfirmBtn').addEventListener('click', doConfirmOtp);
