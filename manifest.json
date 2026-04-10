@@ -1,6 +1,6 @@
 {
-  "name": "Brainiac Tennis",
-  "short_name": "Brainiac",
+  "name": "Tennis Scheduling",
+  "short_name": "Tennis",
   "description": "Tennis lesson booking & scheduling",
   "start_url": "./brainiac-tennis-app.html",
   "display": "standalone",
