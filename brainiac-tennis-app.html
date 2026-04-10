@@ -1291,9 +1291,9 @@ var DB = {
   ],
   lessonTypes: ['Private Lesson','Group Class','Match Coaching'],
   coaches: [
-    {id:1,name:'Coach Esther Forrester',initials:'EF',title:'Head Coach · Div I Alumni',bio:'Former Division I player, 20 years experience.',username:'esther',password:'coach123',active:true},
-    {id:2,name:'Coach Maria Santos',initials:'MS',title:'Assistant Coach',bio:'Certified tennis instructor, 8 years experience.',username:'maria',password:'coach123',active:true},
-    {id:3,name:'Coach Jose Reyes',initials:'JR',title:'Junior Coach',bio:'Specializes in kids programs and beginners.',username:'jose',password:'coach123',active:true}
+    {id:1,name:'Coach Esther Forrester',initials:'EF',title:'Head Coach · Div I Alumni',bio:'Former Division I player, 20 years experience.',username:'esther',password:'Ef#Tennis@2026',active:true},
+    {id:2,name:'Coach Maria Santos',initials:'MS',title:'Assistant Coach',bio:'Certified tennis instructor, 8 years experience.',username:'maria',password:'Ms#Tennis@2026',active:true},
+    {id:3,name:'Coach Jose Reyes',initials:'JR',title:'Junior Coach',bio:'Specializes in kids programs and beginners.',username:'jose',password:'Jr#Tennis@2026',active:true}
   ],
   payments: [
     {id:1,name:'Pay Now (Card)',active:true},
@@ -1313,7 +1313,7 @@ var DB = {
     Sun:{active:false,slots:[]}
   },
   users: [
-    {username:'admin',password:'tennis123',role:'admin',name:'Admin User',initials:'AD'}
+    {username:'admin',password:'BT#Admin@2026$',role:'admin',name:'Admin User',initials:'AD'}
   ],
   classes: [
     {id:1, title:'Private Lesson — Morning', lessonId:1, courtId:1, coachId:1, date:'2026-04-14', time:'7:00 AM', duration:60, maxSpots:4, bookedSpots:1, price:80, notes:'Beginner friendly.', active:true},
@@ -1375,7 +1375,7 @@ function loadDB() {
 loadDB();
 
 // ── AUTH ──
-var ADMIN_USER = {username:'admin',password:'tennis123',role:'admin',name:'Admin User',initials:'AD'};
+var ADMIN_USER = {username:'admin',password:'BT#Admin@2026$',role:'admin',name:'Admin User',initials:'AD'};
 var currentUser = null;
 var loginRole = 'admin';
 
