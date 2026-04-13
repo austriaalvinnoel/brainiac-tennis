@@ -1609,6 +1609,12 @@ function selectPkgAndBook(id) {
 // ═══════════════════════════════════════
 var schView = 'list';
 
+// Returns just the first name for student-facing views, e.g. "Coach Esther Forrester" → "Esther"
+function coachFirstName(fullName) {
+  var name = String(fullName||'').replace(/^Coach\s+/i, '');
+  return name.split(' ')[0] || fullName;
+}
+
 function renderSchedulePage() {
   // Populate filter dropdowns
   var fc = document.getElementById('schFilterCourt');
@@ -1626,7 +1632,7 @@ function renderSchedulePage() {
   });
   fco.innerHTML = '<option value="">All Coaches</option>';
   DB.coaches.filter(function(c){ return c.active; }).forEach(function(c){
-    fco.innerHTML += '<option value="'+c.id+'">'+esc(c.name)+'</option>';
+    fco.innerHTML += '<option value="'+c.id+'">'+esc(coachFirstName(c.name))+'</option>';
   });
 
   fc.onchange = renderClassList;
@@ -1757,8 +1763,8 @@ function buildStudentClassCard(cls) {
         '<span class="cc-tag cc-court">📍 '+esc(court?court.name:'TBA')+'</span>'+
         '<span class="cc-tag cc-lesson">🎾 '+esc(lesson?lesson.name:'TBA')+'</span>'+
         (coach && coach.photo
-          ? '<span class="cc-tag cc-coach" style="display:inline-flex;align-items:center;gap:5px"><img src="'+coach.photo+'" alt="" style="width:18px;height:18px;border-radius:50%;object-fit:cover;flex-shrink:0"/> '+esc(coach.name)+'</span>'
-          : '<span class="cc-tag cc-coach">👤 '+esc(coach?coach.name:'TBA')+'</span>')+
+          ? '<span class="cc-tag cc-coach" style="display:inline-flex;align-items:center;gap:5px"><img src="'+coach.photo+'" alt="" style="width:18px;height:18px;border-radius:50%;object-fit:cover;flex-shrink:0"/> '+esc(coachFirstName(coach.name))+'</span>'
+          : '<span class="cc-tag cc-coach">👤 '+esc(coach?coachFirstName(coach.name):'TBA')+'</span>')+
         '<span class="cc-tag cc-time">⏰ '+esc(cls.time)+' · '+cls.duration+'min</span>'+
       '</div>'+
       (cls.notes?'<div class="scc-desc">'+esc(cls.notes)+'</div>':'')+
@@ -1801,7 +1807,7 @@ function preSelectClassBooking(cls) {
     var coach = DB.coaches.find(function(c){ return c.id===cls.coachId; });
     if (coach && chSel) {
       for (var k=0;k<chSel.options.length;k++){
-        if (chSel.options[k].textContent===coach.name){ chSel.selectedIndex=k; break; }
+        if (chSel.options[k].value===coach.name){ chSel.selectedIndex=k; break; }
       }
     }
     // Set date
@@ -1849,7 +1855,7 @@ function initBook() {
   var ch=document.getElementById('bCH');
   ch.innerHTML='<option>— Any Available —</option>';
   DB.coaches.filter(function(c){ return c.active; }).forEach(function(c){
-    var opt=document.createElement('option'); opt.textContent=c.name; ch.appendChild(opt);
+    var opt=document.createElement('option'); opt.value=c.name; opt.textContent=coachFirstName(c.name); ch.appendChild(opt);
   });
   // Show default coach photo/initials on init
   (function(){
@@ -1859,7 +1865,7 @@ function initBook() {
     if(def){
       if(def.photo) avEl.innerHTML='<img src="'+def.photo+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>';
       else avEl.textContent=def.initials;
-      nmEl.textContent=def.name;
+      nmEl.textContent=coachFirstName(def.name);
     }
   })();
   ch.onchange=function(){
@@ -1869,12 +1875,12 @@ function initBook() {
     if(coach){
       if (coach.photo) avEl.innerHTML='<img src="'+coach.photo+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>';
       else avEl.textContent=coach.initials;
-      nmEl.textContent=coach.name;
+      nmEl.textContent=coachFirstName(coach.name);
     } else {
       var def=DB.coaches[0];
       if (def && def.photo) avEl.innerHTML='<img src="'+def.photo+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%"/>';
       else avEl.textContent=def?def.initials:'EF';
-      nmEl.textContent=def?def.name:'Esther Forrester';
+      nmEl.textContent=def?coachFirstName(def.name):'Esther';
     }
     sumUpdate();
   };
@@ -3124,7 +3130,7 @@ function renderBookingHistory(stu) {
     div.className = 'bh-card';
     div.innerHTML =
       '<div class="bh-top">'+
-        '<div><div class="bh-pkg">'+esc(b.package)+'</div><div class="bh-meta"><span>📅 '+esc(d)+'</span><span>⏰ '+esc(b.time)+'</span><span>👤 '+esc(b.coach)+'</span><span>📍 '+esc(b.court)+'</span></div></div>'+
+        '<div><div class="bh-pkg">'+esc(b.package)+'</div><div class="bh-meta"><span>📅 '+esc(d)+'</span><span>⏰ '+esc(b.time)+'</span><span>👤 '+esc(coachFirstName(b.coach))+'</span><span>📍 '+esc(b.court)+'</span></div></div>'+
         '<div><span class="bdg '+sc+'">'+esc(b.status)+'</span><div class="bh-ref">'+esc(b.ref)+'</div></div>'+
       '</div>'+
       (b.coachComment ? '<div class="bh-feedback"><div class="bh-feedback-lbl">💬 Coach Feedback</div><div class="bh-feedback-txt">'+esc(b.coachComment)+'</div></div>' : '');
@@ -3144,8 +3150,8 @@ function renderCoachFeedback(stu) {
     div.className = 'bh-card';
     div.innerHTML =
       '<div style="font-weight:600;color:var(--g9);margin-bottom:4px">'+esc(b.package)+' · '+esc(d)+'</div>'+
-      '<div style="font-size:.78rem;color:var(--g4);margin-bottom:.75rem">👤 '+esc(b.coach)+' · 📍 '+esc(b.court)+'</div>'+
-      '<div class="bh-feedback"><div class="bh-feedback-lbl">💬 Feedback from '+esc(b.coach)+'</div><div class="bh-feedback-txt">'+esc(b.coachComment)+'</div></div>';
+      '<div style="font-size:.78rem;color:var(--g4);margin-bottom:.75rem">👤 '+esc(coachFirstName(b.coach))+' · 📍 '+esc(b.court)+'</div>'+
+      '<div class="bh-feedback"><div class="bh-feedback-lbl">💬 Feedback from '+esc(coachFirstName(b.coach))+'</div><div class="bh-feedback-txt">'+esc(b.coachComment)+'</div></div>';
     el.appendChild(div);
   });
 }
