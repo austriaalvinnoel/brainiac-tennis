@@ -2153,7 +2153,6 @@ function renderCoachBookings(coach, myBks, today) {
         '</div>'+
         '<div class="cbc-info" style="flex:1">'+
           '<div class="cbc-name">'+esc(firstName)+'</div>'+
-          '<div class="cbc-sub" style="font-size:.82rem;color:var(--g4)">Full name: '+esc(b.name)+'</div>'+
           '<div class="cbc-sub">'+esc(b.type)+' · '+esc(b.package)+'</div>'+
           '<div class="cbc-sub">📍 '+esc(b.court)+'</div>'+
           '<div class="cbc-sub">⏰ '+esc(b.time)+(isToday?' <strong style="color:var(--gold)">TODAY</strong>':'')+'</div>'+
@@ -2236,7 +2235,7 @@ function renderBkTable(data) {
     var sc=b.status==='Confirmed'?'b-ok':b.status==='Pending'?'b-pend':'b-can';
     var tr=document.createElement('tr');
     tr.innerHTML='<td style="font-family:monospace;font-size:.72rem;color:var(--g4)">'+esc(b.ref)+'</td>'+
-      '<td><div style="font-weight:500">'+esc(b.name)+'</div><div style="font-size:.72rem;color:var(--g4)">'+esc(b.email)+'</div></td>'+
+      '<td><div style="font-weight:500">'+esc(b.name?b.name.split(' ')[0]:b.name)+'</div><div style="font-size:.72rem;color:var(--g4)">'+esc(b.name)+'</div><div style="font-size:.72rem;color:var(--g4)">'+esc(b.email)+'</div></td>'+
       '<td>'+esc(b.package)+'</td>'+
       '<td style="font-size:.78rem">'+esc(b.court||'—')+'</td>'+
       '<td>'+d+'</td><td>'+esc(b.time)+'</td>'+
