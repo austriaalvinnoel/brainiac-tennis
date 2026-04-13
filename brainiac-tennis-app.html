@@ -1207,6 +1207,19 @@ tr:hover td{background:var(--gu)}
           <button class="add-btn" id="coachSaveProfileBtn">Save Profile</button>
           <span id="coachProfileSaved" style="font-size:.82rem;color:var(--gl);display:none">✓ Saved!</span>
         </div>
+        <div style="margin-top:1rem;border-top:1px solid var(--g2);padding-top:1rem">
+          <div style="font-size:.82rem;font-weight:600;color:var(--gd);margin-bottom:.6rem">Change Password</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem">
+            <div class="fl"><label>Current Password</label><input type="password" id="cPfCurPass" placeholder="Current password"/></div>
+            <div class="fl"><label>New Password</label><input type="password" id="cPfNewPass" placeholder="Min. 6 characters"/></div>
+            <div class="fl"><label>Confirm New Password</label><input type="password" id="cPfConfPass" placeholder="Repeat new password"/></div>
+          </div>
+          <div style="margin-top:.6rem;display:flex;align-items:center;gap:.75rem">
+            <button class="add-btn" id="coachChangePassBtn">Update Password</button>
+            <span id="coachPassSaved" style="font-size:.82rem;color:var(--gl);display:none">✓ Password updated!</span>
+            <span id="coachPassErr" style="font-size:.82rem;color:#c0392b;display:none"></span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="stats" id="coachStats"></div>
@@ -2131,6 +2144,30 @@ function renderCoachPanel() {
       document.getElementById('coachUserLabel').textContent = coach.name;
       document.getElementById('coachPhotoName').textContent = coach.name;
       document.getElementById('coachPanelTitle').textContent = coach.name + "'s Schedule";
+    });
+  }
+
+  // Change password button
+  var cpBtn = document.getElementById('coachChangePassBtn');
+  if (cpBtn && !cpBtn._bound) {
+    cpBtn._bound = true;
+    cpBtn.addEventListener('click', function(){
+      var cur  = document.getElementById('cPfCurPass').value;
+      var nw   = document.getElementById('cPfNewPass').value;
+      var conf = document.getElementById('cPfConfPass').value;
+      var err  = document.getElementById('coachPassErr');
+      var ok   = document.getElementById('coachPassSaved');
+      err.style.display='none'; ok.style.display='none';
+      if (cur !== coach.password) { err.textContent='Current password is incorrect.'; err.style.display=''; return; }
+      if (nw.length < 6) { err.textContent='New password must be at least 6 characters.'; err.style.display=''; return; }
+      if (nw !== conf) { err.textContent='Passwords do not match.'; err.style.display=''; return; }
+      coach.password = nw;
+      currentUser.password = nw;
+      document.getElementById('cPfCurPass').value='';
+      document.getElementById('cPfNewPass').value='';
+      document.getElementById('cPfConfPass').value='';
+      ok.style.display='';
+      setTimeout(function(){ ok.style.display='none'; }, 2500);
     });
   }
 
