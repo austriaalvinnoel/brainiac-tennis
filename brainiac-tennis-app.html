@@ -1020,6 +1020,7 @@ tr:hover td{background:var(--gu)}
           <div class="adm-av" id="admAvatar">AD</div>
           <span id="admUserLabel">Admin</span>
         </div>
+        <button class="logout-btn" id="adminResetPassBtn" style="background:var(--gl)">🔑 Reset Password</button>
         <button class="logout-btn" id="adminLogoutBtn">Sign out</button>
       </div>
     </div>
@@ -1253,6 +1254,19 @@ tr:hover td{background:var(--gu)}
         <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap">
           <button class="btn-p" id="saveProfileBtn">Save Changes</button>
           <div style="font-size:.82rem;color:var(--gl);align-self:center;display:none" id="profileSaved">✓ Saved!</div>
+        </div>
+      </div>
+      <div class="bk-card" style="margin-top:1rem">
+        <h3>Change Password</h3>
+        <div class="fg">
+          <div class="fl"><label>Current Password</label><input type="password" id="pCurPass" placeholder="Current password"/></div>
+          <div class="fl"><label>New Password</label><input type="password" id="pNewPass" placeholder="Min. 6 characters"/></div>
+          <div class="fl"><label>Confirm New Password</label><input type="password" id="pConfPass" placeholder="Repeat new password"/></div>
+        </div>
+        <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center">
+          <button class="btn-p" id="changePassBtn">Update Password</button>
+          <div style="font-size:.82rem;color:var(--gl);display:none" id="passChanged">✓ Password updated!</div>
+          <div style="font-size:.82rem;color:#c0392b;display:none" id="passError"></div>
         </div>
       </div>
     </div>
@@ -1507,6 +1521,28 @@ document.getElementById('loginCancelBtn').addEventListener('click', hideLogin);
 document.getElementById('loginUser').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('loginPass').focus(); });
 document.getElementById('loginPass').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
 document.getElementById('adminLogoutBtn').addEventListener('click', doLogout);
+document.getElementById('adminResetPassBtn').addEventListener('click', function(){
+  openModal('<h3>Reset Admin Password</h3>'+
+    mfl('Current Password','ar-cur','','','password')+
+    mfl('New Password','ar-new','','Min. 6 characters','password')+
+    mfl('Confirm New Password','ar-conf','','Repeat new password','password')+
+    '<div id="arErr" style="font-size:.82rem;color:#c0392b;display:none;margin-bottom:.5rem"></div>'+
+    '<div class="modal-btns"><button class="m-save" id="mSave">Update Password</button><button class="m-cancel" id="mCancel">Cancel</button></div>');
+  document.getElementById('mCancel').addEventListener('click', closeModal);
+  document.getElementById('mSave').addEventListener('click', function(){
+    var cur=document.getElementById('ar-cur').value;
+    var nw=document.getElementById('ar-new').value;
+    var conf=document.getElementById('ar-conf').value;
+    var err=document.getElementById('arErr');
+    err.style.display='none';
+    if(cur!==ADMIN_USER.password){err.textContent='Current password is incorrect.';err.style.display='';return;}
+    if(nw.length<6){err.textContent='New password must be at least 6 characters.';err.style.display='';return;}
+    if(nw!==conf){err.textContent='Passwords do not match.';err.style.display='';return;}
+    ADMIN_USER.password=nw;
+    closeModal();
+    alert('Admin password updated successfully.');
+  });
+});
 
 // ═══════════════════════════════════════
 // NAVIGATION
@@ -2478,11 +2514,33 @@ function renderCoachesTab(){
       '<div class="lesson-price">'+esc(c.title)+'</div>'+
       '<div class="lesson-desc">'+esc(c.bio)+'</div>'+
       '<div style="font-size:.75rem;color:var(--g4);margin-top:3px">Login: <strong>'+esc(c.username)+'</strong> / '+esc(c.password)+'</div></div>'+
-      '<div style="display:flex;gap:3px;flex-shrink:0"><button class="icon-btn" data-a="edit">✎</button><button class="icon-btn" data-a="tog">'+(c.active?'⊘':'✓')+'</button><button class="icon-btn" data-a="del">✕</button></div>';
+      '<div style="display:flex;gap:3px;flex-shrink:0"><button class="icon-btn" data-a="edit">✎</button><button class="icon-btn" data-a="reset" title="Reset Password">🔑</button><button class="icon-btn" data-a="tog">'+(c.active?'⊘':'✓')+'</button><button class="icon-btn" data-a="del">✕</button></div>';
     div.querySelector('[data-a="edit"]').addEventListener('click',function(){ editCoach(c.id); });
+    div.querySelector('[data-a="reset"]').addEventListener('click',function(){ resetCoachPassword(c.id); });
     div.querySelector('[data-a="tog"]').addEventListener('click',function(){ c.active=!c.active; renderCoachesTab(); });
     div.querySelector('[data-a="del"]').addEventListener('click',function(){ if(!confirm('Delete?')) return; DB.coaches=DB.coaches.filter(function(x){ return x.id!==c.id; }); renderCoachesTab(); });
     list.appendChild(div);
+  });
+}
+function resetCoachPassword(id){
+  var c=DB.coaches.find(function(x){ return x.id===id; });
+  openModal('<h3>Reset Password — '+esc(c.name)+'</h3>'+
+    mfl('New Password','cr-new','','Min. 6 characters','password')+
+    mfl('Confirm New Password','cr-conf','','Repeat new password','password')+
+    '<div id="crErr" style="font-size:.82rem;color:#c0392b;display:none;margin-bottom:.5rem"></div>'+
+    '<div class="modal-btns"><button class="m-save" id="mSave">Update Password</button><button class="m-cancel" id="mCancel">Cancel</button></div>');
+  document.getElementById('mCancel').addEventListener('click', closeModal);
+  document.getElementById('mSave').addEventListener('click', function(){
+    var nw=document.getElementById('cr-new').value;
+    var conf=document.getElementById('cr-conf').value;
+    var err=document.getElementById('crErr');
+    err.style.display='none';
+    if(nw.length<6){err.textContent='Password must be at least 6 characters.';err.style.display='';return;}
+    if(nw!==conf){err.textContent='Passwords do not match.';err.style.display='';return;}
+    c.password=nw;
+    closeModal();
+    renderCoachesTab();
+    alert('Password updated for '+c.name+'.');
   });
 }
 function editCoach(id){
@@ -3112,6 +3170,29 @@ function renderProfilePage() {
       saved.style.display='';
       setTimeout(function(){ saved.style.display='none'; }, 2500);
       renderProfilePage();
+    });
+  }
+  var cpBtn = document.getElementById('changePassBtn');
+  if (cpBtn && !cpBtn._bound) {
+    cpBtn._bound = true;
+    cpBtn.addEventListener('click', function(){
+      var cur  = document.getElementById('pCurPass').value;
+      var nw   = document.getElementById('pNewPass').value;
+      var conf = document.getElementById('pConfPass').value;
+      var err  = document.getElementById('passError');
+      var ok   = document.getElementById('passChanged');
+      err.style.display='none'; ok.style.display='none';
+      if (cur !== stu.password) { err.textContent='Current password is incorrect.'; err.style.display=''; return; }
+      if (nw.length < 6) { err.textContent='New password must be at least 6 characters.'; err.style.display=''; return; }
+      if (nw !== conf) { err.textContent='Passwords do not match.'; err.style.display=''; return; }
+      stu.password = nw;
+      currentUser.password = nw;
+      saveDB();
+      document.getElementById('pCurPass').value='';
+      document.getElementById('pNewPass').value='';
+      document.getElementById('pConfPass').value='';
+      ok.style.display='';
+      setTimeout(function(){ ok.style.display='none'; }, 2500);
     });
   }
 }
