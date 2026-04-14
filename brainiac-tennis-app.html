@@ -6,6 +6,9 @@
 <title>Tennis Scheduling — Booking</title>
 <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <!-- PWA -->
 <link rel="manifest" href="manifest.json"/>
 <meta name="theme-color" content="#1a3a2a"/>
@@ -1165,7 +1168,7 @@ tr:hover td{background:var(--gu)}
         </div>
         <div style="overflow-x:auto">
           <table><thead><tr>
-            <th>Photo</th><th>Name</th><th>Email</th><th>Phone</th><th>Age</th><th>Gender</th><th>Address</th><th>Guardian</th><th>Username</th><th>Bookings</th><th>Joined</th>
+            <th>Photo</th><th>Name</th><th>Email</th><th>Phone</th><th>Age</th><th>Gender</th><th>Address</th><th>Guardian</th><th>Username</th><th>Bookings</th><th>Joined</th><th>Actions</th>
           </tr></thead><tbody id="stuBody"></tbody></table>
         </div>
       </div>
@@ -1358,6 +1361,49 @@ var DB = {
 };
 
 // ── LOCALSTORAGE PERSISTENCE ──
+// ═══════════════════════════════════════
+// FIREBASE
+// ═══════════════════════════════════════
+var firebaseConfig = {
+  apiKey: "AIzaSyAtzxrO1kkwLv9-MkCwTQJ_V55ncG9ebUo",
+  authDomain: "tennis-scheduling-31fd4.firebaseapp.com",
+  projectId: "tennis-scheduling-31fd4",
+  storageBucket: "tennis-scheduling-31fd4.firebasestorage.app",
+  messagingSenderId: "45080449721",
+  appId: "1:45080449721:web:0faf95791eae8ed7730168"
+};
+firebase.initializeApp(firebaseConfig);
+var fsdb = firebase.firestore();
+
+function fsWriteStudent(s) {
+  fsdb.collection('students').doc(String(s.id)).set(s).catch(function(e){ console.error('FS write student:', e); });
+}
+function fsWriteBooking(b) {
+  fsdb.collection('bookings').doc(String(b.id)).set(b).catch(function(e){ console.error('FS write booking:', e); });
+}
+function fsDeleteStudent(id) {
+  fsdb.collection('students').doc(String(id)).delete().catch(function(e){ console.error('FS delete student:', e); });
+}
+function fsDeleteBooking(id) {
+  fsdb.collection('bookings').doc(String(id)).delete().catch(function(e){ console.error('FS delete booking:', e); });
+}
+function loadFromFirestore() {
+  Promise.all([
+    fsdb.collection('students').get(),
+    fsdb.collection('bookings').get()
+  ]).then(function(results){
+    var stuSnap = results[0];
+    var bkSnap  = results[1];
+    if (!stuSnap.empty) DB.students = stuSnap.docs.map(function(d){ return d.data(); });
+    if (!bkSnap.empty)  DB.bookings  = bkSnap.docs.map(function(d){ return d.data(); });
+    // sync to localStorage as cache
+    try { localStorage.setItem('brainiac_db', JSON.stringify({students:DB.students,bookings:DB.bookings})); } catch(e){}
+    // refresh any open admin tab
+    if (curPage==='admin') renderAdminBookings();
+    if (document.getElementById('ap-students') && document.getElementById('ap-students').classList.contains('on')) renderStudentsTab();
+  }).catch(function(e){ console.error('FS load error:', e); });
+}
+
 function saveDB() {
   try {
     // Save coach profile overrides (photo, phone, email, address)
@@ -1400,6 +1446,7 @@ function loadDB() {
   } catch(e){}
 }
 loadDB();
+loadFromFirestore();
 
 // ── AUTH ──
 var ADMIN_USER = {username:'admin',password:'BT#Admin@2026$',role:'admin',name:'Admin User',initials:'AD'};
@@ -2066,6 +2113,7 @@ function submitBooking() {
   var sl=DB.schedule[dayKey].slots.find(function(s){ return s.time===pickedSlot; });
   if(sl) sl.booked++;
   DB.bookings.push(bk);
+  fsWriteBooking(bk);
   sendBookingEmail(bk);
   document.getElementById('bkRef').textContent=ref;
   document.getElementById('successModal').classList.add('on');
@@ -2336,8 +2384,8 @@ function filterBk(q) {
   var f=DB.bookings.filter(function(b){ var s=q.toLowerCase(); return b.name.toLowerCase().indexOf(s)>-1||b.package.toLowerCase().indexOf(s)>-1||b.ref.toLowerCase().indexOf(s)>-1; });
   renderBkTable(f);
 }
-function chgStatus(id,s){ var b=DB.bookings.find(function(x){ return x.id===id; }); if(b){ b.status=s; renderAdminBookings(); } }
-function delBk(id){ if(!confirm('Remove this booking?')) return; DB.bookings=DB.bookings.filter(function(x){ return x.id!==id; }); renderAdminBookings(); }
+function chgStatus(id,s){ var b=DB.bookings.find(function(x){ return x.id===id; }); if(b){ b.status=s; fsWriteBooking(b); saveDB(); renderAdminBookings(); } }
+function delBk(id){ if(!confirm('Remove this booking?')) return; fsDeleteBooking(id); DB.bookings=DB.bookings.filter(function(x){ return x.id!==id; }); saveDB(); renderAdminBookings(); }
 
 function buildQaForm() {
   var f=document.getElementById('qaForm');
@@ -2840,6 +2888,7 @@ function doStuSignup() {
   };
   DB.students.push(stu);
   saveDB();
+  fsWriteStudent(stu);
   currentUser = {role:'student', firstName: fn, lastName: ln, email: email, username: uname, photo: photo, studentId: stu.id};
   hideStuSignup();
   applyAuth();
@@ -3080,7 +3129,16 @@ function renderStudentsTab() {
         '<td style="font-size:.78rem">'+esc(s.guardian||'—')+'</td>'+
         '<td style="font-family:monospace;font-size:.78rem">'+esc(s.username)+'</td>'+
         '<td style="text-align:center;font-weight:500">'+bks+'</td>'+
-        '<td style="font-size:.75rem">'+joined+'</td>';
+        '<td style="font-size:.75rem">'+joined+'</td>'+
+        '<td><button class="icon-btn" style="color:#c0392b" data-del-stu="'+s.id+'">✕</button></td>';
+      tr.querySelector('[data-del-stu]').addEventListener('click', function(){
+        var sid = parseInt(this.getAttribute('data-del-stu'));
+        if (!confirm('Delete this student? This cannot be undone.')) return;
+        DB.students = DB.students.filter(function(x){ return x.id !== sid; });
+        fsDeleteStudent(sid);
+        saveDB();
+        renderStudentsTab();
+      });
       tb.appendChild(tr);
     });
   }
