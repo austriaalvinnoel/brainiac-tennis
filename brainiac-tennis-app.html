@@ -2005,17 +2005,10 @@ function initBook() {
 
   // Auto-fill student details if logged in
   if (currentUser && currentUser.role === 'student') {
-    var stu = DB.students.find(function(s){ return s.email === currentUser.email; });
-    if (stu) {
-      var fnEl = document.getElementById('bFN');
-      var lnEl = document.getElementById('bLN');
-      var emEl = document.getElementById('bEM');
-      var phEl = document.getElementById('bPH');
-      if (fnEl && !fnEl.value) fnEl.value = stu.firstName || '';
-      if (lnEl && !lnEl.value) lnEl.value = stu.lastName  || '';
-      if (emEl && !emEl.value) emEl.value = stu.email      || '';
-      if (phEl && !phEl.value) phEl.value = stu.phone      || '';
-    }
+    document.getElementById('bFN').value = currentUser.firstName || '';
+    document.getElementById('bLN').value = currentUser.lastName  || '';
+    document.getElementById('bEM').value = currentUser.email     || '';
+    document.getElementById('bPH').value = currentUser.phone     || '';
   }
 
   renderCal(); sumUpdate();
@@ -2912,7 +2905,7 @@ function doStuSignup() {
 }
 
 function completeStuLogin(stu) {
-  currentUser = {role:'student', firstName: stu.firstName, lastName: stu.lastName, email: stu.email, username: stu.username, photo: stu.photo||'', studentId: stu.id};
+  currentUser = {role:'student', firstName: stu.firstName, lastName: stu.lastName, email: stu.email, phone: stu.phone||'', username: stu.username, photo: stu.photo||'', studentId: stu.id};
   hideStuLogin();
   applyAuth();
   goPage('book');
