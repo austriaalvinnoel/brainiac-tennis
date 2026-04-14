@@ -2002,6 +2002,22 @@ function initBook() {
   });
   if(!selPayment){ var fp=DB.payments.find(function(p){ return p.active; }); selPayment=fp?fp.name:''; }
   document.getElementById('bSK').onchange=sumUpdate;
+
+  // Auto-fill student details if logged in
+  if (currentUser && currentUser.role === 'student') {
+    var stu = DB.students.find(function(s){ return s.email === currentUser.email; });
+    if (stu) {
+      var fnEl = document.getElementById('bFN');
+      var lnEl = document.getElementById('bLN');
+      var emEl = document.getElementById('bEM');
+      var phEl = document.getElementById('bPH');
+      if (fnEl && !fnEl.value) fnEl.value = stu.firstName || '';
+      if (lnEl && !lnEl.value) lnEl.value = stu.lastName  || '';
+      if (emEl && !emEl.value) emEl.value = stu.email      || '';
+      if (phEl && !phEl.value) phEl.value = stu.phone      || '';
+    }
+  }
+
   renderCal(); sumUpdate();
 }
 
