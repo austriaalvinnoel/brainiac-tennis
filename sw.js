@@ -1,4 +1,4 @@
-const CACHE = 'brainiac-v2';
+const CACHE = 'brainiac-v3';
 const PRECACHE = [
   './brainiac-tennis-app.html',
   './manifest.json',

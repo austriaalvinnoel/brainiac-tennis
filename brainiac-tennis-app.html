@@ -2911,20 +2911,43 @@ function doStuSignup() {
   goPage('book');
 }
 
+function completeStuLogin(stu) {
+  currentUser = {role:'student', firstName: stu.firstName, lastName: stu.lastName, email: stu.email, username: stu.username, photo: stu.photo||'', studentId: stu.id};
+  hideStuLogin();
+  applyAuth();
+  goPage('book');
+}
 function doStuLogin() {
   var u = document.getElementById('slUser').value.trim().toLowerCase();
   var p = document.getElementById('slPass').value;
   var err = document.getElementById('slErr');
   err.textContent = '';
   if (!u||!p) { err.textContent = 'Please enter your credentials.'; return; }
+  // Try local DB first (fast path)
   var stu = DB.students.find(function(s){
     return (s.email===u || s.username===u) && s.password===p;
   });
-  if (!stu) { err.textContent = 'Incorrect email/username or password.'; return; }
-  currentUser = {role:'student', firstName: stu.firstName, lastName: stu.lastName, email: stu.email, username: stu.username, photo: stu.photo||'', studentId: stu.id};
-  hideStuLogin();
-  applyAuth();
-  goPage('book');
+  if (stu) { completeStuLogin(stu); return; }
+  // Not found locally — fetch fresh from Firestore
+  err.textContent = 'Checking…';
+  fsdb.collection('students').get().then(function(snap){
+    var found = null;
+    snap.forEach(function(doc){
+      var s = doc.data();
+      if ((s.email===u || s.username===u) && s.password===p) found = s;
+    });
+    if (found) {
+      // Sync to local DB
+      if (!DB.students.find(function(s){ return s.id===found.id; })) DB.students.push(found);
+      saveDB();
+      err.textContent = '';
+      completeStuLogin(found);
+    } else {
+      err.textContent = 'Incorrect email/username or password.';
+    }
+  }).catch(function(){
+    err.textContent = 'Incorrect email/username or password.';
+  });
 }
 
 function doStuLogout() {
